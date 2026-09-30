@@ -59,7 +59,7 @@ pnpm check-i18n      # 加了 locale JSON key 后,看覆盖率报告
 
 ### 2.4 加一个脚本(scripts/)
 
-- 只用 node 内置依赖 + tsx,不引第三方(先例:全部 9 个脚本)
+- 只用 node 内置依赖 + tsx,不引第三方(先例:全部运维脚本)
 - 只读审计类(check-*)→ exit 1 可 gate CI;改写类(apply-template)→ 交互确认 + `--dry-run`
 - package.json scripts 注册 + AGENTS.md 命令区同步 + 本文第 1 节验证清单按需更新
 

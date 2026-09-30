@@ -1,6 +1,6 @@
 ---
 title: "Verify Your Changes: The Checklist and the Gates"
-description: "The post-change, pre-commit checklist: seven local commands, the eight CI gates, the three pipelines, and the safety and performance baselines."
+description: "The post-change, pre-commit checklist: seven local commands, the eight CI gates, the six pipelines, and the safety and performance baselines."
 manual: dev
 order: 4
 icon: lucide:shield-check
@@ -32,13 +32,16 @@ CI runs the full gate set on every push: lint → typecheck → test → check-c
 
 **Locating a red CI**: open the failed job, read the last log line — the failing gate is named at the top of the log; reproduce locally with the same command, fix, push, CI reruns itself.
 
-## Three automatic pipelines (.github/workflows/)
+## Six automatic pipelines (.github/workflows/)
 
 | Pipeline | When | What it guards |
 |---|---|---|
 | **CI** | every push / PR | The eight gates; one red blocks everything |
 | **Content freshness audit** | weekly (cron) | Freshness audit, auto-opens issues for stale pages. **Official repo only by default** (forks stay silent by default, sparing you the noise); to enable: have AI delete the `if: github.repository ==` line. It **only reminds, never edits content** |
 | **Initialize AnvilWiki** | manual | Post-fork cleanup: resets wrangler.toml vars, removes the project page, optional demo clear. **Does not swap game name / color / languages** — those need local `pnpm apply-template` |
+| **Auto content PR** | manual | The content pipeline: paste a CSV or codes list, deterministic generators draft the articles, all eight gates run before a draft PR opens — content always lands via PR, never direct to main |
+| **IndexNow** | after CI succeeds | Submits the production sitemap's URLs to search engines (IndexNow protocol, faster indexing); unconfigured forks exit with zero requests |
+| **Release anvilwiki-ops** | `ops-v*` tag push | Publishes the `tools/anvil-ops` npm package (maintainer-facing), gated by a GitHub Environment approval |
 
 ## Safety baselines (built in — don't dismantle)
 

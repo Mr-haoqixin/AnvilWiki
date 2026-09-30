@@ -1,6 +1,6 @@
 ---
 title: "改完怎么自证:验证清单与门禁"
-description: "每次改动后、提交前的自证清单:七条本地命令各守什么、CI 八道门禁怎么读、三条自动流水线各自把什么关,以及安全与性能底线——定制时别拆模板内置的防线。"
+description: "每次改动后、提交前的自证清单:七条本地命令各守什么、CI 八道门禁怎么读、六条自动流水线各自把什么关,以及安全与性能底线——定制时别拆模板内置的防线。"
 manual: dev
 order: 4
 icon: lucide:shield-check
@@ -32,13 +32,16 @@ pnpm check-i18n      # 加了 locale JSON key 后,看覆盖率报告
 
 **CI 红了怎么定位**:点进红色 job 看日志最后一行——哪道门禁挂了,日志开头会写;本地跑同一条命令复现,修完推上去 CI 自己会再跑。
 
-## 三条自动流水线(.github/workflows/)
+## 六条自动流水线(.github/workflows/)
 
 | 流水线 | 什么时候跑 | 替你把什么关 |
 |---|---|---|
 | **CI** | 每次 push / PR | 八道门禁,红一条不许合 |
 | **Content freshness audit** | 每周一(定时) | 保鲜审计,过期页面自动开 issue。**默认只在 AnvilWiki 官方仓库生效**(fork 收不到,免得给你开一堆提醒);想开:让 AI 删掉文件里 `if: github.repository ==` 那行。它**只提醒、绝不改内容** |
 | **Initialize AnvilWiki** | 手动点 | fork 后收尾清理:重置 wrangler.toml 变量、删项目页、可选清 demo。**不换游戏名/主题色/语言**——那些只能本地 `pnpm apply-template` |
+| **Auto content PR** | 手动点 | 内容管道:贴 CSV 或兑换码清单跑确定性生成器产文章,八道门禁全绿才开 draft PR——内容永远走 PR,不直推 main |
+| **IndexNow** | CI 成功后自动 | 把生产 sitemap 的 URL 提交给搜索引擎(IndexNow 协议,加速收录);没配 key 的 fork 直接退出,零请求 |
+| **Release anvilwiki-ops** | 推 `ops-v*` 标签 | 发布 `tools/anvil-ops` npm 包(模板作者发布运维包用),带 GitHub Environment 审批门 |
 
 ## 安全底线(已内置,定制时别拆)
 
