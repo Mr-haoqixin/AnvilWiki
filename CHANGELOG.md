@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **demo 站 locale 猜测路径 404 兜底**：`/zh`、`/zh/`、`/en`、`/en/` 四个裸路径线上全 404（2026-09-28 外部访客直访 `anvil.wiki/zh` 撞 404 实证，社群日报 #65 立案；与 09-05「首页语言入口缺中文」同家族）——demo 的中文层只在 `/zh/landing/…`（项目官网中文版），英文首页在 `/`（默认 locale 无前缀），而 Cloudflare 只对解析到真实资产的路由补尾斜杠，死路径直接 404。`public/_redirects` 新增 4 条精确 301（`/zh` 两形态 → `/zh/landing/`，`/en` 两形态 → `/`），沿既有约定带斜杠/裸形态各一条；`tests/redirects.test.ts` 契约扩为两类规则（手册旧 slug 36 条 + locale 入口 4 条，6→9 条测试），新类钉死精确集合/目标活路由文件在位/源路径永无活路由（防 301 遮蔽真页）。文件仍属 demo 层，fork 随 LANDING_PATHS 双通道整体删除，零 fork 影响。
+
 ## [2.36.1] - 2026-09-27
 
 ### Fixed

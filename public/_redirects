@@ -1,10 +1,17 @@
 # Cloudflare Pages redirects — https://developers.cloudflare.com/pages/configuration/redirects/
 #
-# 301s for handbook lessons whose URL slugs were renamed or split — the v1.14
-# chapter split (2026-08-17) and the v2.8.0-v2.12.0 teaching redesign
-# (2026-09-02). Old bookmarks and search entries land on the successor lesson
-# instead of a 404. Mapping source: the redesign spec
-# (docs/superpowers/specs/2026-09-02-handbook-teaching-redesign.md).
+# Demo-layer exact-path 301s, two rule classes:
+#
+# 1. Handbook lessons whose URL slugs were renamed or split — the v1.14
+#    chapter split (2026-08-17) and the v2.8.0-v2.12.0 teaching redesign
+#    (2026-09-02). Old bookmarks and search entries land on the successor
+#    lesson instead of a 404. Mapping source: the redesign spec
+#    (docs/superpowers/specs/2026-09-02-handbook-teaching-redesign.md).
+# 2. Locale entry points — the demo wiki ships en (no prefix) and ja; zh
+#    exists only as the project-site landing layer at /zh/landing/. Visitors
+#    guessing /zh or /en hit a hard 404 (reported 2026-09-28): Cloudflare
+#    only slash-normalizes paths that resolve to a real asset, so both slash
+#    forms need their own rule.
 #
 # EXACT PATHS ONLY. Placeholder/splat rules here once looped forever with
 # Cloudflare's directory normalization (301 -> internal slash normalization ->
@@ -13,11 +20,11 @@
 # normalizes the slash on paths that resolve to a real asset — dead paths
 # never hit that normalization, so the bare form needs its own rule.
 #
-# Demo-layer file: only the demo serves /landing/docs routes, so fork
-# initialization removes it together with the landing pages (LANDING_PATHS in
-# scripts/apply-template.ts + the "Remove project landing page" step in
-# .github/workflows/setup.yml). Rule shape, live targets and channel sync are
-# pinned by tests/redirects.test.ts.
+# Demo-layer file: only the demo serves /landing/docs and /zh/landing routes,
+# so fork initialization removes it together with the landing pages
+# (LANDING_PATHS in scripts/apply-template.ts + the "Remove project landing
+# page" step in .github/workflows/setup.yml). Rule shape, live targets and
+# channel sync are pinned by tests/redirects.test.ts.
 
 # v1.14 chapter split (2026-08-17)
 /landing/docs/deploy-and-get-indexed/ /landing/docs/put-site-online/ 301
@@ -58,3 +65,10 @@
 /zh/landing/docs/seo-traffic /zh/landing/docs/rank-one-keyword/ 301
 /zh/landing/docs/sync-and-contribute /zh/landing/docs/sync-upstream/ 301
 /zh/landing/docs/ci-and-security /zh/landing/docs/verify-your-changes/ 301
+
+# Locale entry points (2026-09-29): /zh lands on the project-site Chinese
+# homepage, /en on the English wiki home (the default locale lives at /).
+/zh/ /zh/landing/ 301
+/zh /zh/landing/ 301
+/en/ / 301
+/en / 301
