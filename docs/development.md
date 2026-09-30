@@ -90,9 +90,10 @@ pnpm check-i18n      # 加了 locale JSON key 后,看覆盖率报告
 3. CHANGELOG.md(版本五处中另两处):Unreleased 段落改日期标题 + 底部 compare 链接加一行 + [Unreleased] 指针上移到新版本(v2.4.1 起曾连续 6 版漏更,见 CHANGELOG [2.6.2])
 4. docs/PRD.md 更新记录表补一行 + §14.2 路线图该版本标 ✅(更新记录表曾停更 v2.14.0–v2.17.0 连续 7 版才被文档漂移审计发现——此步无门禁,漏更不报警)
 5. AGENTS.md Status 段更新版本与要点
-6. commit:feat(vX.Y): ... 一个 + git commit --allow-empty -m "chore(release): vX.Y.0" 一个
-7. git push origin main(CI 绿 + Cloudflare Pages 自动部署)
-8. gh release create vX.Y.0 --latest --notes "<CHANGELOG 同款中英摘要>"
+6. 若本批随发 anvilwiki-ops npm 包:tools/anvil-ops/package.json 版本 bump + tools/anvil-ops/README.md 顶部 Status 行同步(Status 行无门禁,1.0.4→1.0.5→1.0.6 两度漂移,分别靠 2026-09-16 与 2026-09-30 漂移审计发现)
+7. commit:feat(vX.Y): ... 一个 + git commit --allow-empty -m "chore(release): vX.Y.0" 一个
+8. git push origin main(CI 绿 + Cloudflare Pages 自动部署)
+9. gh release create vX.Y.0 --latest --notes "<CHANGELOG 同款中英摘要>"
 ```
 
 Minor = 新功能(默认关闭/向后兼容);Patch = 修复;Major = breaking(需在 CHANGELOG 写迁移说明)。config 层兼容承诺见 [staying-up-to-date.md](staying-up-to-date.md)。

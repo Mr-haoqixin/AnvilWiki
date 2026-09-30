@@ -6,7 +6,7 @@ order: 7
 icon: lucide:bot
 shortTitle: "AI ops & GSC setup"
 tldr: "anvilwiki-ops (npm package, runs via npx) hands the weekly ops loop to AI: doctor checks what's missing in one pass; once a GSC service account (authorized through a Google Group) and a CF token sit in .env, metrics pulls 28 days of real data and insights ranks evidence-backed actions; with MCP registered you just talk — five tools (doctor/metrics/audit/insights/submit_pr), and every write goes verify → branch → PR with the merge button staying yours."
-updated: 2026-09-15
+updated: 2026-09-30
 ---
 
 ## Where you are, and what this lesson solves
@@ -85,7 +85,7 @@ Writes have exactly one path: **validate (check-content + check-i18n + full buil
 - `gh CLI not found`: install the GitHub CLI (submit needs it): https://cli.github.com/
 - `No site config found`: your repo deleted wrangler.toml (the launch lesson's recommendation) — add `SITE_URL=https://your-domain` to `.env`. **Never** rebuild wrangler.toml for this: its return kills every dashboard-configured variable.
 - `No uncommitted changes to submit`: the worktree is clean — have AI produce something first.
-- Package not found with `npx anvilwiki-ops`: needs 0.1.0+ (shipped with template v1.15; the current line is 1.0.5 — multi-site + AI referrals landed in 1.0.0, the submit private-key safety net and cross-process lock in 1.0.3/1.0.4, pid-recycle lock recovery in 1.0.5).
+- Package not found with `npx anvilwiki-ops`: needs 0.1.0+ (shipped with template v1.15; the current line is 1.0.6 — multi-site + AI referrals landed in 1.0.0, the submit private-key safety net and cross-process lock in 1.0.3/1.0.4, pid-recycle lock recovery in 1.0.5, insights offloaded to a worker channel in 1.0.6).
 
 ## ✅ Acceptance (all must hold)
 

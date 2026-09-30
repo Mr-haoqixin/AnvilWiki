@@ -1,12 +1,12 @@
 ---
 title: "Appendix C · Glossary & Command Cheat Sheet"
-description: "Every word card in one place — 30+ terms by theme — plus twenty-one pnpm commands grouped by scenario: writing, QA, config, ops, assets."
+description: "Every word card in one place — 28 terms by theme — plus seventeen pnpm commands grouped by scenario: writing, QA, config, ops, assets."
 manual: learn
 order: 32
 stage: "Appendices"
 icon: lucide:book-marked
 tldr: "Two parts: ① the glossary — every lesson's word cards regrouped by theme (SEO & search / site & content / monetization & ops); ② the command sheet — pnpm commands by scenario: writing (new-post / bulk-new-posts / sync-codes), QA (check-content / check-links / build), config (check-config / apply-template / new-locale), ops (refresh-audit / submit-indexnow), assets (gen-covers / gen-assets). One line each — when detail fades, start here."
-updated: 2026-09-18
+updated: 2026-09-30
 ---
 
 ## Glossary (grouped by theme)
@@ -88,6 +88,7 @@ pnpm template-audit     # template health (mandatory before cloning)
 ```bash
 pnpm refresh-audit      # freshness audit; the site reports its own stale pages
 pnpm submit-indexnow    # manual IndexNow check/push; initialized forks auto-submit after successful main CI
+pnpm init-indexnow-key  # create/reuse the repo-root .indexnow-key (runs during initialization; for legacy-site migration or key rotation)
 pnpm gen-covers         # generate og:image covers (1200×675)
 pnpm gen-assets         # regenerate the icon set + homepage image from the theme color
 ```

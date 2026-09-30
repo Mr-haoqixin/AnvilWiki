@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - **demo 站 locale 猜测路径 404 兜底**：`/zh`、`/zh/`、`/en`、`/en/` 四个裸路径线上全 404（2026-09-28 外部访客直访 `anvil.wiki/zh` 撞 404 实证，社群日报 #65 立案；与 09-05「首页语言入口缺中文」同家族）——demo 的中文层只在 `/zh/landing/…`（项目官网中文版），英文首页在 `/`（默认 locale 无前缀），而 Cloudflare 只对解析到真实资产的路由补尾斜杠，死路径直接 404。`public/_redirects` 新增 4 条精确 301（`/zh` 两形态 → `/zh/landing/`，`/en` 两形态 → `/`），沿既有约定带斜杠/裸形态各一条；`tests/redirects.test.ts` 契约扩为两类规则（手册旧 slug 36 条 + locale 入口 4 条，6→9 条测试），新类钉死精确集合/目标活路由文件在位/源路径永无活路由（防 301 遮蔽真页）。文件仍属 demo 层，fork 随 LANDING_PATHS 双通道整体删除，零 fork 影响。
+- **文档漂移修复批（七天变更对照审计，零代码变更）**：① `tools/anvil-ops/README.md` 顶部 Status 行 1.0.5→1.0.6（v2.36.1 随批发 npm 漏更——同型第二例，1.0.4→1.0.5 曾由 2026-09-16 漂移审计批修正）；② `docs/development.md` §4 发版清单新增第 6 步：随发 anvilwiki-ops 时 package.json 版本与 README Status 行同步，堵住该无门禁同步点的复发根因；③ 手册附录 C 命令速查（en+zh 双语对称）收录 `pnpm init-indexnow-key`（v2.36.0 新命令此前缺席速查表），顺修同页三处计数/描述漂移：命令 21→17 条、术语 30+→28 个、zh 描述「按拼音/字母排列」与 tldr「工程类」分组对齐正文实际（按主题归拢，三组）；④ 开发手册第 7 课 ai-ops（en）排障清单的「当前版本线 1.0.5」提法同步 1.0.6 并补 1.0.6 变更（insights 走 worker offload）。
 
 ## [2.36.1] - 2026-09-27
 
