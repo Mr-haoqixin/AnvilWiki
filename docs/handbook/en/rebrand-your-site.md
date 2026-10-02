@@ -6,7 +6,7 @@ order: 11
 stage: "Stand It Up"
 icon: lucide:paintbrush
 tldr: "Run pnpm apply-template; it asks one question at a time — answer from the table (unsure? Enter takes the default): full/short name, domain, tagline, description, theme color, locales, categories, 15 in all. Then pnpm check-config shows ✅ and pnpm build runs red-free, with your game name, color, and categories live at localhost:4321. Finally swap the icon: pnpm gen-assets generates a full set, or upload your own at favicon.io. Preview changes first with --dry-run."
-updated: 2026-09-02
+updated: 2026-10-02
 ---
 
 ## A true scene first
@@ -21,6 +21,8 @@ The store is copied — still wearing someone else's sign. This lesson swaps the
 ### Step 1: run the rebrand command, answer from the table
 
 Type `pnpm apply-template`; it asks question by question, Enter after each; **unsure? Enter takes the default**:
+
+> **CLI language**: the command prompts in English by default and opens with a language question ("选择界面语言 / Select CLI language") — answer `1` for a Chinese UI, or skip the question with `pnpm apply-template --lang zh`. Non-interactive runs (`--answers`) never ask and stay English unless `--lang` is passed.
 
 | It asks | You answer | Why |
 |---|---|---|

@@ -52,6 +52,11 @@ import {
   UI_IMPORT_BLOCK_RE,
   type SkinInput,
 } from '../scripts/lib/apply-rewrites';
+import {
+  APPLY_TEMPLATE_STRINGS,
+  envDefaultLang,
+  langFromFlag,
+} from '../scripts/lib/apply-template-i18n';
 
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -1371,5 +1376,59 @@ describe('new-locale.ts single-sources locale helpers (drift guard)', () => {
   test('writes go through the shared atomic helper (no bare writeFileSync)', () => {
     expect(src).toContain('writeAtomic');
     expect(src).not.toMatch(/\bwriteFileSync\b/);
+  });
+});
+
+describe('apply-template CLI bilingual UI (--lang + interactive language question)', () => {
+  // The CLI speaks en or zh (scripts/lib/apply-template-i18n.ts). The table
+  // is the whole contract: zh must mirror en key-for-key, and the ENGLISH
+  // table must keep the exact phrases scripts/e2e-apply-template.mjs greps
+  // for — a casual rewording of "Base config complete" would fail every CI
+  // e2e run, not just look off.
+  const cliSrc = readFileSync(join(repoRoot, 'scripts/apply-template.ts'), 'utf8');
+
+  test('zh table mirrors the en table key-for-key (no silent drift)', () => {
+    const { en, zh } = APPLY_TEMPLATE_STRINGS;
+    expect(Object.keys(zh).sort()).toEqual(Object.keys(en).sort());
+    // Type-level Record<keyof typeof en, string> enforces this at typecheck;
+    // this runtime guard covers future refactors that loosen the annotation.
+  });
+
+  test('en table keeps the phrases pnpm test:e2e pins, verbatim', () => {
+    const t = APPLY_TEMPLATE_STRINGS.en;
+    expect(t.secComplete).toContain('Base config complete');
+    expect(t.orphanKeptWarn(2, 'en, zh')).toContain('not in your chosen locales');
+    expect(t.keptFilesWarn(1, 'X')).toContain('NOT demo content');
+  });
+
+  test('langFromFlag parses --lang zh / --lang=zh, regional tags, absence, and rejects the rest', () => {
+    expect(langFromFlag(['--lang', 'zh'])).toBe('zh');
+    expect(langFromFlag(['--lang=zh'])).toBe('zh');
+    expect(langFromFlag(['--lang', 'zh-TW'])).toBe('zh');
+    expect(langFromFlag(['--lang', 'en'])).toBe('en');
+    expect(langFromFlag(['--lang', 'en-US'])).toBe('en');
+    expect(langFromFlag(['--dry-run', '-n'])).toBeUndefined();
+    expect(langFromFlag(['--lang'])).toBe('invalid'); // dangling flag = user error, not absence
+    expect(langFromFlag(['--lang', 'fr'])).toBe('invalid');
+    expect(langFromFlag(['--lang='])).toBe('invalid');
+  });
+
+  test('envDefaultLang: a zh terminal locale defaults the interactive question to 中文', () => {
+    expect(envDefaultLang({ LANG: 'zh_CN.UTF-8' })).toBe('zh');
+    expect(envDefaultLang({ LC_ALL: 'zh_TW', LANG: 'en_US.UTF-8' })).toBe('zh');
+    expect(envDefaultLang({ LANGUAGE: 'zh:en' })).toBe('zh');
+    expect(envDefaultLang({ LANG: 'en_US.UTF-8' })).toBe('en');
+    expect(envDefaultLang({ LANG: 'C' })).toBe('en');
+    expect(envDefaultLang({})).toBe('en');
+  });
+
+  test('the language question is TTY-gated and never consumes scripted answers', () => {
+    // askLanguage must go through rl.ask DIRECTLY — the ask()/askBool helpers
+    // divert to the scripted --answers queue, where a language question would
+    // either eat the first of the 18 positional answers or stall a piped run.
+    expect(cliSrc).toMatch(/await rl\.ask\(`选择界面语言/);
+    // ...and the interactive ask is gated to non-scripted TTY runs only, so
+    // --answers/piped/CI output (and the E2E's pinned markers) stay English.
+    expect(cliSrc).toMatch(/LANG_FLAG === undefined && !scripted && process\.stdin\.isTTY/);
   });
 });

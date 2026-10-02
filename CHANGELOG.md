@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **`pnpm apply-template` 双语界面（中/英）**：CLI 提问与进度输出此前只有英文，中文用户初始化站点要对着满屏英文答题。现新增 `scripts/lib/apply-template-i18n.ts` 双语词典（en/zh 键级对齐，结构类型 + 契约测试双向钉死），交互 TTY 运行开头先问一句「选择界面语言 / Select CLI language」（输入 1 即全程中文；回车取 LANG 环境变量推导的默认）；非交互通道（`--answers`/管道/CI）**永不提问**、缺省英文——18 项答案位置序与 E2E 钉死的英文输出标记（`Base config complete` 等）字节不动，需要中文时加 `--lang zh`（或 `--lang=zh`，支持 zh-TW 等地区标签，非法值响亮退出）。中文界面同时接受 `是` 作为 y/N 确认。边界：共享 lib 层（apply-rewrites）的模板漂移诊断与脚本模式的 answers 文件报错保持英文（开发者/CI 面向）。语言提问经 `rl.ask` 直连、以 `isTTY && !scripted` 门控——绝不消费脚本答案队列的行（LinePrompt FIFO 会排队一切输入）。文档同步：docs/apply-template.md（导语 + 逃生口清单）、学习手册课 11（en+zh 双语提示块 + updated 日期）；`tests/apply-template.test.ts` 新增 6 条契约（zh 键集镜像 / en 表保留 E2E 钉死短语 / `--lang` 解析矩阵 / env 默认语言 / 语言提问 TTY 门控 + 不走脚本答案队列的静态钉）。
+
 ### Fixed
 
 - **demo 站 locale 猜测路径 404 兜底**：`/zh`、`/zh/`、`/en`、`/en/` 四个裸路径线上全 404（2026-09-28 外部访客直访 `anvil.wiki/zh` 撞 404 实证，社群日报 #65 立案；与 09-05「首页语言入口缺中文」同家族）——demo 的中文层只在 `/zh/landing/…`（项目官网中文版），英文首页在 `/`（默认 locale 无前缀），而 Cloudflare 只对解析到真实资产的路由补尾斜杠，死路径直接 404。`public/_redirects` 新增 4 条精确 301（`/zh` 两形态 → `/zh/landing/`，`/en` 两形态 → `/`），沿既有约定带斜杠/裸形态各一条；`tests/redirects.test.ts` 契约扩为两类规则（手册旧 slug 36 条 + locale 入口 4 条，6→9 条测试），新类钉死精确集合/目标活路由文件在位/源路径永无活路由（防 301 遮蔽真页）。文件仍属 demo 层，fork 随 LANDING_PATHS 双通道整体删除，零 fork 影响。

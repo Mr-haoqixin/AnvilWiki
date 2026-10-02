@@ -21,7 +21,7 @@
 | 文章内容 | [src/content/wiki/](#7-mdx-文章) |
 | 广告 key | Cloudflare 环境变量 `PUBLIC_ADSENSE_*`（参考 [Google AdSense](https://adsense.google.com/)） |
 
-> 想自动化基础配置？运行 `pnpm apply-template`，它会交互式引导你完成 site.ts / navigation.ts / globals.css / routing.ts / locales 的修改。脚本化/CI 场景用 `pnpm apply-template --answers answers.json` 非交互驱动（与交互同一问答路径，答案缺失或多余都会响亮报告）。
+> 想自动化基础配置？运行 `pnpm apply-template`，它会交互式引导你完成 site.ts / navigation.ts / globals.css / routing.ts / locales 的修改。脚本化/CI 场景用 `pnpm apply-template --answers answers.json` 非交互驱动（与交互同一问答路径，答案缺失或多余都会响亮报告）。交互界面默认英文，开头会先问一句界面语言（输 `1` 即全程中文提问）；非交互通道可用 `--lang zh` 指定中文，缺省英文——`--answers` 的答案位置序不受语言影响。
 
 ---
 
@@ -53,7 +53,7 @@
 
 **⚠️ 语言 JSON 分三类处理（重跑安全，按内容判定不只按文件名）**：未选择的语言里——① **demo 自带且仍是 demo 内容的**（`ja.json` 等，`site.name` 仍是 demo 站名）会被**直接删除**：它们装载着完整的 demo 游戏翻译，留着是身份泄漏，且 `pnpm check-config` 会对「locale 文件存在但不在 routing.ts」报错，fork 第一天 CI 就是红的；② **demo 文件名但内容已换成你游戏的**（比如上一轮运行选了 ja、这一轮没选）——内容判定发现 `site.name` 已不是 demo 站名，**只警告、绝不删除**；③ **你自己创建的** locale 文件（`pnpm new-locale` 加的等）同样**只警告、绝不删除**——重跑不能毁掉你的翻译工作。②③ 看到「Kept N locale file(s)」警告后自行决定删除或把该语言加进所选列表，处理前 `pnpm check-config` 会一直是红的。
 
-**逃生口**：`pnpm apply-template --dry-run`（只打印不写入）、`--no-clear-content`（保留 demo 文章）、`--keep-landing`（保留项目官网）、`--answers answers.json`（非交互模式，复制第二个站/CI 时用）。
+**逃生口**：`pnpm apply-template --dry-run`（只打印不写入）、`--no-clear-content`（保留 demo 文章）、`--keep-landing`（保留项目官网）、`--answers answers.json`（非交互模式，复制第二个站/CI 时用）、`--lang zh` 或 `--lang en`（界面语言；交互 TTY 会先问一句可跳过，非交互通道缺省英文）。
 
 **事后体检**：`pnpm template-audit`——四层扫描（代码层无 demo 字符串 / 配置层是否还挂 demo 域名 / 内容层残留 / 换皮遗留文件），fork 站上线前跑一次确认没有"Anvil Quest"残留。
 

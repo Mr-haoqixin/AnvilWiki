@@ -111,7 +111,7 @@ pnpm template-audit   # scripts/template-audit.ts — template health check (cod
 pnpm bulk-new-posts   # scripts/bulk-new-posts.ts — batch-create draft MDX from a new-posts.csv keyword list (--dry-run preview)
 pnpm sync-codes       # scripts/sync-codes.ts — batch-apply a codes-sync.csv into codes pages' frontmatter codes array (add/expire; --dry-run preview)
 pnpm refresh-audit    # scripts/refresh-audit.ts — deterministic freshness report (codes pages >7d, stale categories >90d, home-explore highlights ↔ codes frontmatter cross-check)
-pnpm apply-template   # interactive template-apply CLI (hex→HSL theme, rewrite config/locales)
+pnpm apply-template   # interactive template-apply CLI (hex→HSL theme, rewrite config/locales; bilingual en/zh prompts — TTY runs are asked, or --lang zh|en; non-interactive defaults to English so --answers order is untouched)
 pnpm new-post         # interactive MDX article scaffold
 ```
 

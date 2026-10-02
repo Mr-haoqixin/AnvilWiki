@@ -6,7 +6,7 @@ order: 11
 stage: "把站立起来"
 icon: lucide:paintbrush
 tldr: "终端跑 pnpm apply-template,它一题一题问、你照表回答(不知道就回车用默认):游戏全名/短名/域名/标语/简介/主题色/语言/栏目等 15 题。跑完 pnpm check-config 显示 ✅、pnpm build 无红色,localhost:4321 上游戏名、主题色、栏目全是你的。最后换图标:pnpm gen-assets 一键生成,或 favicon.io 上传自制。想先预览改动,加 --dry-run。"
-updated: 2026-09-02
+updated: 2026-10-02
 ---
 
 ## 先看一个真实场景
@@ -21,6 +21,8 @@ updated: 2026-09-02
 ### 第 1 步:跑换皮命令,照表回答
 
 终端输入 `pnpm apply-template`,它一题一题问,每题答完按回车;**不知道怎么填就回车用默认值**:
+
+> **界面语言**:命令默认英文提问,开头会先问一句「选择界面语言 / Select CLI language」——输 `1` 即整程中文;也可以直接 `pnpm apply-template --lang zh` 跳过提问。下表「它问什么」一列保留英文题面,两种界面都能对照着答。
 
 | 它问什么 | 你填什么 | 为什么 |
 |---|---|---|
