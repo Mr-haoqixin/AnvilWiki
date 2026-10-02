@@ -17,8 +17,14 @@ import { describe, expect, it } from 'vitest';
  *   2. The body's test-pass date sentence: freshness batches that bump
  *      frontmatter lastModified but leave the intro's re-test date behind go
  *      red (the Sep 7 vs Sep 22 drift that shipped in 18a99c1).
+ *   3. Title/description month anchors: the "(September 2026)" SERP face.
+ *      The Oct 1 flip in ecc366b (#67) rotated summary + body + highlights
+ *      but left title/description on September — breaking acf46a7's practice
+ *      that a freshness batch moves title/description/summary together. When
+ *      a month anchor is present it must equal lastModified's month; absent
+ *      anchors degrade to a pass like check 2.
  *
- * Both checks are clock-free. A missing date sentence degrades to a pass,
+ * All checks are clock-free. A missing date sentence degrades to a pass,
  * mirroring refresh-audit's conservative fallback — but an unparseable
  * sentence that IS present still fails.
  */
@@ -114,6 +120,23 @@ function bodyTestPassDate(locale: string, body: string): string | undefined {
   return m ? `${m[1]}-${m[2].padStart(2, '0')}-${m[3].padStart(2, '0')}` : undefined;
 }
 
+function frontmatterLine(fm: string, key: string): string {
+  return fm.match(new RegExp(`^${key}:.*$`, 'm'))?.[0] ?? '';
+}
+
+/** Normalize the first `Month YYYY` (en) / `YYYY年M月` (ja) fragment on a
+ *  frontmatter line to `YYYY-MM`, or undefined when it carries no month
+ *  anchor (words that aren't month names don't count). */
+function monthAnchorOf(line: string, locale: string): string | undefined {
+  if (locale === 'en') {
+    const m = line.match(/([A-Za-z]+)\s+(\d{4})/);
+    const mm = m ? MONTHS[m[1]] : undefined;
+    return m && mm ? `${m[2]}-${mm}` : undefined;
+  }
+  const m = line.match(/(\d{4})年(\d{1,2})月/);
+  return m ? `${m[1]}-${m[2].padStart(2, '0')}` : undefined;
+}
+
 describe('codes page ↔ home highlights consistency', () => {
   for (const locale of LOCALES) {
     it(`${locale}: home badge-list highlights mirror the codes page active set`, () => {
@@ -135,6 +158,22 @@ describe('codes page ↔ home highlights consistency', () => {
         return;
       }
       expect(testPassDate).toBe(lastModified);
+    });
+
+    it(`${locale}: title/description month anchors match lastModified month`, () => {
+      const fm = frontmatterOf(readCodesPage(locale));
+      const lastModified = lastModifiedOf(fm);
+      expect(lastModified, 'codes frontmatter should pin lastModified').toBeTruthy();
+      const expected = String(lastModified).slice(0, 7);
+      for (const key of ['title', 'description'] as const) {
+        const anchor = monthAnchorOf(frontmatterLine(fm, key), locale);
+        if (anchor) {
+          expect(
+            anchor,
+            `${key} month anchor lags behind lastModified — rotate title/description in the same freshness batch (the Sep title / Oct body drift of #67)`,
+          ).toBe(expected);
+        }
+      }
     });
   }
 });
