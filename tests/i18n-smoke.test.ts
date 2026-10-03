@@ -13,6 +13,7 @@
 import { describe, expect, it } from 'vitest';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { getUi } from '~/i18n/ui';
 
 const ROOT = path.resolve(__dirname, '..');
 const LOCALE_ROUTES_DIR = path.join(ROOT, 'src/pages/[locale]');
@@ -56,5 +57,31 @@ describe('i18n: no hardcoded locale arrays', () => {
     const list = Array.from(m![1].matchAll(/['"]([^'"]+)['"]/g)).map((x) => x[1]);
     expect(list.length).toBeGreaterThan(0);
     expect(list).toContain('en');
+  });
+});
+
+describe('i18n: getUi results are deeply frozen (read-only by contract AND at runtime)', () => {
+  // getUi caches merged objects and deepMerge shares nested references with
+  // the en module table — one caller mutating its copy would silently poison
+  // every other locale's view. ui.ts deep-freezes all results so mutation
+  // throws (strict-mode modules) instead.
+  it('every locale flavor is deeply frozen (en, cached merge, unknown-locale copy)', () => {
+    const ja = getUi('ja');
+    expect(Object.isFrozen(ja)).toBe(true);
+    expect(Object.isFrozen(ja.home)).toBe(true);
+    expect(Object.isFrozen(getUi('en').shared)).toBe(true);
+    const unknown = getUi('zz');
+    expect(Object.isFrozen(unknown)).toBe(true);
+  });
+
+  it('mutating a cached locale result throws (no silent cross-locale poisoning)', () => {
+    const ja = getUi('ja');
+    expect(() => {
+      (ja as Record<string, unknown>).nav = 'poison';
+    }).toThrow();
+    // Nesting that came from the en table through the merge must be frozen too.
+    expect(() => {
+      (ja.shared as Record<string, unknown>).wikiNavAria = 'poison';
+    }).toThrow();
   });
 });

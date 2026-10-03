@@ -1431,4 +1431,18 @@ describe('apply-template CLI bilingual UI (--lang + interactive language questio
     // --answers/piped/CI output (and the E2E's pinned markers) stay English.
     expect(cliSrc).toMatch(/LANG_FLAG === undefined && !scripted && process\.stdin\.isTTY/);
   });
+
+  test('en count-lines keep the pre-i18n singular/plural forms (scripted output byte-stable)', () => {
+    // The v2.37.0 release banner promises scripted runs stay byte-identical.
+    // The i18n table initially collapsed these to "(s)", which changed the
+    // n=1 lines; the plural logic must match the pre-i18n literals exactly.
+    const t = APPLY_TEMPLATE_STRINGS.en;
+    expect(t.clearedArticles(1, false)).toContain('1 demo article under');
+    expect(t.clearedArticles(2, false)).toContain('2 demo articles under');
+    expect(t.clearedArticles(1, true)).toContain('Would remove');
+    expect(t.scaffoldCreated(1)).toContain('1 scaffold article (');
+    expect(t.scaffoldCreated(3)).toContain('3 scaffold articles (');
+    expect(t.landingRemoved(1)).toContain('1 project landing page file (');
+    expect(t.landingRemoved(5)).toContain('5 project landing page files (');
+  });
 });

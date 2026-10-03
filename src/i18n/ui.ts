@@ -49,10 +49,29 @@ function deepMerge(
 }
 
 /**
+ * Deep-freeze a UI tree. Every getUi() result shares structure with the
+ * `en` module table (deepMerge shallow-copies base and assigns arrays by
+ * reference), so one caller mutating its copy would silently poison every
+ * other locale's view. Freezing turns that corruption class into a loud
+ * TypeError in strict-mode modules instead — all ~20 call sites are
+ * read-only (audited 2026-10-03, round 35), pinned by tests/i18n-smoke.
+ */
+function deepFreeze<T>(value: T): T {
+  if (value && typeof value === 'object') {
+    for (const v of Object.values(value as Record<string, unknown>)) deepFreeze(v);
+    Object.freeze(value);
+  }
+  return value;
+}
+
+deepFreeze(en);
+deepFreeze(ja);
+
+/**
  * Get the full UI messages object for a locale, with English fallback.
  * Never throws — unknown locales return English. Non-default locales are
- * deep-merged once and cached; the cached object is shared across callers,
- * so treat any result as read-only.
+ * deep-merged once and cached, and every result is deeply frozen: treat it
+ * as read-only because it IS read-only (mutation throws).
  */
 const uiCache = new Map<Locale, typeof en>();
 
@@ -61,11 +80,13 @@ export function getUi(locale: string): typeof en {
   if (isLocale(locale)) {
     const cached = uiCache.get(locale);
     if (cached) return cached;
-    const merged = deepMerge(en as Record<string, unknown>, messages[locale]) as typeof en;
+    const merged = deepFreeze(
+      deepMerge(en as Record<string, unknown>, messages[locale]),
+    ) as typeof en;
     uiCache.set(locale, merged);
     return merged;
   }
-  return deepMerge(en as Record<string, unknown>, {}) as typeof en;
+  return deepFreeze(deepMerge(en as Record<string, unknown>, {})) as typeof en;
 }
 
 /** The homepage `home` namespace (drives HomePage + the /faq pages). */

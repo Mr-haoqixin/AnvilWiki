@@ -129,15 +129,19 @@ const en = {
   orphanKeptWhy3:
     "      Delete them yourself if they are leftovers — until then `pnpm check-config` stays red.",
 
+  // Plural forms here reproduce the pre-i18n output byte-for-byte: the
+  // v2.37.0 release banner promises scripted runs stay byte-identical, and
+  // collapsing to "(s)" broke that for n=1.
   clearedArticles: (n: number, dry: boolean) =>
-    `   🗑️  ${dry ? 'Would remove' : 'Removed'} ${n} demo article(s) under src/content/wiki/ (content-aware)`,
+    `   🗑️  ${dry ? 'Would remove' : 'Removed'} ${n} demo article${n === 1 ? '' : 's'} under src/content/wiki/ (content-aware)`,
   clearedAssets: (n: number, dry: boolean) =>
     `   🖼️  ${dry ? 'Would remove' : 'Removed'} ${n} demo asset file(s) (covers/gallery/article images/public tokens, by name)`,
   keptFilesWarn: (n: number, names: string) =>
     `   ⚠️  Kept ${n} file(s) that are NOT demo content — they never mention the demo game (${names}). Delete them yourself if unwanted:`,
-  scaffoldCreated: (n: number) => `   📄 Created ${n} scaffold article(s) (one per category, en/)`,
+  scaffoldCreated: (n: number) =>
+    `   📄 Created ${n} scaffold article${n === 1 ? '' : 's'} (one per category, en/)`,
   landingRemoved: (n: number) =>
-    `   🗑️  Removed ${n} project landing page file(s) (src/components/landing/, src/config/landing*.ts, src/pages/landing* incl. the /landing/docs center, public/images/showcase/ + wechat-qr.jpg; docs/handbook markdown stays as repo docs)`,
+    `   🗑️  Removed ${n} project landing page file${n === 1 ? '' : 's'} (src/components/landing/, src/config/landing*.ts, src/pages/landing* incl. the /landing/docs center, public/images/showcase/ + wechat-qr.jpg; docs/handbook markdown stays as repo docs)`,
 
   nextStepsHeader: '📌 Remaining tasks (see docs/apply-template.md):',
   nextIcons1: '   • Replace the icon set — your site still shows the demo anvil icons.',
@@ -150,7 +154,7 @@ const en = {
   nextIcons5: '           android-chrome-192x192.png, android-chrome-512x512.png.',
   nextIcons6: '           Same for the homepage hero image: public/images/hero.webp / hero.svg.',
   nextIcons7:
-    '           (CLI cannot generate binary assets — see the learning manual, chapter 3, step 5.)',
+    '           (CLI cannot generate binary assets — see the learning manual, lesson 11 "rebrand-your-site", or run pnpm gen-assets.)',
   nextHome: '   • Fill homepage modules in src/locales/<locale>.json',
   nextHomeDetail: '           (home.hero / start / explore / faq / updates).',
   nextArticles: '   • Add article MDX under src/content/wiki/<locale>/<category>/.',
@@ -280,7 +284,7 @@ const zh: CliStrings = {
   nextIcons4: '           favicon-16x16.png、favicon-32x32.png、apple-touch-icon.png、',
   nextIcons5: '           android-chrome-192x192.png、android-chrome-512x512.png。',
   nextIcons6: '           首页大图同理:public/images/hero.webp / hero.svg。',
-  nextIcons7: '           (CLI 生成不了图片资产 — 见学习手册第 3 课第 5 步,或直接跑 pnpm gen-assets)',
+  nextIcons7: '           (CLI 生成不了图片资产 — 见学习手册第 11 课「换成你的游戏」,或直接跑 pnpm gen-assets)',
   nextHome: '   • 填首页文案:src/locales/<语言>.json',
   nextHomeDetail: '           (home.hero / start / explore / faq / updates)。',
   nextArticles: '   • 在 src/content/wiki/<语言>/<栏目>/ 下写文章 MDX。',

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **第 35 轮 24h 审计全面修复批（双语 CLI 收尾 ×2 + getUi 只读契约硬化 + 语言提问逃生口）**：① en 表 3 处计数行（清除 demo 文章/脚手架创建/官网页删除）在 i18n 化时把单复数折叠成 `article(s)`/`file(s)`——发版横幅「脚本/非交互运行输出字节不变」的声明在这 3 行严格不成立（n=1 时输出与 i18n 前不同），现恢复与 i18n 前逐字节一致的复数处理并加契约测试钉死；② 「下一步」图标指引的陈旧手册指针：en 沿用 v2.8 手册重编号前的 "chapter 3, step 5"、zh 新翻译忠实复制成「第 3 课第 5 步」——图标更换实际在课 11（rebrand-your-site，`pnpm gen-assets`/favicon.io 两条路），en+zh 同步改指课 11；③ 语言提问拒绝语补 `--answers` 逃生口提示：交互 TTY 里整段粘贴 18 行旧答案会被语言提问逐行拒绝耗尽（fail-visible 但用户易困惑），拒绝语现直接指路正确工具——重试封顶有意不做（封顶会把粘贴场景变成后续答案静默错位，比可见循环更危险）；④ getUi 返回值深冻结：模块级缓存对象与 `en` 模块表共享嵌套引用（deepMerge 浅拷贝 base、数组按引用赋值），任一调用点就地变异会把投毒静默扩散到 en 与全部 locale 视图——现 `en`/`ja` 模块表与全部 getUi 结果（含未知 locale 路径）深冻结，变异在 strict 模块响亮 TypeError 而非静默串味（全仓 ~22 调用点已逐一核验只读，冻结契约由 i18n-smoke 契约测试钉死：深度冻结 + 变异抛错）。docs/apply-template.md 导语补「批量粘贴走 `--answers`」提示；test 390→393。
+
 ## [2.37.0] - 2026-10-03
 
 ### Added

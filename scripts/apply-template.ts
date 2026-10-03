@@ -260,7 +260,13 @@ async function askLanguage(rl: LinePrompt, fallback: CliLang): Promise<CliLang> 
     if (raw === '') return fallback;
     if (raw === '1' || raw === 'zh' || raw === 'zh-cn' || raw === '中文') return 'zh';
     if (raw === '2' || raw === 'en') return 'en';
-    console.log('   请输入 1 或 2 / Please answer 1 or 2.');
+    // Not retry-capped on purpose: a capped loop would silently misalign a
+    // pasted 18-line answer sheet (eaten lines shift every later answer).
+    // The loop fails visibly instead, and the rejection names the right tool
+    // for bulk input.
+    console.log(
+      '   请输入 1 或 2 / Please answer 1 or 2 (整段粘贴答案请改用 --answers <file> / pasting a full answer sheet? use --answers <file>).',
+    );
   }
 }
 
