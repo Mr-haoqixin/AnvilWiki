@@ -49,7 +49,7 @@ export const GET: APIRoute = async (context) => {
       };
     }),
     // xhtml language tag — helps RSS readers detect content language.
-    customData: `<language>en</language>`,
+    customData: `<language>${defaultLocale}</language>`,
   });
 };
 

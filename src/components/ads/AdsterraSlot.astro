@@ -96,7 +96,7 @@ const adLabel = sharedStrings.adLabel ?? 'Advertisement';
              GA/AdSense). Idempotent: each slot ships one copy of this script;
              only iframes still carrying data-adsterra-defer are touched.
              Event + storage key mirror src/lib/shared-ui.ts (inline scripts
-             can't import). */
+             can't import; tests/consent.test.ts pins the duplicates). */
           (function () {
             var CONSENT_KEY = 'aw-cookie-consent';
             var CONSENT_EVENT = 'aw:consent-accepted';

@@ -105,11 +105,11 @@ export const site = {
 
 ```ts
 export const NAVIGATION_CONFIG = [
-  { key: 'bosses', path: '/bosses', icon: 'lucide:swords', isContentType: true, order: 1 },
-  { key: 'guides', path: '/guides', icon: 'lucide:book-open', isContentType: true, order: 2 },
-  { key: 'codes',  path: '/codes',  icon: 'lucide:gift',     isContentType: true, order: 3 },
-  // → 改成你的游戏需要的内容分类。isContentType 与 order 都是必填
-  //   （isContentType 标记"有 MDX 内容目录的分类"，order 控制导航排序）。
+  { key: 'bosses', path: '/bosses', icon: 'lucide:swords', isContentType: true },
+  { key: 'guides', path: '/guides', icon: 'lucide:book-open', isContentType: true },
+  { key: 'codes',  path: '/codes',  icon: 'lucide:gift',     isContentType: true },
+  // → 改成你的游戏需要的内容分类。isContentType 必填（标记"有 MDX 内容
+  //   目录的分类"）；菜单顺序 = 数组顺序（写在前面的显示在前）。
 ];
 ```
 

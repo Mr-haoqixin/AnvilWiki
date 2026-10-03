@@ -18,7 +18,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { defaultLocale, type Locale } from './routing';
 import { slugifyTag } from '~/lib/url';
-import { selectRelatedEntries, newestFirst } from '~/lib/content-utils';
+import { newestFirst, parseEntryId, selectRelatedEntries } from '~/lib/content-utils';
 
 export type WikiEntry = CollectionEntry<'wiki'>;
 
@@ -42,7 +42,6 @@ function isPublished(e: WikiEntry): boolean {
 }
 
 // parseEntryId lives in lib/content-utils.ts (pure, vitest-testable).
-import { parseEntryId } from '~/lib/content-utils';
 export { parseEntryId };
 
 /**

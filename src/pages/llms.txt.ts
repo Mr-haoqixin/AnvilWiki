@@ -51,7 +51,7 @@ export const GET: APIRoute = async () => {
     '',
     `> ${site.description}`,
     '',
-    `Wiki for ${site.game.name} (${site.game.platform}, by ${site.game.developer}). Articles cover boss guides, tier lists, codes, items, and beginner tips.`,
+    `Wiki for ${site.game.name} (${site.game.platform}, by ${site.game.developer}).`,
     '',
     '## Articles',
     '',

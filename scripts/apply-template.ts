@@ -286,8 +286,7 @@ function rewriteNavigationTs(input: SkinInput): string {
   const src = read(filePath);
   const items = input.categories
     .map(
-      (c, i) =>
-        `  { key: '${c.key}', path: '/${c.key}', icon: '${c.icon}', isContentType: true, order: ${i + 1} }`,
+      (c) => `  { key: '${c.key}', path: '/${c.key}', icon: '${c.icon}', isContentType: true }`,
     )
     .join(',\n');
   // An empty selection must produce a VALID empty array — the naive

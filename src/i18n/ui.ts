@@ -12,7 +12,7 @@
 import en from '~/locales/en.json';
 import ja from '~/locales/ja.json';
 
-import { defaultLocale, type Locale } from './routing';
+import { defaultLocale, isLocale, type Locale } from './routing';
 
 const messages: Record<Locale, Record<string, unknown>> = {
   en: en as Record<string, unknown>,
@@ -50,12 +50,22 @@ function deepMerge(
 
 /**
  * Get the full UI messages object for a locale, with English fallback.
- * Never throws — unknown locales return English.
+ * Never throws — unknown locales return English. Non-default locales are
+ * deep-merged once and cached; the cached object is shared across callers,
+ * so treat any result as read-only.
  */
+const uiCache = new Map<Locale, typeof en>();
+
 export function getUi(locale: string): typeof en {
   if (locale === defaultLocale) return en;
-  const locMessages = isLocaleSafe(locale) ? messages[locale] : {};
-  return deepMerge(en as Record<string, unknown>, locMessages) as typeof en;
+  if (isLocale(locale)) {
+    const cached = uiCache.get(locale);
+    if (cached) return cached;
+    const merged = deepMerge(en as Record<string, unknown>, messages[locale]) as typeof en;
+    uiCache.set(locale, merged);
+    return merged;
+  }
+  return deepMerge(en as Record<string, unknown>, {}) as typeof en;
 }
 
 /** The homepage `home` namespace (drives HomePage + the /faq pages). */
@@ -73,20 +83,4 @@ export type SharedUi = typeof en.shared;
  */
 export function getHomeFaq(locale: string): HomeUi['faq'] {
   return getUi(locale).home.faq;
-}
-
-/** Translation function: t('nav.bosses') → localized string. */
-export function t(locale: string, key: string): unknown {
-  const ui = getUi(locale);
-  return key
-    .split('.')
-    .reduce<unknown>(
-      (acc, k) =>
-        acc && typeof acc === 'object' ? (acc as Record<string, unknown>)[k] : undefined,
-      ui,
-    );
-}
-
-function isLocaleSafe(value: string): value is Locale {
-  return value in messages;
 }

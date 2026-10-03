@@ -96,12 +96,17 @@ export function spliceImageIntoFrontmatter(src: string, imageRelPath: string): s
   const line = `image: '${imageRelPath}'`;
   // [^\r\n] keeps the anchor line's own terminator out of the capture — `.*`
   // would swallow a CR on CRLF files and double it when splicing with \r\n.
+  // Function replacers everywhere (same $-expansion class as apply-rewrites,
+  // v2.7.1): string-mode replace would expand `$&`/`$'`/`$1`/`$$` sequences
+  // living in title/description text into the spliced block — a `$'` title
+  // drags the document body into the frontmatter and the build stays green.
+  // Pinned by covers.test.ts ($-sequence cases).
   const newBlock = /^category:[^\r\n]*$/m.test(block)
-    ? block.replace(/^(category:[^\r\n]*)/m, `$1${eol}${line}`)
+    ? block.replace(/^(category:[^\r\n]*)/m, (match) => `${match}${eol}${line}`)
     : /^description:[^\r\n]*$/m.test(block)
-      ? block.replace(/^(description:[^\r\n]*)/m, `$1${eol}${line}`)
+      ? block.replace(/^(description:[^\r\n]*)/m, (match) => `${match}${eol}${line}`)
       : `${block}${eol}${line}`;
-  return src.replace(fmRe, `---${eol}${newBlock}${eol}---`);
+  return src.replace(fmRe, () => `---${eol}${newBlock}${eol}---`);
 }
 
 const CJK_RE = /[\u{3040}-\u{30ff}\u{31f0}-\u{31ff}\u{3400}-\u{4dbf}\u{4e00}-\u{9fff}\u{f900}-\u{faff}]/u;

@@ -26,7 +26,6 @@ import type { LandingContent, LandingLocale } from './landing-types';
 
 export const landingContent: Record<LandingLocale, LandingContent> = { en, zh };
 
-/** Landing-page routes per locale (for language switching + hreflang). */
 /**
  * Landing root URL for a landing locale. trailingSlash:'always' — every
  * internal link must end "/" or each visit 308s once (see lib/url.ts).

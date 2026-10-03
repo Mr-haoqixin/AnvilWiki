@@ -79,6 +79,15 @@ describe('spliceImageIntoFrontmatter', () => {
     expect(out!.replace(/\r\n/g, '').includes('\n')).toBe(false);
   });
 
+  test('$-sequences in frontmatter text survive the splice unchanged', () => {
+    // String-mode replace would expand these: `$'` drags the document tail
+    // into the frontmatter, `$1` repeats the whole old block, `$$` silently
+    // loses a dollar — all without failing the build.
+    const src = "---\ntitle: Cost $1 $' $$ 5\ncategory: bosses\n---\n\nBody text";
+    const out = spliceImageIntoFrontmatter(src, 'c.png');
+    expect(out).toBe("---\ntitle: Cost $1 $' $$ 5\ncategory: bosses\nimage: 'c.png'\n---\n\nBody text");
+  });
+
   test('falls back to description, then appends when neither exists', () => {
     expect(spliceImageIntoFrontmatter('---\ntitle: T\ndescription: D\n---\n', 'c.png')).toBe(
       "---\ntitle: T\ndescription: D\nimage: 'c.png'\n---\n",

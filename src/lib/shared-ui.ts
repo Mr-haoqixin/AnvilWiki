@@ -34,9 +34,10 @@ export function currentSharedStrings(currentLocale: string | undefined): SharedS
 
 /**
  * Consent wiring shared by CookieConsent.astro (dispatches) and the
- * AdsterraSlot.astro inline script (consumes — the inline script is
- * untranspiled and cannot import, so it hardcodes these values; keep the
- * two in sync).
+ * AdsterraSlot.astro + MobileAnchorAd.astro inline scripts (consume —
+ * those scripts are untranspiled and cannot import, so they hardcode
+ * these values). tests/consent.test.ts pins every duplicate to these
+ * canonical exports — rename only together.
  *
  * - CONSENT_STORAGE_KEY: localStorage flag written by CookieConsent
  *   ('accepted' | 'declined').
