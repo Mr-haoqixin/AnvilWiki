@@ -64,8 +64,13 @@ function deepFreeze<T>(value: T): T {
   return value;
 }
 
-deepFreeze(en);
-deepFreeze(ja);
+// Freeze via the messages map, NOT via bare `en`/`ja` identifiers: the
+// apply-template CLI rewrites the import block and this literal for forks
+// that drop locales (their imports are stripped), so any reference to a
+// stripped identifier outside those regions is a fork-only ReferenceError.
+// `en` alone is fork-safe (always a chosen locale); the loop covers every
+// table that actually ships. Pinned by tests/apply-template.test.ts.
+for (const table of Object.values(messages)) deepFreeze(table);
 
 /**
  * Get the full UI messages object for a locale, with English fallback.
