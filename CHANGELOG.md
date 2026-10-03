@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.37.0] - 2026-10-03
+
 ### Added
 
 - **`pnpm apply-template` 双语界面（中/英）**：CLI 提问与进度输出此前只有英文，中文用户初始化站点要对着满屏英文答题。现新增 `scripts/lib/apply-template-i18n.ts` 双语词典（en/zh 键级对齐，结构类型 + 契约测试双向钉死），交互 TTY 运行开头先问一句「选择界面语言 / Select CLI language」（输入 1 即全程中文；回车取 LANG 环境变量推导的默认）；非交互通道（`--answers`/管道/CI）**永不提问**、缺省英文——18 项答案位置序与 E2E 钉死的英文输出标记（`Base config complete` 等）字节不动，需要中文时加 `--lang zh`（或 `--lang=zh`，支持 zh-TW 等地区标签，非法值响亮退出）。中文界面同时接受 `是` 作为 y/N 确认。边界：共享 lib 层（apply-rewrites）的模板漂移诊断与脚本模式的 answers 文件报错保持英文（开发者/CI 面向）。语言提问经 `rl.ask` 直连、以 `isTTY && !scripted` 门控——绝不消费脚本答案队列的行（LinePrompt FIFO 会排队一切输入）。文档同步：docs/apply-template.md（导语 + 逃生口清单）、学习手册课 11（en+zh 双语提示块 + updated 日期）；`tests/apply-template.test.ts` 新增 6 条契约（zh 键集镜像 / en 表保留 E2E 钉死短语 / `--lang` 解析矩阵 / env 默认语言 / 语言提问 TTY 门控 + 不走脚本答案队列的静态钉）。
@@ -16,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **demo 站 locale 猜测路径 404 兜底**：`/zh`、`/zh/`、`/en`、`/en/` 四个裸路径线上全 404（2026-09-28 外部访客直访 `anvil.wiki/zh` 撞 404 实证，社群日报 #65 立案；与 09-05「首页语言入口缺中文」同家族）——demo 的中文层只在 `/zh/landing/…`（项目官网中文版），英文首页在 `/`（默认 locale 无前缀），而 Cloudflare 只对解析到真实资产的路由补尾斜杠，死路径直接 404。`public/_redirects` 新增 4 条精确 301（`/zh` 两形态 → `/zh/landing/`，`/en` 两形态 → `/`），沿既有约定带斜杠/裸形态各一条；`tests/redirects.test.ts` 契约扩为两类规则（手册旧 slug 36 条 + locale 入口 4 条，6→9 条测试），新类钉死精确集合/目标活路由文件在位/源路径永无活路由（防 301 遮蔽真页）。文件仍属 demo 层，fork 随 LANDING_PATHS 双通道整体删除，零 fork 影响。
 - **文档漂移修复批（七天变更对照审计，零代码变更）**：① `tools/anvil-ops/README.md` 顶部 Status 行 1.0.5→1.0.6（v2.36.1 随批发 npm 漏更——同型第二例，1.0.4→1.0.5 曾由 2026-09-16 漂移审计批修正）；② `docs/development.md` §4 发版清单新增第 6 步：随发 anvilwiki-ops 时 package.json 版本与 README Status 行同步，堵住该无门禁同步点的复发根因；③ 手册附录 C 命令速查（en+zh 双语对称）收录 `pnpm init-indexnow-key`（v2.36.0 新命令此前缺席速查表），顺修同页三处计数/描述漂移：命令 21→17 条、术语 30+→28 个、zh 描述「按拼音/字母排列」与 tldr「工程类」分组对齐正文实际（按主题归拢，三组）；④ 开发手册第 7 课 ai-ops（en）排障清单的「当前版本线 1.0.5」提法同步 1.0.6 并补 1.0.6 变更（insights 走 worker offload）。
 - **codes 页保鲜第五轮补漏：title/description 月锚点跟随（en+ja）+ 门禁**（第 33 轮 24h 审计发现）：#67（ecc366b）按 EMBERFALL-2026 自身到期日（9月30日）翻过期时同步了 frontmatter/summary/正文/首页高亮四面，但 en title 仍写 "(September 2026)"、en description 仍锚定 September、ja 同两处仍写 2026年9月——与 lastModified 2026-10-01 及正文「October 1 验证」同页自相矛盾（第 23 轮正文面残留的同族新例，背离 acf46a7 先例「标题/描述/摘要同步更新到 N 码口径」，且 check-content/refresh-audit/consistency 三层门禁均不覆盖该面）。现 en+ja title/description 翻到 October/2026年10月；`tests/codes-consistency.test.ts` 新增第三组检查（title/description 出现月锚点时必须等于 lastModified 年月，缺席优雅跳过，无时钟依赖），同族漂移由纪律变红灯。
+- **第五次全项目代码审查全面修复批（工作流 28 文件分片评审 + 独立复核 10/10 确认；0 高 / 1 中 / 9 低）**：①中=**consent 字面量契约收口**——`aw-cookie-consent`/`aw:consent-accepted` 硬编码于 CookieConsent（打包模块看不见 frontmatter import）/AdsterraSlot/MobileAnchorAd（is:inline 无法 import）三组件脚本，shared-ui.ts 导出常量在 src/ 零 import、零测试钉住，fail-closed 方向=任一侧单改则同意读不到、事件永不命中、广告静默永不加载；且同步注释口径互相打架（shared-ui 说 two、CookieConsent 说 three）。新第 24 套件 `tests/consent.test.ts`（4 条）按各文件赋值形态把三处字面量钉到 canonical 导出，四处注释统一口径并指向测试。②低×9：landing.ts 删 v2.25.0 残留悬空注释（git log -L 坐实旧单行描述的复数机制不存在）；根除 `NavigationItem.order` 死字段（全仓零消费者、菜单顺序=数组顺序语义不变，接口+四值+apply-template 生成串+docs/apply-template.md「order 必填/控制排序」误导表述四面同步）；content.ts 同模块双 import 合并（`export { parseEntryId }` re-export 保留，lib/navigation.ts 依赖链不动）；getUi 非默认 locale 加模块级缓存（实测 deepMerge 12.9µs×~290 调用≈4ms/构建，量级微小，~20 个调用点全只读已逐一核验，缓存对象共享契约入注释）；删 ui.ts `t()` 死代码（23 处 import 零消费，与 getUi 结构化类型路线相悖的 unknown 返回）；`isLocaleSafe` 的 `in` 原型链判定（'toString' 也命中）改用 routing.ts `isLocale` 单源；covers.ts 封面拼 frontmatter 三处 replace 全改函数回调（字符串模式会展开标题/描述里的 `$'`/`$&`/`$1`/`$$`——`$'` 把正文拖进 frontmatter、`$$` 静默吞美元符且 build 不红，v2.7.1 apply-rewrites 同类根治，covers.test.ts 补 $ 序列不变形契约）；llms.txt 删与 site.description 双源漂移的硬编码分类枚举句（items vs item locations 已现漂移，上方 `> ${site.description}` 枚举同批分类信息零损失）；rss.xml `<language>` 改用 defaultLocale（同文件三处在用的单源，唯独它写死 'en'）。③附带：eslint ignores 补 `.zcode/**`（工作流 hub 的 .dwf.ts 草稿为 gitignored 工具态，其方言语法炸 TS parser，本地 lint 门禁误红）。test 385→390（+consent 4/+covers 1）、套件 23→24、八门禁全绿（check-links 11,848 链接）、apply-template EOF 干跑冒烟 exit 0。
 
 ## [2.36.1] - 2026-09-27
 
@@ -1350,7 +1353,8 @@ This release covers everything since v0.2.0: the full PRD roadmap (v1.1–v2.0) 
 - Docs: PRD (1600+ lines), deployment, apply-template (4-step guide), content-format, seo, ads, migration-from-nextjs
 - Build: 27 pages, typecheck 0 errors
 
-[Unreleased]: https://github.com/PNGTRID/AnvilWiki/compare/v2.36.1...HEAD
+[Unreleased]: https://github.com/PNGTRID/AnvilWiki/compare/v2.37.0...HEAD
+[2.37.0]: https://github.com/PNGTRID/AnvilWiki/compare/v2.36.1...v2.37.0
 [2.36.1]: https://github.com/PNGTRID/AnvilWiki/compare/v2.36.0...v2.36.1
 [2.36.0]: https://github.com/PNGTRID/AnvilWiki/compare/v2.35.2...v2.36.0
 [2.35.2]: https://github.com/PNGTRID/AnvilWiki/compare/v2.35.1...v2.35.2

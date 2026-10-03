@@ -18,7 +18,7 @@ export const en: LandingContent = {
   description:
     'An open-source game wiki template with an AI-native content workflow: pick the right game, generate pages by talking to your AI tool, codes pages stay fresh on autopilot. Lighthouse 4×100, free on Cloudflare, 100% ad revenue yours.',
   announcement: {
-    text: `AnvilWiki template update log (v${PROJECT_VERSION}): fourth full-project code-review fix batch landed — 31 issues fixed (4 medium, 27 low). Re-running initialization/apply-template no longer silently wipes hand-filled site.ts fields or your edited overview copy; expired codes reactivated by a CSV sync now warn loudly; check-content can see image-wrapped links; plus gate, pipeline, and workflow hardening across 23 test suites. Forks: merge upstream and pnpm install as usual. This bar tracks template releases — details & full changelog on GitHub Releases.`,
+    text: `AnvilWiki template update log (v${PROJECT_VERSION}): the CLI now speaks Chinese — apply-template asks your interface language on interactive runs (or pass --lang zh), while scripted/non-interactive runs stay byte-identical. The fifth full-project code review landed in the same release: 10 confirmed findings fixed — consent event/storage literals now pinned by a contract test (a one-sided rename silently killed ad loading), a silent shell-$ expansion in cover frontmatter splicing eliminated, dead code and duplicate truth-sources (order field, t(), llms.txt enum) removed. 24 suites / 390 tests. Forks: merge upstream and pnpm install as usual. This bar tracks template releases — details & full changelog on GitHub Releases.`,
     href: RELEASES,
     dismissLabel: 'Dismiss announcement',
   },
