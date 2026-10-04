@@ -71,6 +71,7 @@ import {
   stripDemoAuthors,
   tsEscape,
   UI_IMPORT_BLOCK_RE,
+  UI_MESSAGES_BLOCK_RE,
   type SkinInput,
 } from './lib/apply-rewrites';
 import {
@@ -407,7 +408,9 @@ function rewriteUiTs(input: SkinInput): string {
   // (a) locale-JSON import block: one or more import lines.
   const importBlockRe = UI_IMPORT_BLOCK_RE;
   // (b) messages map: from `const messages` through the closing `};`.
-  const messagesRe = /const messages: Record<Locale, Record<string, unknown>> = \{[\s\S]*?\};/;
+  // Shared constant — the contract test that scans ui.ts OUTSIDE the rewritten
+  // regions strips this exact regex, so both sides can never drift apart.
+  const messagesRe = UI_MESSAGES_BLOCK_RE;
   if (!importBlockRe.test(src) || !messagesRe.test(src)) {
     console.error(`❌ Could not rewrite locale imports in ${filePath}. Aborting.`);
     process.exit(1);

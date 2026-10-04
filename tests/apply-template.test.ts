@@ -50,6 +50,7 @@ import {
   stripDemoAuthors,
   tsEscape,
   UI_IMPORT_BLOCK_RE,
+  UI_MESSAGES_BLOCK_RE,
   type SkinInput,
 } from '../scripts/lib/apply-rewrites';
 import {
@@ -775,7 +776,7 @@ describe('hyphen locales (zh-tw / pt-br) generate legal TypeScript', () => {
     expect(importBlock, 'ui.ts must still carry the locale-JSON import block').toBeTruthy();
     const outside = src
       .replace(UI_IMPORT_BLOCK_RE, '')
-      .replace(/const messages: Record<Locale, Record<string, unknown>> = \{[\s\S]*?\};/, '')
+      .replace(UI_MESSAGES_BLOCK_RE, '')
       .replace(/\/\*[\s\S]*?\*\//g, '')
       .replace(/^\s*\/\/.*$/gm, '');
     const ids = Array.from(importBlock.matchAll(/import (\w+) from/g)).map((m) => m[1]);

@@ -148,6 +148,14 @@ export function buildUiMessagesEntries(locales: string[]): string {
  */
 export const UI_IMPORT_BLOCK_RE = /(?:import \w+ from '~\/locales\/[\w-]+\.json';\n)+/;
 
+/**
+ * The `const messages` map literal in ui.ts — the second CLI-rewritten
+ * region. Single source shared by rewriteUiTs (apply-template.ts) and the
+ * contract test that scans the code OUTSIDE the rewritten regions for
+ * strippable locale identifiers: if those two described the regions
+ * differently, the contract could silently stop covering the real rewrite.
+ */
+export const UI_MESSAGES_BLOCK_RE = /const messages: Record<Locale, Record<string, unknown>> = \{[\s\S]*?\};/;
 
 export interface SkinInput {
   gameName: string;
