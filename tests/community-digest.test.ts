@@ -149,6 +149,32 @@ describe('community-digest.json contract (written daily by automation)', () => {
     expect(reports[0].date).toBe(data.daily[0].date);
   });
 
+  test('daily summary parenthesized counts match the same-day report stats (when present)', () => {
+    // The 2026-10-04 entry shipped "（13 条）" beside a same-day stats card
+    // reading 12 — the only count in 49 issues of daily prose to contradict
+    // its own structured stats field, and both render on the community page.
+    // Pinned so this family goes red instead of drifting again. Only
+    // parenthesized "N 条" counts are checked (the shape the pipeline
+    // actually writes); counts stated in free prose stay unguarded on
+    // purpose — that prose is content, not data.
+    const statsByDate = new Map(reports.map((r) => [String(r.date), r.stats as Raw]));
+    let checked = 0;
+    for (const day of data.daily) {
+      const m = day.summary.match(/[（(][^（）()]*?(\d+)\s*条[^（）()]*?[）)]/);
+      if (!m) continue;
+      const stats = statsByDate.get(day.date);
+      if (!stats) continue;
+      checked += 1;
+      expect(
+        Number(m[1]),
+        `${day.date} summary says （${m[1]} 条） but same-day report stats.messages is ${String(
+          stats.messages,
+        )}`,
+      ).toBe(stats.messages);
+    }
+    expect(checked, 'count-consistency checker matched nothing — regex or shape drifted').toBeGreaterThan(0);
+  });
+
   test('owner-only dimensions never leak into the public file (spec §3.5)', () => {
     const leaked = reports
       .flatMap((r) => Object.keys(r))
