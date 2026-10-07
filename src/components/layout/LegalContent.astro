@@ -1,7 +1,6 @@
 ---
 /**
- * LegalContent — the shared body for each legal page.
- * Renders different content based on the `page` prop. English only (per PRD).
+ * LegalContent — shared Chinese text for the public legal pages.
  */
 import { site } from '~/config/site';
 
@@ -9,7 +8,7 @@ interface Props {
   page: 'about' | 'privacy-policy' | 'terms-of-service' | 'copyright' | 'contact';
 }
 const { page } = Astro.props;
-const game = site.game.name;
+const game = site.name.replace(/\s*(?:中文\s+)?Wiki$/, '');
 const year = new Date().getFullYear();
 ---
 
@@ -17,35 +16,30 @@ const year = new Date().getFullYear();
   page === 'about' && (
     <>
       <p>
-        {site.name} is a fan-made community wiki dedicated to {game}, a {site.game.genre} on{' '}
-        {site.game.platform} developed by {site.game.developer}. Our mission is to provide accurate,
-        up-to-date guides, tips, and reference material to help players get the most out of the
-        game.
+        {site.name} 是由玩家维护的《{game}》非官方资料站。本站整理攻略、任务流程、玩法说明与版本记录，并尽可能注明信息来源、核对日期及适用版本，帮助玩家查找游戏资料。
       </p>
-      <h2>What We Cover</h2>
+      <h2>本站内容</h2>
       <ul>
-        <li>Boss strategies and attack patterns</li>
-        <li>Item locations, stats, and crafting recipes</li>
-        <li>Active redeemable codes (updated daily)</li>
-        <li>Tier lists and build recommendations</li>
-        <li>Progression guides for new and returning players</li>
+        <li>歌曲、魔法、课程与任务攻略</li>
+        <li>地点、物品、园艺、制作与探索资料</li>
+        <li>试玩版与正式版的历史更新记录</li>
+        <li>平台、语言、系统需求及购买信息</li>
       </ul>
-      <h2>Community-Driven</h2>
+      <h2>玩家共建</h2>
       <p>
-        This wiki is maintained by volunteers. If you spot an error or have content to contribute,
-        join our Discord and let us know. All content is freely accessible — no account required.
-      </p>
-      <h2>Contact</h2>
-      <p>
-        Reach us via our{' '}
-        <a href={site.social.discord} target="_blank" rel="noopener noreferrer">
-          Discord server
-        </a>{' '}
-        or{' '}
-        <a href={site.social.official} target="_blank" rel="noopener noreferrer">
-          the game's official channels
+        本站是独立玩家项目，不是官方 Wiki。资料可能因游戏更新而变化；发现错误或希望补充内容，可通过
+        <a href="https://github.com/mr-haoqixin/AnvilWiki/issues" target="_blank" rel="noopener noreferrer">
+          GitHub 仓库
         </a>
-        .
+        提交反馈。本站内容无需登录即可浏览。
+      </p>
+      <h2>官方信息</h2>
+      <p>
+        游戏相关的官方消息请以
+        <a href={site.social.official} target="_blank" rel="noopener noreferrer">
+          Eastshade Studios 官网
+        </a>
+        及游戏商店公告为准。
       </p>
     </>
   )
@@ -55,59 +49,41 @@ const year = new Date().getFullYear();
   page === 'privacy-policy' && (
     <>
       <p>
-        This privacy policy describes how {site.name} ("we", "us", or "our") handles information
-        when you visit this website.
+        本隐私政策说明你访问 {site.name} 时，本站及页面所使用的第三方服务可能如何处理信息。
       </p>
-      <h2>Information We Collect</h2>
+      <h2>本站收集的信息</h2>
       <p>
-        {site.name} is a static website. We do not require you to create an account or submit
-        personal information. We do not directly collect or store personal data.
+        本站以静态页面提供内容，不要求创建账号或提交个人资料，也不直接建立用户资料库。网站托管与安全服务可能按其政策处理基本请求信息。
       </p>
-      <h2>Third-Party Services</h2>
-      <p>
-        We use third-party services that may collect information as described in their respective
-        privacy policies:
-      </p>
+      <h2>第三方服务</h2>
+      <p>只有在相应功能启用或你主动使用时，第三方服务才可能处理相关数据：</p>
       <ul>
         <li>
-          <strong>Advertising partners</strong> (e.g. Google AdSense, Adsterra) — may use cookies to
-          serve relevant ads. You can opt out of personalized advertising via your browser settings.
+          <strong>广告服务</strong>（如 Google AdSense、Adsterra）：可能使用 Cookie 或类似技术提供及衡量广告；个性化广告设置可在浏览器或服务商提供的选项中管理。
         </li>
         <li>
-          <strong>Analytics</strong> (e.g. Google Analytics, Cloudflare Web Analytics) — GA may
-          collect anonymized usage data such as page views and approximate location (cookie-based,
-          loaded only after you accept the consent banner); Cloudflare Web Analytics is cookieless
-          and collects aggregate page-view data.
+          <strong>流量分析</strong>（如 Google Analytics、Cloudflare Web Analytics）：Google Analytics 仅在你通过同意提示后才加载；Cloudflare Web Analytics 在启用时以汇总方式统计访问情况。
         </li>
         <li>
-          <strong>Cloudflare</strong> — our hosting provider, which may process basic request data
-          for security and performance (and serve Web Analytics when enabled, see above).
+          <strong>Cloudflare</strong>：本站托管与 CDN 服务商，可能为安全和性能目的处理请求数据。
         </li>
         <li>
-          <strong>Comments</strong> (giscus, opt-in) — when the comment section is enabled,
-          giscus.app loads an embedded GitHub view; viewing it exposes your IP address and browser
-          info to that service, and signing in to comment is handled by GitHub under its own
-          privacy policy.
+          <strong>留言</strong>：本站目前关闭留言功能。若未来启用 Giscus，嵌入组件可能向 Giscus 与 GitHub 传送访问者的 IP 地址和浏览器信息；登录及发言由 GitHub 按其隐私政策处理。
         </li>
         <li>
-          <strong>Embedded videos</strong> (YouTube) — pages with videos load thumbnail images
-          from i.ytimg.com and, after you press play, the YouTube player from youtube-nocookie.com.
-          Until you interact, no YouTube cookies are set.
+          <strong>嵌入视频</strong>（YouTube）：含视频的页面可能加载 YouTube 缩略图；点击播放后才会连接 YouTube 播放器。在播放前不会加载播放器。
         </li>
       </ul>
-      <h2>Cookies</h2>
+      <h2>Cookie</h2>
       <p>
-        Some third-party services set cookies. You can control cookies through your browser
-        settings. Disabling cookies may affect ad personalization but will not prevent you from
-        accessing site content.
+        第三方服务可能设置 Cookie。你可以在浏览器设置中管理 Cookie；关闭后可能影响广告个性化或部分服务，但通常不影响阅读本站静态内容。
       </p>
-      <h2>Children's Privacy</h2>
+      <h2>儿童隐私</h2>
       <p>
-        {site.name} is not directed at children under 13, and we do not knowingly collect
-        information from children.
+        本站并非专门面向 13 岁以下儿童，也不会故意收集儿童的个人信息。
       </p>
-      <h2>Changes to This Policy</h2>
-      <p>We may update this policy from time to time. Changes will be posted on this page.</p>
+      <h2>政策更新</h2>
+      <p>如服务或法律要求发生变化，我们可能更新本政策，并在本页公布修订内容。</p>
     </>
   )
 }
@@ -115,40 +91,29 @@ const year = new Date().getFullYear();
 {
   page === 'terms-of-service' && (
     <>
-      <p>By accessing {site.name}, you agree to the following terms of service.</p>
-      <h2>Use of Content</h2>
+      <p>访问或使用 {site.name} 即表示你已阅读并接受以下使用条款。</p>
+      <h2>内容使用</h2>
       <p>
-        All guides, articles, and reference material on this site are provided for personal,
-        non-commercial use. You may not copy, republish, or redistribute our content without
-        attribution and a link back to the original page.
+        本站原创文章、攻略与整理资料可供个人非商业参考。转载或再发布时，请注明来源并链接至原页面；游戏名称、图片及其他权利人素材仍归其各自权利人所有。
       </p>
-      <h2>Accuracy</h2>
+      <h2>资料准确性</h2>
       <p>
-        We strive for accuracy but make no warranties regarding the completeness or correctness of
-        any content. {game} is frequently updated, and information may become outdated. Always
-        verify critical information in-game.
+        本站努力核对资料，但不保证内容始终完整、准确或适用于所有版本。{game} 可能更新，游戏内提示与官方公告优先；涉及存档或进度的操作请先自行确认风险。
       </p>
-      <h2>Third-Party Links</h2>
+      <h2>第三方链接</h2>
       <p>
-        This site links to external websites (official game channels, video tutorials, etc.) that we
-        do not control. We are not responsible for the content or practices of third-party sites.
+        本站可能链接至游戏官网、商店或其他外部网站。本站无法控制这些网站的内容、可用性与隐私做法，也不对其承担责任。
       </p>
-      <h2>Trademarks</h2>
+      <h2>商标与独立性</h2>
       <p>
-        {game} and all related trademarks, logos, and assets are the property of{' '}
-        {site.game.developer}. {site.name} is an independent fan project and is not affiliated with
-        or endorsed by {site.game.developer}.
+        {game} 的名称、商标、标志及游戏素材归 {site.game.developer} 或相应权利人所有。{site.name} 是独立玩家项目，与开发商没有隶属、赞助或背书关系。
       </p>
-      <h2>Limitation of Liability</h2>
+      <h2>责任限制</h2>
       <p>
-        Use of this site is at your own risk. We are not liable for any damages arising from your
-        use of the site or reliance on its content.
+        你需自行判断并承担使用本站资料的风险。法律允许的范围内，本站不对因使用网站或依赖其内容产生的损失承担责任。
       </p>
-      <h2>Changes to These Terms</h2>
-      <p>
-        We may revise these terms at any time. Continued use of the site after changes constitutes
-        acceptance of the updated terms.
-      </p>
+      <h2>条款修订</h2>
+      <p>本站可能随时更新条款；修订内容发布后继续使用本站，即表示你接受更新后的条款。</p>
     </>
   )
 }
@@ -156,28 +121,23 @@ const year = new Date().getFullYear();
 {
   page === 'copyright' && (
     <>
-      <h2>Copyright Notice</h2>
+      <h2>本站原创内容</h2>
       <p>
-        © {year} {site.name}. All original articles, guides, and written content on this site are
-        the intellectual property of {site.name} and its contributors.
+        © {year} {site.name}。除另有说明外，本站原创文章、攻略与编辑整理内容由本站及贡献者享有相应权利。
       </p>
-      <h2>Game Assets</h2>
+      <h2>游戏素材</h2>
       <p>
-        {game}, including its name, logo, characters, artwork, and other related assets, is the
-        property of {site.game.developer}. All {game} content is used on this wiki under fair use
-        for the purpose of providing informational guides to players. {site.name} claims no
-        ownership of any {game} intellectual property.
+        {game} 的名称、标志、角色、美术及其他游戏素材归 {site.game.developer} 或相应权利人所有。本站仅为介绍游戏与提供玩家资料而引用相关素材，不主张拥有这些素材的权利；权利人如有异议，请通过下方渠道联系。
       </p>
-      <h2>DMCA / Takedown</h2>
+      <h2>版权或下架请求</h2>
       <p>
-        If you believe any content on this site infringes your copyright, please contact us via our{' '}
-        <a href={site.social.discord} target="_blank" rel="noopener noreferrer">
-          Discord server
-        </a>{' '}
-        with a detailed description of the allegedly infringing material. We will review and respond
-        to valid requests promptly.
+        如你认为本站内容侵犯了你的权利，请通过
+        <a href="https://github.com/mr-haoqixin/AnvilWiki/issues" target="_blank" rel="noopener noreferrer">
+          GitHub 仓库
+        </a>
+        联系维护者，并提供相关页面、权利证明及请求说明。本站会核查有效请求并及时处理。
       </p>
-      <h2>Fan-Made Notice</h2>
+      <h2>非官方声明</h2>
       <p>{site.legalNotice}</p>
     </>
   )
@@ -186,60 +146,62 @@ const year = new Date().getFullYear();
 {
   page === 'contact' && (
     <>
-      {/* h2, not h1 — LegalPage already renders the page H1 (single-H1 rule). */}
-      <h2>Contact {site.name}</h2>
-      <p>
-        {site.name} is a fan-made wiki. Reach us or contribute through any of the channels below.
-      </p>
-      <h2>Community</h2>
+      <h2>联系 {site.name}</h2>
+      <p>本站是玩家维护的非官方 Wiki。可通过以下公开渠道联系维护者或提交更正建议。</p>
+      <h2>联系渠道</h2>
       <ul>
         {site.social.official && (
           <li>
-            <strong>Official game website:</strong>{' '}
+            <strong>游戏官网（用于核实官方信息）：</strong>{' '}
             <a href={site.social.official} target="_blank" rel="noopener noreferrer">
               {site.social.official}
             </a>
           </li>
         )}
+        <li>
+          <strong>本站反馈：</strong>{' '}
+          <a href="https://github.com/mr-haoqixin/AnvilWiki/issues" target="_blank" rel="noopener noreferrer">
+            在 GitHub 提交问题或更正
+          </a>
+        </li>
         {site.social.discord && (
           <li>
-            <strong>Discord:</strong>{' '}
+            <strong>Discord：</strong>{' '}
             <a href={site.social.discord} target="_blank" rel="noopener noreferrer">
-              Join our server
+              加入社区
             </a>
           </li>
         )}
         {site.social.reddit && (
           <li>
-            <strong>Reddit:</strong>{' '}
+            <strong>Reddit：</strong>{' '}
             <a href={site.social.reddit} target="_blank" rel="noopener noreferrer">
-              r/{site.game.name.replace(/\s+/g, '')}
+              {site.social.reddit}
             </a>
           </li>
         )}
         {site.social.youtube && (
           <li>
-            <strong>YouTube:</strong>{' '}
+            <strong>YouTube：</strong>{' '}
             <a href={site.social.youtube} target="_blank" rel="noopener noreferrer">
-              {site.name} channel
+              {site.social.youtube}
             </a>
           </li>
         )}
         {site.contactEmail && (
           <li>
-            <strong>Email:</strong> <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>
+            <strong>电子邮件：</strong> <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>
           </li>
         )}
       </ul>
-      <h2>Contributing</h2>
+      <h2>内容贡献</h2>
       <p>
-        Found a typo or outdated info? Want to add a guide? This wiki is open source — submit changes
-        via pull requests or through any channel listed above.
+        发现错字、过期资料或希望补充攻略？欢迎通过 GitHub 提交问题或 Pull Request。请尽量附上游戏版本、来源与复现步骤。
       </p>
-      <h2>Reporting Issues</h2>
+      <h2>版权问题</h2>
       <p>
-        For copyright or takedown requests, see our{' '}
-        <a href="/copyright/">Copyright page</a>.
+        版权或下架请求请参阅
+        <a href="/copyright/">版权说明</a>。
       </p>
     </>
   )

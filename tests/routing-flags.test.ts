@@ -33,12 +33,12 @@ function makeRoutingFixture(content: string): string {
 
 describe('readLocales / readDefaultLocale — success', () => {
   test('parses the real repo routing.ts', () => {
-    expect(readLocales(repoRoot)).toEqual(['en', 'ja']);
-    expect(readDefaultLocale(repoRoot)).toBe('en');
+    expect(readLocales(repoRoot)).toEqual(['zh', 'en']);
+    expect(readDefaultLocale(repoRoot)).toBe('zh');
   });
 
   test('default root is the process cwd (repo root under vitest)', () => {
-    expect(readLocales()).toEqual(['en', 'ja']);
+    expect(readLocales()).toEqual(['zh', 'en']);
   });
 
   test('accepts defaultLocale with and without the `: Locale` annotation', () => {

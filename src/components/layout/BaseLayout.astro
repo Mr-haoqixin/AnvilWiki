@@ -24,6 +24,8 @@ interface Props {
   locale: string;
   /** Per-page alternates for hreflang. */
   alternates?: Array<{ hreflang: string; href: string }>;
+  /** Canonical URL override for retained alias routes. */
+  canonicalUrl?: string;
   /** og:image override (absolute URL). Defaults to hero.webp. */
   image?: string;
   /** Optional extra JSON-LD objects to inject (WebSite, Article, etc.). */
@@ -76,6 +78,7 @@ const {
   description,
   locale,
   alternates = [],
+  canonicalUrl,
   image = `${siteUrl}/images/hero.webp`,
   jsonLd = [],
   article = false,
@@ -176,7 +179,7 @@ const privacyLabel = consent?.privacyLabel ?? footerStrings.privacyPolicy ?? 'Pr
          without this, covers never surface as large preview images (v2.0). */
       <meta name="robots" content="max-image-preview:large" />
     )}
-    <link rel="canonical" href={new URL(Astro.url.pathname, siteUrl).href} />
+    <link rel="canonical" href={canonicalUrl ?? new URL(Astro.url.pathname, siteUrl).href} />
 
     {/* hreflang alternates */}
     {alternates.map((alt) => <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />)}

@@ -65,23 +65,35 @@ describe('i18n: getUi results are deeply frozen (read-only by contract AND at ru
   // the en module table — one caller mutating its copy would silently poison
   // every other locale's view. ui.ts deep-freezes all results so mutation
   // throws (strict-mode modules) instead.
-  it('every locale flavor is deeply frozen (en, cached merge, unknown-locale copy)', () => {
-    const ja = getUi('ja');
-    expect(Object.isFrozen(ja)).toBe(true);
-    expect(Object.isFrozen(ja.home)).toBe(true);
-    expect(Object.isFrozen(getUi('en').shared)).toBe(true);
+  it('every locale flavor is deeply frozen (zh, en, unknown-locale fallback)', () => {
+    const zh = getUi('zh');
+    const en = getUi('en');
+    expect(Object.isFrozen(zh)).toBe(true);
+    expect(Object.isFrozen(zh.home)).toBe(true);
+    expect(Object.isFrozen(en)).toBe(true);
+    expect(Object.isFrozen(en.home)).toBe(true);
+    expect(Object.isFrozen(en.shared)).toBe(true);
     const unknown = getUi('zz');
     expect(Object.isFrozen(unknown)).toBe(true);
   });
 
+  it('serves the default Chinese UI through the retained English URL prefix', () => {
+    expect(getUi('en').site.name).toBe(getUi('zh').site.name);
+    expect(getUi('en').home.hero.title).toBe(getUi('zh').home.hero.title);
+  });
+
   it('mutating a cached locale result throws (no silent cross-locale poisoning)', () => {
-    const ja = getUi('ja');
+    const zh = getUi('zh');
+    const en = getUi('en');
     expect(() => {
-      (ja as Record<string, unknown>).nav = 'poison';
+      (zh as Record<string, unknown>).nav = 'poison';
+    }).toThrow();
+    expect(() => {
+      (en as Record<string, unknown>).nav = 'poison';
     }).toThrow();
     // Nesting that came from the en table through the merge must be frozen too.
     expect(() => {
-      (ja.shared as Record<string, unknown>).wikiNavAria = 'poison';
+      (en.shared as Record<string, unknown>).wikiNavAria = 'poison';
     }).toThrow();
   });
 });

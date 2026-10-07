@@ -3,11 +3,11 @@
  * Recent updates — default locale (English): /recent
  */
 import RecentPage from '~/components/article/RecentPage.astro';
-import { defaultLocale, locales } from '~/i18n/routing';
+import { defaultLocale } from '~/i18n/routing';
 import { languageAlternates, recentPath } from '~/lib/url';
 import { getRecentEntries } from '~/lib/content';
 
-const alternates = languageAlternates((loc) => recentPath(loc), locales);
+const alternates = languageAlternates((loc) => recentPath(loc), [defaultLocale]);
 // Zero published articles = thin empty state — noindex, same treatment as
 // ListPage's empty category lists.
 const noindex = (await getRecentEntries(defaultLocale, 1)).length === 0;

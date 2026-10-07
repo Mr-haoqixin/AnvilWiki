@@ -2,7 +2,7 @@
 /**
  * LandingLayout — the shell for the project landing pages (/landing, /zh/landing).
  *
- * Wraps BaseLayout with a minimal header (logo + language toggle + GitHub +
+ * Wraps BaseLayout with a minimal header (logo + GitHub +
  * theme toggle) and a simplified footer. Does NOT use SiteHeader (that's the
  * demo game's navigation) or StickyBanner (ads) — the landing page is about
  * the project, not the demo game.
@@ -13,27 +13,22 @@ import SearchButton from '~/components/header/SearchButton.astro';
 import { Icon } from 'astro-icon/components';
 import {
   landingContent,
-  landingPath,
   type LandingLocale,
 } from '~/config/landing';
-import { templatesNavLabel } from '~/config/landing-templates';
 import { websiteJsonLd } from '~/lib/seo';
 import { defaultLocale, type Locale } from '~/i18n/routing';
 import { handbookPath } from '~/lib/handbook';
+import { siteUrl } from '~/config/site';
 
 interface Props {
   locale: LandingLocale;
   /** hreflang alternates (built by the route page). */
   alternates?: Array<{ hreflang: string; href: string }>;
-  /** Override the <title> (docs pages: "{chapter} | AnvilWiki Docs"). */
+  /** Override the <title> (docs pages: "{chapter} | AnvilWiki 文档"). */
   pageTitle?: string;
   /** Override the meta description. */
   pageDescription?: string;
-  /**
-   * Where the header language toggle should link. Defaults to the other
-   * locale's landing root; docs pages pass the equivalent docs path so the
-   * toggle keeps you inside the docs center.
-   */
+  /** Retained for source compatibility; language switching is hidden on the Chinese-only site. */
   togglePath?: string;
   /** Extra JSON-LD objects appended after the default WebSite one. */
   extraJsonLd?: Record<string, unknown>[];
@@ -55,70 +50,37 @@ interface Props {
 };
 const {
   locale,
-  alternates = [],
   pageTitle,
   pageDescription,
-  togglePath,
   extraJsonLd = [],
   search = true,
   wide = false,
 } = Astro.props;
 const t = landingContent[locale];
-const other: LandingLocale = locale === 'en' ? 'zh' : 'en';
 const jsonLd = [websiteJsonLd((locale === 'en' ? defaultLocale : 'zh') as Locale), ...extraJsonLd];
 const title = pageTitle ?? t.title;
 const description = pageDescription ?? t.description;
+const isPrefixedAlias = Astro.url.pathname.startsWith('/zh/landing');
+const canonicalPath = Astro.url.pathname.startsWith('/zh/landing/privacy')
+  ? '/privacy-policy/'
+  : isPrefixedAlias
+    ? Astro.url.pathname.replace(/^\/zh(?=\/landing)/, '')
+    : Astro.url.pathname;
+const canonicalUrl = new URL(canonicalPath, siteUrl).href;
+const alternates = [{ hreflang: 'zh', href: canonicalUrl }];
 ---
 
 <BaseLayout
   title={title}
   description={description}
   locale={t.htmlLang}
+  canonicalUrl={canonicalUrl}
+  noindex={isPrefixedAlias}
   titleSuffix="AnvilWiki"
   jsonLd={jsonLd}
   alternates={alternates}
   consent={t.consent}
 >
-  {/* Locale auto-detect + preference memory (runs before anything renders):
-      1. Manual toggle always wins (stored in localStorage by the toggle links).
-      2. No stored preference + Chinese browser → serve the Chinese page.
-      3. Otherwise stay (someone may have been linked here directly).
-      Scoped to the landing ROOT pages only — redirecting someone away from
-      /landing/docs/<chapter> would drop the chapter they were reading (the
-      docs center has its own per-page language toggle).
-      Trailing-slash tolerant: the site builds with trailingSlash:'always', so
-      the browser always sees '/landing/' and '/zh/landing/' — the exact-string
-      check that used to live here never matched and the whole block was dead
-      code in production. Redirect targets carry the slash too, so the fix
-      doesn't just add a 308 hop.
-      Crawlers are excluded from the auto-detect branch: headless renderers
-      follow JS redirects, which would turn /landing into a conditional
-      redirect for zh-locale crawlbots and muddy the canonical/hreflang
-      signals. */}
-  <script is:inline>
-    (() => {
-      try {
-        const stored = localStorage.getItem('landing-lang');
-        const isRoot = /^\/(zh\/)?landing\/?$/.test(location.pathname);
-        if (!isRoot) return;
-        const isZhPage = location.pathname.startsWith('/zh/');
-        const isBot = /bot|crawler|spider|crawl|slurp|bingpreview|lighthouse/i.test(
-          navigator.userAgent,
-        );
-        if (stored === 'en' && isZhPage) {
-          location.replace('/landing/');
-        } else if (stored === 'zh' && !isZhPage) {
-          location.replace('/zh/landing/');
-        } else if (!stored && !isZhPage && !isBot) {
-          const lang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
-          if (lang.startsWith('zh')) location.replace('/zh/landing/');
-        }
-      } catch (e) {
-        /* storage unavailable — keep the current page */
-      }
-    })();
-  </script>
-
   {/* Announcement bar (optional — see landing.ts). Dismissible: the X
       persists to localStorage keyed by the announcement TEXT, so dismissing
       hides this entry but a future release's new text shows again (same
@@ -177,7 +139,7 @@ const description = pageDescription ?? t.description;
     })();
   </script>
 
-  {/* Minimal header — logo + language + GitHub + theme toggle */}
+  {/* Minimal header — logo + GitHub + theme toggle */}
   <header class="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur">
     <div
       class:list={[
@@ -209,28 +171,21 @@ const description = pageDescription ?? t.description;
             </button>
           )}
           <a
-            href={`${handbookPath(locale, '', true)}#learn`}
+            href={`${handbookPath('en', '', true)}#learn`}
             class="flex items-center gap-2 px-3 py-2 text-sm transition hover:bg-muted"
           >
             <Icon name="lucide:graduation-cap" class="h-4 w-4" />
             <span>{t.handbook.manuals.learn.label}</span>
           </a>
           <a
-            href={`${handbookPath(locale, '', true)}#dev`}
+            href={`${handbookPath('en', '', true)}#dev`}
             class="flex items-center gap-2 px-3 py-2 text-sm transition hover:bg-muted"
           >
             <Icon name="lucide:wrench" class="h-4 w-4" />
             <span>{t.handbook.manuals.dev.label}</span>
           </a>
           <a
-            href={locale === 'en' ? '/landing/templates/' : '/zh/landing/templates/'}
-            class="flex items-center gap-2 px-3 py-2 text-sm transition hover:bg-muted"
-          >
-            <Icon name="lucide:layout-template" class="h-4 w-4" />
-            <span>{templatesNavLabel[locale]}</span>
-          </a>
-          <a
-            href={locale === 'en' ? '/landing/community/' : '/zh/landing/community/'}
+            href="/landing/community/"
             class="flex items-center gap-2 px-3 py-2 text-sm transition hover:bg-muted"
           >
             <Icon name="lucide:messages-square" class="h-4 w-4" />
@@ -248,11 +203,11 @@ const description = pageDescription ?? t.description;
             class="flex items-center gap-2 border-t border-border px-3 py-2 text-sm text-muted-foreground transition hover:bg-muted hover:text-nav"
           >
             <Icon name="lucide:external-link" class="h-4 w-4" />
-            <span>Demo</span>
+            <span>游戏 Wiki</span>
           </a>
         </div>
       </details>
-      <a href={landingPath(locale)} class="flex shrink-0 items-center gap-2 font-bold text-foreground">
+      <a href="/landing/" class="flex shrink-0 items-center gap-2 font-bold text-foreground">
         <Icon name="lucide:hammer" class="h-6 w-6 text-nav" />
         <span>AnvilWiki</span>
       </a>
@@ -276,36 +231,21 @@ const description = pageDescription ?? t.description;
       )}
       <div class="ml-auto flex items-center gap-3">
         <a
-          href={togglePath ?? landingPath(other)}
-          hreflang={other}
-          onclick={`localStorage.setItem('landing-lang','${other}')`}
-          class="rounded-md border border-border px-2 py-1 text-xs font-medium text-muted-foreground transition hover:text-nav"
-        >
-          {other === 'zh' ? '中文' : 'EN'}
-        </a>
-        <a
-          href={`${handbookPath(locale, '', true)}#learn`}
+          href={`${handbookPath('en', '', true)}#learn`}
           class="hidden items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-foreground/70 transition hover:bg-muted hover:text-foreground sm:inline-flex"
         >
           <Icon name="lucide:graduation-cap" class="h-4 w-4" />
           <span>{t.handbook.manuals.learn.label}</span>
         </a>
         <a
-          href={`${handbookPath(locale, '', true)}#dev`}
+          href={`${handbookPath('en', '', true)}#dev`}
           class="hidden items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-foreground/70 transition hover:bg-muted hover:text-foreground sm:inline-flex"
         >
           <Icon name="lucide:wrench" class="h-4 w-4" />
           <span>{t.handbook.manuals.dev.label}</span>
         </a>
         <a
-          href={locale === 'en' ? '/landing/templates/' : '/zh/landing/templates/'}
-          class="hidden items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-foreground/70 transition hover:bg-muted hover:text-foreground sm:inline-flex"
-        >
-          <Icon name="lucide:layout-template" class="h-4 w-4" />
-          <span>{templatesNavLabel[locale]}</span>
-        </a>
-        <a
-          href={locale === 'en' ? '/landing/community/' : '/zh/landing/community/'}
+          href="/landing/community/"
           class="hidden items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-foreground/70 transition hover:bg-muted hover:text-foreground sm:inline-flex"
         >
           <Icon name="lucide:messages-square" class="h-4 w-4" />
@@ -323,7 +263,7 @@ const description = pageDescription ?? t.description;
           class="hidden items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-foreground/70 transition hover:bg-muted hover:text-foreground sm:inline-flex"
         >
           <Icon name="lucide:external-link" class="h-4 w-4" />
-          <span>Demo</span>
+          <span>游戏 Wiki</span>
         </a>
         <ThemeToggle />
       </div>
@@ -380,13 +320,7 @@ const description = pageDescription ?? t.description;
         </div>
         <div class="flex items-center gap-4 text-sm">
           <a
-            href={locale === 'en' ? '/landing/templates/' : '/zh/landing/templates/'}
-            class="text-foreground/70 transition hover:text-foreground"
-          >
-            {templatesNavLabel[locale]}
-          </a>
-          <a
-            href={locale === 'en' ? '/landing/community/' : '/zh/landing/community/'}
+            href="/landing/community/"
             class="text-foreground/70 transition hover:text-foreground"
           >
             {t.communityHighlights.navLabel}
@@ -407,7 +341,7 @@ const description = pageDescription ?? t.description;
         </div>
       </div>
       <p class="mt-6 text-center text-xs text-muted-foreground sm:text-left">
-        {t.footer.madeWith} · © 2026 AnvilWiki Contributors
+        {t.footer.madeWith} ·         © 2026 AnvilWiki 贡献者
       </p>
       <p class="mt-1 text-center text-xs text-muted-foreground sm:text-left">
         {t.footer.author} · <a href="https://github.com/PNGTRID" class="transition hover:text-nav">GitHub @PNGTRID</a>

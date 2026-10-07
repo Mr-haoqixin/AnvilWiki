@@ -4,11 +4,11 @@
  * Non-default locales: src/pages/[locale]/tags/index.astro
  */
 import TagsIndexPage from '~/components/article/TagsIndexPage.astro';
-import { defaultLocale, locales } from '~/i18n/routing';
+import { defaultLocale } from '~/i18n/routing';
 import { languageAlternates, tagsPath } from '~/lib/url';
 import { getTagsWithCounts } from '~/lib/content';
 
-const alternates = languageAlternates((loc) => tagsPath(loc), locales);
+const alternates = languageAlternates((loc) => tagsPath(loc), [defaultLocale]);
 // Zero tags = thin empty state — noindex, same treatment as ListPage's
 // empty category lists.
 const noindex = (await getTagsWithCounts(defaultLocale)).length === 0;

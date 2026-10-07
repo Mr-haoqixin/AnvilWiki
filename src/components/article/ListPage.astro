@@ -40,6 +40,7 @@ const description =
   (String(shared.defaultListDescription ?? '').replace('{title}', title) || title);
 
 const entries = await getEntriesByCategory(category, locale);
+const displayLocale = locale === 'en' ? 'zh-CN' : locale;
 
 const jsonLd = [
   // Empty ItemList (itemListElement: []) is invalid structured data — only
@@ -75,7 +76,7 @@ const jsonLd = [
   description={description}
   alternates={alternates}
   jsonLd={jsonLd}
-  noindex={entries.length === 0}
+  noindex={entries.length === 0 || locale === 'en'}
 >
   <div class="space-y-6">
     <header>
@@ -110,8 +111,8 @@ const jsonLd = [
                 </p>
                 <p class="mt-3 text-xs text-muted-foreground">
                   {entry.data.lastModified
-                    ? `${shared.lastUpdated}: ${entry.data.lastModified.toLocaleDateString(locale, { timeZone: 'UTC' })}`
-                    : `${shared.publishedOn}: ${entry.data.date.toLocaleDateString(locale, { timeZone: 'UTC' })}`}
+                    ? `${shared.lastUpdated}: ${entry.data.lastModified.toLocaleDateString(displayLocale, { timeZone: 'UTC' })}`
+                    : `${shared.publishedOn}: ${entry.data.date.toLocaleDateString(displayLocale, { timeZone: 'UTC' })}`}
                 </p>
               </a>
             );

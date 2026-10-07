@@ -2,7 +2,7 @@
 
 AnvilWiki 内置可选的评论系统，基于 [Giscus](https://giscus.app) —— 评论通过 GitHub 登录后存到你的仓库的 **GitHub Discussions** 里。零服务器、零数据库，构建时静态，评论运行时按需加载。
 
-**默认关闭。** 不配置时文章页不显示评论区，模板保持 Lighthouse 4×100。填好 4 个必填环境变量（`PUBLIC_GISCUS_REPO` / `REPO_ID` / `CATEGORY` / `CATEGORY_ID`，`MAPPING` 有默认值）后自动启用。
+Giscus 需要访客使用 GitHub 登录，不支持匿名留言。本游戏站当前关闭留言功能；配置 Giscus 也必须显式设置 `PUBLIC_GISCUS_ENABLED=true` 才会加载。匿名留言需要自建后端、垃圾信息防护和审核机制，因此当前不接入。
 
 ---
 
@@ -22,26 +22,26 @@ AnvilWiki 内置可选的评论系统，基于 [Giscus](https://giscus.app) —�
    - `data-category` → `PUBLIC_GISCUS_CATEGORY`
    - `data-category-id` → `PUBLIC_GISCUS_CATEGORY_ID`
    - `mapping` → `PUBLIC_GISCUS_MAPPING`（默认 `pathname`，通常不用改）
-4. 把这 5 个值填到 `.env`（参考 `.env.example`）—— 本地开发用
+4. 把这 5 个配置填到 `.env`（参考 `.env.example`），并设 `PUBLIC_GISCUS_ENABLED=true`—— 本地开发用
 5. **生产部署**：把这 5 个值配到 Cloudflare。⚠️ 本仓库根目录有 `wrangler.toml`，它一旦存在就会**接管 env 配置，dashboard 的 Environment variables 会被忽略**。两个选择：
    - **删掉 `wrangler.toml`**（`git rm wrangler.toml && git commit`），然后在 Cloudflare dashboard 的 Settings → Environment variables 配 5 个变量
-   - **或改 `wrangler.toml` 的 `[vars]`**，把 `PUBLIC_GISCUS_*` 5 个值改成你的
+   - **或改 `wrangler.toml` 的 `[vars]`**，填入自己的四个 `PUBLIC_GISCUS_*` 身份值，并设 `PUBLIC_GISCUS_ENABLED = "true"`
 6. `pnpm dev`，访问任意文章页，评论区出现在正文下方
 
 ## 验证
 
-访问 `http://localhost:4321/bosses/emberfang`（或你的任一文章页）。正文 + 标签下方应出现评论区。点「Sign in with GitHub」登录后可发表评论。
+访问 `http://localhost:4321/guides/ancient-shrines-quest-completion/`（或你的任一文章页）。正文下方应出现评论区。点「Sign in with GitHub」登录后可发表评论。
 
 ## 多语言行为
 
-不同 locale 的同一篇文章是**独立的**评论区：
+不同 locale 的同一篇文章是**独立的**评论区；中文界面使用简体中文，英文页面使用英文：
 
 | URL | 评论区 |
 |---|---|
-| `/bosses/emberfang`（英文） | Discussion A |
-| `/ja/bosses/emberfang`（日文） | Discussion B（与 A 互不影响） |
+| `/guides/ancient-shrines-quest-completion/`（中文） | Discussion A |
+| `/en/guides/ancient-shrines-quest-completion/`（英文 fallback 页面） | Discussion B（与 A 互不影响） |
 
-这是 `mapping=pathname` 的自然结果，符合「日文用户用日文讨论、英文用户用英文讨论」的预期。Giscus 的界面语言（按钮、提示）会自动跟随页面 locale（en/ja）。
+这是 `mapping=pathname` 的自然结果。Giscus 的界面语言（按钮、提示）会自动跟随页面 locale（`zh-CN` / `en`）。
 
 ## 暗色模式
 
@@ -73,6 +73,7 @@ Giscus 是「评论」(需要 GitHub 登录),不是「留言板」或「客服�
 - Discussions 是否开启？（Settings → General → Features）
 - giscus app 是否安装到该仓库？
 - 4 个必填字段是否都填了？（任一为空 = 组件不渲染）
+- 是否显式设置 `PUBLIC_GISCUS_ENABLED=true`？（默认关闭）
 - `data-category-id` 是否对？（不是 category 名字，是那串 `DIC_...` 开头的 ID）
 - **🚨 配了 env 但构建时读不到？** 检查仓库根目录有没有 `wrangler.toml`。有的话它接管 env，dashboard 配的会被忽略。要么删 `wrangler.toml`，要么改它的 `[vars]` 段。详见 [docs/deployment.md](./deployment.md)。
 

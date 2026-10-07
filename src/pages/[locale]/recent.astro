@@ -19,7 +19,7 @@ if (!isLocale(localeParam) || localeParam === defaultLocale) {
 }
 const locale: Locale = localeParam;
 
-const alternates = languageAlternates((loc) => recentPath(loc), locales);
+const alternates = languageAlternates((loc) => recentPath(loc), [defaultLocale]);
 // Zero published articles = thin empty state — noindex, same treatment as
 // ListPage's empty category lists.
 const noindex = (await getRecentEntries(locale, 1)).length === 0;

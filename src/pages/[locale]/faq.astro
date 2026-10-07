@@ -30,7 +30,7 @@ const locale: Locale = localeParam;
 const ui = getUi(locale);
 const faq = getHomeFaq(locale);
 const faqPath = localizePath('/faq', locale);
-const alternates = languageAlternates((loc) => localizePath('/faq', loc), locales);
+const alternates = languageAlternates((loc) => localizePath('/faq', loc), [defaultLocale]);
 const jsonLd = [
   ...(faq.items.length > 0 ? [faqPageJsonLd(faq.items)] : []),
   simpleBreadcrumbJsonLd({ pageLabel: faq.title, path: faqPath, locale, homeLabel: (ui.nav as Record<string, string>).home }),

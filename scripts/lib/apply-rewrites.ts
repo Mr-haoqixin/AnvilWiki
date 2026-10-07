@@ -350,7 +350,10 @@ export const DEMO_SITE_OPTIONAL_VALUES: readonly string[] = [
   'https://youtube.com/@example',
   'https://twitter.com/example',
   'https://reddit.com/r/anvilquest',
-  // Demo official game URL — also the shipped sameAs[0] entry.
+  // Shipped Songs of Glimmerwick official links — replace on a fresh fork.
+  'https://eastshade.com/songs-of-glimmerwick/',
+  'https://store.steampowered.com/app/1706510/Songs_of_Glimmerwick/',
+  // Retain the prior template demo links for existing migrations and fixtures.
   'https://example.com/anvil-quest',
   'https://en.wikipedia.org/wiki/Anvil_Quest',
 ];
@@ -884,7 +887,7 @@ interface VarSpec {
   comments?: string[];
   /** Render commented-out (`#KEY = ""`) unless a user value is preserved — optional slots a fork enables explicitly. */
   commented?: boolean;
-  /** Shipped default when nothing is preserved (only PUBLIC_GISCUS_MAPPING is non-empty). */
+  /** Shipped default when nothing is preserved (Giscus mapping is pathname). */
   blank?: string;
 }
 
@@ -911,10 +914,13 @@ const WRANGLER_VARS_TEMPLATE: VarSpec[] = [
   { key: 'PUBLIC_GISCUS_REPO_ID' },
   { key: 'PUBLIC_GISCUS_CATEGORY' },
   { key: 'PUBLIC_GISCUS_CATEGORY_ID' },
+  { key: 'PUBLIC_GISCUS_ENABLED', blank: 'false' },
   { key: 'PUBLIC_GISCUS_MAPPING', blank: 'pathname' },
   {
     key: 'PUBLIC_SPONSOR_URL',
-    comments: ['Sponsor card — blank = disabled. Fill PUBLIC_SPONSOR_URL to enable.'],
+    comments: [
+      'Donation card — blank = disabled. Fill a donation URL or WeChat/Alipay QR image path.',
+    ],
   },
   { key: 'PUBLIC_SPONSOR_IMAGE_URL' },
   { key: 'PUBLIC_CF_BEACON_TOKEN', comments: ['Cloudflare Web Analytics — blank = disabled.'] },

@@ -22,7 +22,7 @@ import { type Locale } from '~/i18n/routing';
 import { getUi } from '~/i18n/ui';
 
 interface Props {
-  /** Page locale — drives Giscus UI language (en/ja). */
+  /** Page locale — drives Giscus UI language. */
   locale: Locale;
 }
 
@@ -36,12 +36,15 @@ const category = env.PUBLIC_GISCUS_CATEGORY;
 const categoryId = env.PUBLIC_GISCUS_CATEGORY_ID;
 const mapping = env.PUBLIC_GISCUS_MAPPING || 'pathname';
 
-// 4 required business fields — any one empty = disabled (no half-rendered iframe).
-const enabled = Boolean(repo && repoId && category && categoryId);
+// Giscus requires GitHub authentication; anonymous feedback needs a backend
+// and moderation. Keep it disabled until the site explicitly opts in.
+const enabled = Boolean(
+  repo && repoId && category && categoryId && import.meta.env.PUBLIC_GISCUS_ENABLED === 'true',
+);
 
 // Giscus data-lang uses short codes matching our locale values.
 // Whitelist is defensive (Giscus codes ≠ BCP-47 in edge cases).
-const GISCUS_LANG: Record<string, string> = { en: 'en', ja: 'ja' };
+const GISCUS_LANG: Record<string, string> = { en: 'en', zh: 'zh-CN' };
 const lang = GISCUS_LANG[locale] ?? 'en';
 
 const ui = getUi(locale);
@@ -67,7 +70,7 @@ const heading = shared.commentsHeading ?? 'Comments';
       data-reactions-enabled="1"
       data-emit-metadata="0"
       data-input-position="bottom"
-      data-theme="light"
+      data-theme="preferred_color_scheme"
       data-lang={lang}
       data-loading="lazy"
       crossorigin="anonymous"

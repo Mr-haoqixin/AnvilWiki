@@ -11,7 +11,7 @@ import { siteUrl } from '~/config/site';
 import { chaptersForLocale } from '~/lib/handbook';
 
 const t = landingContent.en;
-const chapters = chaptersForLocale(await getCollection('handbook'), 'en');
+const chapters = chaptersForLocale(await getCollection('handbook'), 'zh');
 
 const alternates = [
   { hreflang: 'en', href: `${siteUrl}/landing/docs/dev/` },
@@ -22,7 +22,7 @@ const alternates = [
 <LandingLayout
   locale="en"
   alternates={alternates}
-  pageTitle={`${t.handbook.manuals.dev.label} | AnvilWiki Docs`}
+  pageTitle={`${t.handbook.manuals.dev.label} | AnvilWiki 文档`}
   pageDescription={t.handbook.manuals.dev.description}
   togglePath="/zh/landing/docs/dev/"
   search

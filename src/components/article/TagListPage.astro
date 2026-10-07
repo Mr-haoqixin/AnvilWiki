@@ -22,12 +22,14 @@ interface Props {
 }
 const { locale, tagSlug, alternates = [] } = Astro.props;
 const ui = getUi(locale);
-const nav = ui.nav;
+const nav = ui.nav as Record<string, string>;
 const shared = ui.shared;
+const displayLocale = locale === 'en' ? 'zh-CN' : locale;
 
 const label = await tagLabelFor(tagSlug, locale);
 const title = label ?? tagSlug;
 const description = `${title} — ${shared.allTags} · ${ui.site.tagline}`;
+const categories = ui.overview as Record<string, { overviewTitle: string }>;
 
 const entries = await getEntriesByTag(tagSlug, locale);
 // Tag pages don't fall back — only offer languages where the tag exists.
@@ -88,15 +90,17 @@ const jsonLd = [
             return (
               <a href={detailPath(category, parsed?.slug ?? '', locale)} class="card p-5">
                 {entry.data.image && <ArticleCover src={entry.data.image} />}
-                <p class="text-xs uppercase tracking-wider text-muted-foreground">{category}</p>
+                <p class="text-xs uppercase tracking-wider text-muted-foreground">
+                  {categories[category]?.overviewTitle ?? nav[category] ?? category}
+                </p>
                 <h2 class="mt-1 font-semibold leading-snug">{entry.data.title}</h2>
                 <p class="mt-1 line-clamp-2 text-sm text-muted-foreground">
                   {entry.data.description}
                 </p>
                 <p class="mt-3 text-xs text-muted-foreground">
                   {entry.data.lastModified
-                    ? `${shared.lastUpdated}: ${entry.data.lastModified.toLocaleDateString(locale, { timeZone: 'UTC' })}`
-                    : `${shared.publishedOn}: ${entry.data.date.toLocaleDateString(locale, { timeZone: 'UTC' })}`}
+                    ? `${shared.lastUpdated}: ${entry.data.lastModified.toLocaleDateString(displayLocale, { timeZone: 'UTC' })}`
+                    : `${shared.publishedOn}: ${entry.data.date.toLocaleDateString(displayLocale, { timeZone: 'UTC' })}`}
                 </p>
               </a>
             );

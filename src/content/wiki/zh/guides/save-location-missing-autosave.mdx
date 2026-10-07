@@ -1,0 +1,43 @@
+---
+title: 'Windows 试玩版存档位置与缺失自动存档排查'
+description: '检查试玩版存档前先确认 Windows 用户，并查看 Eastshade 文档给出的 LocalLow 路径；找到文件不代表已证明可以恢复进度。'
+category: guides
+date: 2026-10-08
+lastModified: 2026-10-08
+gameVersion: 'Windows demo'
+summary: 'Eastshade 给出的 Windows 路径为 %USERPROFILE%\\AppData\\LocalLow\\Eastshade Studios\\格林默威克之歌（Songs of Glimmerwick）。检查同一 Windows 用户下的文件并先备份；复制文件并未被证实可以恢复缺失存档。'
+tags: ['存档', 'Windows', '排错']
+---
+
+## 原文图片与来源时间
+
+来源页资料核对日：2026-09-27；源站 sitemap 最后修改时间：2026-09-29T01:38:00.000Z。下列图片直接引用原 Wiki 图床，尚未转存到本站。
+
+![Glimmerwick characters walking along a path beside village buildings](https://glimmerwick.wiki/media/village-1280.webp)
+
+![格林默威克之歌（Songs of Glimmerwick） 原 Wiki 图片（glimmerwick.wiki）](https://glimmerwick.wiki/media/gameplay-trailer.webp)
+
+## 检查正确的 Windows 用户
+
+确认当前登录的是游玩试玩版时使用的 Windows 账户。Eastshade 文档给出的存档目录为：
+
+`%USERPROFILE%\AppData\LocalLow\Eastshade Studios\格林默威克之歌（Songs of Glimmerwick）`
+
+在文件资源管理器地址栏输入该路径，可由 Windows 自动替换当前用户目录。若使用另一个账户游玩，应检查那个账户对应的路径。
+
+## 保护存档文件
+
+原页记录玩家找到 `Player`、`Player-prev` 与 `steam_autocloud.vdf`，但复制文件后进度仍未能载入。因此，找到文件不等于已经验证可恢复；尝试任何更改前先复制备份，并保留原文件。
+
+## 版本与来源
+
+原页标注资料核对日为 2026-09-28，讨论对象为 Windows 试玩版；此路径不代表 Steam Deck/Linux 目录。sitemap 更新时间为 `2026-09-29T01:38:00.000Z`。
+
+
+## 相关指南
+
+- [坩埚丢失或药剂课卡住：试玩版处理线索](/guides/lost-cauldron-potions-class/)
+- [如何存档：正式版手动保存与试玩版限制](/guides/manual-save-time-freeze/)
+- [铺设的 Cobblestone Paths 消失：更新到 Version 1.02](/guides/cobblestone-paths-disappeared/)
+
+[查看原文与存档排查来源](https://glimmerwick.wiki/save-location-missing-autosave/)

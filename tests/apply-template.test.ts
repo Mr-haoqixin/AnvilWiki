@@ -20,8 +20,6 @@ import {
   DEMO_ADSTERRA_UNIT_MARKERS,
   DEMO_ARTICLE_IMAGES,
   DEMO_COVERS,
-  DEMO_DOMAINS,
-  DEMO_GAME_NAMES,
   DEMO_GALLERY_IMAGES,
   DEMO_INDEXNOW_KEY_FILE,
   DEMO_PUBLIC_FILES,
@@ -231,10 +229,20 @@ describe('rewriteWranglerVars is value-aware (a re-run must not wipe the user en
     expect(out).toContain('PUBLIC_GISCUS_REPO_ID = ""');
     expect(out).toContain('PUBLIC_GISCUS_CATEGORY = ""');
     expect(out).toContain('PUBLIC_GISCUS_CATEGORY_ID = ""');
+    expect(out).toContain('PUBLIC_GISCUS_ENABLED = "false"');
     // The demo Adsterra/GA values never leak: the shipped file's live unit keys
     // are all demo values, so they reset to the commented blank template lines.
     expect(out).not.toContain('72f65aae2e14988904cffe17cfe697e2');
     expect(out).toContain('#PUBLIC_GA_ID = ""');
+  });
+
+  test('a user-provided combined donation QR path survives re-application', () => {
+    const withQr = LF_WRANGLER.replace(
+      'PUBLIC_GISCUS_MAPPING = "pathname"',
+      'PUBLIC_GISCUS_MAPPING = "pathname"\nPUBLIC_SPONSOR_IMAGE_URL = "/gaveme5.png"',
+    );
+    const out = rewriteWranglerVars(makeInput(), withQr)!;
+    expect(out).toContain('PUBLIC_SPONSOR_IMAGE_URL = "/gaveme5.png"');
   });
 
   test('SITE_URL always follows the CLI domain, even when it holds a non-demo value', () => {
@@ -251,7 +259,7 @@ describe('rewriteWranglerVars is value-aware (a re-run must not wipe the user en
     expect(rewriteWranglerVars(makeInput(), demoOnce)).toBe(demoOnce);
   });
 
-  test('DEMO_VAR_VALUES covers every live value in the shipped wrangler.toml (drift guard)', () => {
+  test('demo registry and active site settings cover shipped wrangler values (drift guard)', () => {
     // If the demo gains a new non-empty env value that is not registered as a
     // demo value, a re-run would PRESERVE it into every fork — the exact leak
     // this list exists to prevent. Every uncommented [vars] value must either
@@ -261,26 +269,49 @@ describe('rewriteWranglerVars is value-aware (a re-run must not wipe the user en
     const values = [...section.matchAll(/^([A-Za-z_][A-Za-z0-9_]*)\s*=\s*"(.*)"\s*$/gm)].map(
       (m) => m[2],
     );
-    expect(values.length, 'the shipped wrangler.toml should carry demo values').toBeGreaterThan(0);
-    // "pathname" is the template's GENERIC giscus mapping default (a user may
-    // legitimately set "url"/"topic" — the rewrite preserves those), not demo
-    // identity; it is deliberately not in DEMO_VAR_VALUES. "Announcements" is
-    // deliberately not registered either (real forks legitimately use that
-    // giscus category name) — its demo-ness is the PAIRED rule: demo category
-    // name + demo category ID together, asserted below. Anything else
-    // non-empty must be registered.
-    const genericDefaults = new Set(['pathname']);
+    expect(values.length, 'the shipped wrangler.toml should carry active values').toBeGreaterThan(0);
+    // "pathname" is the template's GENERIC giscus mapping default. SITE_URL
+    // must match the configured game-wiki domain, and Giscus values are allowed
+    // only as a complete configuration (the shipped site owns its Discussions).
+    const entries = new Map(
+      [...section.matchAll(/^([A-Za-z_][A-Za-z0-9_]*)\s*=\s*"(.*)"\s*$/gm)].map((m) => [
+        m[1],
+        m[2],
+      ]),
+    );
+    const siteTs = readFileSync(join(repoRoot, 'src/config/site.ts'), 'utf8');
+    const domain = siteTs.match(/^\s*domain:\s*'([^']+)'/m)?.[1];
+    expect(domain, 'site config domain not found').toBeTruthy();
+    expect(entries.get('SITE_URL')).toBe(`https://${domain}`);
+    const giscusKeys = [
+      'PUBLIC_GISCUS_REPO',
+      'PUBLIC_GISCUS_REPO_ID',
+      'PUBLIC_GISCUS_CATEGORY',
+      'PUBLIC_GISCUS_CATEGORY_ID',
+    ];
+    const giscusValues = giscusKeys.map((key) => entries.get(key) ?? '');
+    const giscusConfigured = giscusValues.every(Boolean);
+    expect(
+      giscusValues.some(Boolean),
+      'Giscus config must be either fully configured or entirely blank',
+    ).toBe(giscusConfigured);
+    expect(entries.get('PUBLIC_GISCUS_ENABLED')).toBe('false');
+    const donationValues = ['PUBLIC_SPONSOR_URL', 'PUBLIC_SPONSOR_IMAGE_URL'].map(
+      (key) => entries.get(key) ?? '',
+    );
+    expect(donationValues.some(Boolean), 'the donation card should have a link or image').toBe(true);
+    const allowedValues = new Set([
+      'pathname',
+      'false',
+      `https://${domain}`,
+      ...giscusValues,
+      ...donationValues,
+    ]);
     for (const v of values) {
       expect(
-        v === '' || genericDefaults.has(v) || v === 'Announcements' || DEMO_VAR_VALUES.includes(v),
+        v === '' || allowedValues.has(v) || DEMO_VAR_VALUES.includes(v),
         `unregistered demo value: "${v}"`,
       ).toBe(true);
-    }
-    // Paired-rule guard: the shipped file must carry Announcements TOGETHER
-    // with the demo category ID (only that pair is auto-cleared; a fork with
-    // its own ID keeps the name).
-    if (values.includes('Announcements')) {
-      expect(values).toContain('DIC_kwDOT1aRPc4DDODo');
     }
   });
 });
@@ -797,10 +828,11 @@ describe('hyphen locales (zh-tw / pt-br) generate legal TypeScript', () => {
 });
 
 describe('demo locale deletion is content-aware (rebranded locales must survive re-runs)', () => {
-  test('the shipped demo locale files still carry the site.name marker (marker drift guard)', () => {
-    for (const locale of ['en', 'ja']) {
+  test('the shipped game locale files are not classified as demo content', () => {
+    for (const locale of ['en', 'zh']) {
       const raw = readFileSync(join(repoRoot, 'src/locales', `${locale}.json`), 'utf8');
-      expect(isDemoLocaleContent(raw)).toBe(true);
+      expect(JSON.parse(raw).site.name).toContain('Songs of Glimmerwick');
+      expect(isDemoLocaleContent(raw)).toBe(false);
     }
   });
 
@@ -824,11 +856,7 @@ describe('demo locale deletion is content-aware (rebranded locales must survive 
 });
 
 describe('demo article clearing is content-aware (re-runs must keep user work)', () => {
-  test('every shipped demo article carries the demo-game marker (marker drift guard)', () => {
-    // Mirrors the locale marker guard above: if a template author ships a demo
-    // article that never mentions the demo game, content-aware clearing would
-    // KEEP it forever — this goes red in the template repo until the article
-    // carries the marker. Vacuous in forks after a first-run clear.
+  test('shipped game articles are not classified as demo content', () => {
     const base = join(repoRoot, 'src/content/wiki');
     const walk = (dir: string): string[] =>
       existsSync(dir)
@@ -841,12 +869,12 @@ describe('demo article clearing is content-aware (re-runs must keep user work)',
           )
         : [];
     const files = walk(base);
-    expect(files.length, 'the template repo should ship demo wiki articles').toBeGreaterThan(0);
+    expect(files.length, 'the game wiki should ship source articles').toBeGreaterThan(0);
     for (const file of files) {
       expect(
         isDemoArticleContent(readFileSync(file, 'utf8')),
-        `${file} lacks the demo-game marker (${DEMO_GAME_NAMES.join(', ')}) — content-aware clearing would keep it`,
-      ).toBe(true);
+        `${file} must survive demo-content cleanup for a fresh fork`,
+      ).toBe(false);
     }
   });
 
@@ -1030,12 +1058,12 @@ describe('re-run identity detection (S12: re-run = confirm current, never demo d
     expect(empty.releaseDate).toBe('');
   });
 
-  test('the shipped demo site.ts parses as the demo identity (drift guard)', () => {
+  test('the shipped site.ts parses as the game identity, not the template demo', () => {
     const raw = readFileSync(join(repoRoot, 'src/config/site.ts'), 'utf8');
     const id = parseSiteTsIdentity(raw);
     expect(id).not.toBeNull();
-    expect(isDemoSiteTsIdentity(id!)).toBe(true);
-    expect(DEMO_DOMAINS).toContain(id!.domain);
+    expect(id!.gameName).toBe('Songs of Glimmerwick');
+    expect(isDemoSiteTsIdentity(id!)).toBe(false);
   });
 });
 

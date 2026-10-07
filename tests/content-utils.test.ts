@@ -11,10 +11,10 @@ describe('parseEntryId', () => {
   });
 
   it('strips the .mdx extension the glob loader includes in the id', () => {
-    expect(parseEntryId('ja/bosses/emberfang.mdx')).toEqual({
-      locale: 'ja',
-      category: 'bosses',
-      slug: 'emberfang',
+    expect(parseEntryId('zh/guides/ghost-treasure-silver-gold-riddle.mdx')).toEqual({
+      locale: 'zh',
+      category: 'guides',
+      slug: 'ghost-treasure-silver-gold-riddle',
     });
   });
 

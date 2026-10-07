@@ -109,14 +109,13 @@ describe('/faq pages ↔ en.json home.faq contract', () => {
     expect(offenders, `missing keys:\n${offenders.join('\n')}`).toEqual([]);
   });
 
-  test('getHomeFaq() serves the en.json namespace (and deep-merges partial locales)', () => {
-    expect(getHomeFaq('en')).toEqual(en.home.faq);
-    // ja.json carries its own faq; if a key were dropped there, getUi()'s
-    // deep-merge must transparently fall back to en (never undefined).
-    const jaFaq = getHomeFaq('ja');
-    expect(jaFaq.title).toBeTypeOf('string');
-    expect(jaFaq.title.length).toBeGreaterThan(0);
-    expect(Array.isArray(jaFaq.items)).toBe(true);
+  test('getHomeFaq() serves Chinese strings on both retained locale routes', () => {
+    expect(getHomeFaq('en')).toEqual(getHomeFaq('zh'));
+    // The default Chinese locale must resolve FAQ strings without English fallback.
+    const zhFaq = getHomeFaq('zh');
+    expect(zhFaq.title).toBeTypeOf('string');
+    expect(zhFaq.title.length).toBeGreaterThan(0);
+    expect(Array.isArray(zhFaq.items)).toBe(true);
   });
 });
 

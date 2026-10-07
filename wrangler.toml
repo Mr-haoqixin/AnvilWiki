@@ -1,6 +1,6 @@
 # ⚠️⚠️⚠️ FORKERS READ THIS FIRST ⚠️⚠️⚠️
 #
-# This wrangler.toml contains the DEMO SITE config (anvil.wiki).
+# This wrangler.toml contains the Songs of Glimmerwick Wiki site config.
 # The [vars] below point at PNGTRID/AnvilWiki's own GitHub Discussions.
 #
 # When you fork: EITHER
@@ -35,19 +35,20 @@ pages_build_output_dir = "dist"
 
 [vars]
 # Site (must include https:// protocol — Astro validates this as a URL)
-SITE_URL = "https://anvil.wiki"
+SITE_URL = "https://mygameszhwiki.cloud-ip.cc"
 # Legacy IndexNow override for the anvil.wiki demo deployment.
 # New forks generate and commit .indexnow-key during initialization.
 INDEXNOW_KEY = "736d8608fdec899849d382dffdaf4dda78605ffe0f40e2f1dbb57c7390341bed"
-# Giscus comments (DEMO — anvil.wiki points at PNGTRID/AnvilWiki Discussions)
-PUBLIC_GISCUS_REPO = "PNGTRID/AnvilWiki"
-PUBLIC_GISCUS_REPO_ID = "R_kgDOT1aRPQ"
-PUBLIC_GISCUS_CATEGORY = "Announcements"
-PUBLIC_GISCUS_CATEGORY_ID = "DIC_kwDOT1aRPc4DDODo"
+# Giscus requires GitHub sign-in; anonymous comments are disabled.
+PUBLIC_GISCUS_ENABLED = "false"
+PUBLIC_GISCUS_REPO = ""
+PUBLIC_GISCUS_REPO_ID = ""
+PUBLIC_GISCUS_CATEGORY = ""
+PUBLIC_GISCUS_CATEGORY_ID = ""
 PUBLIC_GISCUS_MAPPING = "pathname"
-# Sponsor card (empty = disabled, keeps Lighthouse 4×100 out of the box)
+# Donation card (add your own QR images under public/images and set their paths)
 PUBLIC_SPONSOR_URL = ""
-PUBLIC_SPONSOR_IMAGE_URL = ""
+PUBLIC_SPONSOR_IMAGE_URL = "/gaveme5.png"
 # Cloudflare Web Analytics beacon token (empty = disabled)
 PUBLIC_CF_BEACON_TOKEN = ""
 #

@@ -1,0 +1,245 @@
+{
+  "$schema": "../../docs/home.schema.json",
+  "site": {
+    "name": "格林默威克之歌（Songs of Glimmerwick）中文 Wiki",
+    "shortName": "格林默威克 Wiki",
+    "description": "《格林默威克之歌》（Songs of Glimmerwick）中文攻略与资料站，整理魔法歌曲、校园生活、园艺、任务、道具及版本更新信息，并标注来源与核对日期。",
+    "tagline": "格林默威克之歌中文攻略与玩家资料",
+    "legalNotice": "本站为非官方玩家资料站，与 Eastshade Studios 无隶属、赞助或背书关系。"
+  },
+  "nav": {
+    "home": "首页",
+    "guides": "攻略与资料",
+    "updates": "版本更新",
+    "toggleTheme": "切换主题",
+    "menu": "菜单",
+    "close": "关闭",
+    "search": "搜索",
+    "language": "语言"
+  },
+  "search": {
+    "placeholder": "搜索 Wiki……",
+    "noResults": "没有找到相关内容",
+    "loadError": "搜索加载失败，请刷新页面后重试。"
+  },
+  "shared": {
+    "lastUpdated": "最后核对",
+    "publishedOn": "资料日期",
+    "noArticles": "暂无文章。",
+    "defaultListDescription": "浏览《格林默威克之歌》（Songs of Glimmerwick）的{title}资料与玩家指南。",
+    "relatedArticles": "相关文章",
+    "onThisPage": "本页目录",
+    "browseAll": "浏览全部",
+    "viewAll": "查看全部",
+    "commentsHeading": "评论",
+    "share": "分享",
+    "copyLink": "复制链接",
+    "copied": "已复制",
+    "consentText": "本站使用 Cookie 运行分析与广告服务。",
+    "accept": "接受",
+    "decline": "拒绝",
+    "consentTitle": "Cookie 设置",
+    "bossCard": {
+      "title": "角色资料",
+      "hp": "生命值",
+      "weakness": "弱点",
+      "resistant": "抗性",
+      "location": "地点",
+      "level": "推荐等级"
+    },
+    "codesTable": {
+      "active": "有效内容",
+      "expired": "已失效",
+      "reward": "内容",
+      "expires": "日期",
+      "source": "来源",
+      "code": "版本"
+    },
+    "codesFaq": [],
+    "possiblyOutdated": "本页资料最后核对于",
+    "outdatedNote": "；后续更新可能改变游戏内容。",
+    "prevArticle": "上一篇",
+    "nextArticle": "下一篇",
+    "minuteRead": "分钟阅读",
+    "wasThisHelpful": "这篇资料有帮助吗？",
+    "feedbackThanks": "感谢反馈！",
+    "sponsoredLabel": "赞助内容",
+    "relatedVideos": "相关视频",
+    "gallery": "图片",
+    "gameVersion": "游戏版本",
+    "allTags": "全部标签",
+    "tagsIndexDescription": "按主题浏览 Wiki 文章。",
+    "articlesCount": "篇文章",
+    "recentTitle": "最近更新",
+    "recentDescription": "按时间查看最近更新的 Wiki 资料。",
+    "sponsorTitle": "支持本站",
+    "sponsorText": "如果本站资料对你有帮助，欢迎支持本站。",
+    "sponsorButton": "支持本站",
+    "sponsorAlipayQr": "支付宝",
+    "sponsorWechatQr": "微信支付",
+    "notFoundSearchHint": "也可以尝试搜索 Wiki。",
+    "notFoundPopular": "常用页面",
+    "notFoundTitle": "404 - 页面不存在",
+    "notFoundDescription": "你访问的页面不存在。",
+    "notFoundHeading": "页面不存在",
+    "notFoundText": "页面可能已移除，或暂时无法访问。",
+    "notFoundBackHome": "返回首页",
+    "galleryLabels": {
+      "close": "关闭",
+      "prev": "上一张",
+      "next": "下一张"
+    },
+    "quickAnswer": "简要答案",
+    "skipToContent": "跳转到正文",
+    "tapToCopy": "点击复制",
+    "open": "打开",
+    "playVideo": "播放视频",
+    "watchVideo": "观看视频",
+    "gameTrailer": "预告片",
+    "closeAd": "关闭广告",
+    "adLabel": "广告",
+    "codesFaqTitle": "常见问题",
+    "faqTitle": "常见问题",
+    "toggleTheme": "切换主题",
+    "themeToggleTitle": "浅色 / 深色 / AMOLED 黑色主题",
+    "fallbackNotice": "当前显示默认语言（中文）资料",
+    "copyQuickAnswer": "复制简要答案",
+    "feedbackYes": "有帮助",
+    "feedbackNo": "没有帮助",
+    "breadcrumbAria": "面包屑导航",
+    "wikiNavAria": "Wiki 导航",
+    "paginationAria": "文章分页"
+  },
+  "overview": {
+    "guides": {
+      "overviewTitle": "游戏攻略与资料",
+      "overviewDescription": "《格林默威克之歌》（Songs of Glimmerwick）的任务、歌曲、园艺、道具、探索与版本更新指南。"
+    },
+    "updates": {
+      "overviewTitle": "版本更新",
+      "overviewDescription": "《格林默威克之歌》（Songs of Glimmerwick）历史版本变更与已核实的更新说明。"
+    }
+  },
+  "home": {
+    "meta": {
+      "title": "格林默威克之歌（Songs of Glimmerwick）中文 Wiki - 攻略、任务与版本资料",
+      "description": "《格林默威克之歌》（Songs of Glimmerwick）中文玩家资料站：整理魔法歌曲、校园课程、园艺、探索、任务与更新说明，并注明来源和核对时间。"
+    },
+    "hero": {
+      "badge": "非官方玩家资料站",
+      "title": "格林默威克之歌中文 Wiki",
+      "description": "在格林默威克（Glimmerwick）的魔法大学开启一段林地奇幻旅程：学习古老歌曲、用音乐施展魔法、照料花园、结识同学与居民，并探索岛上的故事。",
+      "ctaPrimary": "访问游戏官网",
+      "ctaSecondary": "浏览攻略资料",
+      "videoId": ""
+    },
+    "updates": {
+      "title": "最近更新"
+    },
+    "start": {
+      "badge": "从这里开始",
+      "title": "格林默威克（Glimmerwick）探索指南",
+      "cards": [
+        {
+          "number": "1",
+          "title": "开学第一天",
+          "description": "查看入学初期的课程、物品与花园路线资料。",
+          "icon": "lucide:book-open",
+          "href": "/guides/first-day-school-supplies"
+        },
+        {
+          "number": "2",
+          "title": "歌曲与施法",
+          "description": "了解歌曲、长笛与魔法操作相关资料。",
+          "icon": "lucide:music",
+          "href": "/guides/cast-song-of-silence"
+        },
+        {
+          "number": "3",
+          "title": "园艺与制作",
+          "description": "查找种植、采集、药剂与园艺工具指南。",
+          "icon": "lucide:sprout",
+          "href": "/guides/guarding-bush-hardiness-potion"
+        },
+        {
+          "number": "4",
+          "title": "版本更新",
+          "description": "查看已核实的版本修复与变更记录。",
+          "icon": "lucide:scroll-text",
+          "href": "/updates/version-1-02/"
+        }
+      ]
+    },
+    "popular": {
+      "badge": "快速查找",
+      "title": "常用指南",
+      "quickLinks": [
+        {
+          "label": "如何施放歌曲与魔法",
+          "href": "/guides/cast-song-of-silence"
+        },
+        {
+          "label": "硬化药剂与南侧道路",
+          "href": "/guides/guarding-bush-hardiness-potion"
+        },
+        {
+          "label": "钓竿与钓鱼操作",
+          "href": "/guides/fishing-rod-how-to-fish"
+        },
+        {
+          "label": "全部攻略资料",
+          "href": "/guides"
+        }
+      ]
+    },
+    "explore": {
+      "title": "浏览 Wiki",
+      "description": "按任务与玩法查找资料；每篇内容均标注来源、日期及适用版本。",
+      "modules": []
+    },
+    "faq": {
+      "title": "常见问题",
+      "description": "关于《格林默威克之歌》（Songs of Glimmerwick）的基础信息。",
+      "items": [
+        {
+          "question": "《格林默威克之歌》（Songs of Glimmerwick）是什么类型的游戏？",
+          "answer": "Eastshade Studios 将其介绍为融合角色扮演与生活模拟要素的奇幻单人游戏。玩家就读于格林默威克（Glimmerwick）的魔法大学，通过演奏音乐施法，并参与课程、园艺与岛屿探索。"
+        },
+        {
+          "question": "游戏中的音乐有什么作用？",
+          "answer": "官网介绍，演奏音乐是施展魔法的关键；古老歌曲可用于园艺，也帮助玩家探索岛屿。具体歌曲效果与操作以游戏内说明和对应版本为准。"
+        },
+        {
+          "question": "游戏何时发售，现有哪些平台？",
+          "answer": "PC 版于 2026 年 9 月 30 日在 Steam 发售。主机版曾被宣布计划推出，具体平台与发售状态请以官方公告为准。"
+        },
+        {
+          "question": "本站是官方 Wiki 吗？",
+          "answer": "不是。本站是独立的玩家资料项目，与 Eastshade Studios 没有隶属、赞助或背书关系。"
+        }
+      ]
+    },
+    "closingCta": {
+      "title": "开始探索格林默威克（Glimmerwick）",
+      "description": "查阅任务、歌曲、园艺与版本资料；遇到版本差异时，请以游戏内提示和官方公告为准。",
+      "primary": "访问游戏官网",
+      "secondary": "浏览全部攻略"
+    }
+  },
+  "footer": {
+    "playGame": "访问游戏官网",
+    "officialDiscord": "官方 Discord",
+    "officialYoutube": "官方 YouTube",
+    "officialTwitter": "官方 X",
+    "officialReddit": "官方 Reddit",
+    "about": "关于本站",
+    "faq": "常见问题",
+    "privacyPolicy": "隐私政策",
+    "termsOfService": "服务条款",
+    "copyright": "版权说明",
+    "contact": "联系本站",
+    "copyrightText": "© 2026 格林默威克之歌中文 Wiki。非官方玩家项目。",
+    "community": "社区",
+    "legal": "法律信息"
+  }
+}

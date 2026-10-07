@@ -1,11 +1,11 @@
 /**
  * check-i18n.ts
  *
- * Translation coverage report — answers "what is ja (or any locale) missing
- * relative to English?" without any manual directory diffing.
+ * Translation coverage report — compares each non-default locale with the
+ * default-locale content and the English UI key reference.
  *
  * Checks per non-default locale:
- *   1. Missing articles: every en/ MDX with no <locale>/ counterpart
+ *   1. Missing articles: every default-locale MDX with no <locale>/ counterpart
  *      (same category/slug path). Also reports extra translations.
  *   2. Missing UI keys: deep key diff of src/locales/en.json vs
  *      src/locales/<locale>.json (missing keys fall back to English at
@@ -80,18 +80,23 @@ const defaultArticles = articleMap(defaultLocale);
 const defaultJsonPath = path.join(LOCALES_DIR, `${defaultLocale}.json`);
 if (!fs.existsSync(defaultJsonPath)) {
   console.error(
-    `❌ src/locales/${defaultLocale}.json is missing — the default locale declared in src/i18n/routing.ts MUST have a UI JSON (every other locale diffs against it). Restore it from the upstream template or fix defaultLocale.`,
+    `❌ src/locales/${defaultLocale}.json is missing — the default locale declared in src/i18n/routing.ts MUST have a UI JSON.`,
   );
   process.exit(1);
 }
-let defaultJson: Record<string, unknown>;
-try {
-  defaultJson = JSON.parse(fs.readFileSync(defaultJsonPath, 'utf8'));
-} catch (e) {
-  console.error(`❌ src/locales/${defaultLocale}.json is not valid JSON: ${(e as Error).message}`);
+const referenceJsonPath = path.join(LOCALES_DIR, 'en.json');
+if (!fs.existsSync(referenceJsonPath)) {
+  console.error('❌ src/locales/en.json is missing — English is the UI key reference.');
   process.exit(1);
 }
-const defaultKeys = new Set(flattenKeys(defaultJson));
+let referenceJson: Record<string, unknown>;
+try {
+  referenceJson = JSON.parse(fs.readFileSync(referenceJsonPath, 'utf8'));
+} catch (e) {
+  console.error(`❌ src/locales/en.json is not valid JSON: ${(e as Error).message}`);
+  process.exit(1);
+}
+const defaultKeys = new Set(flattenKeys(referenceJson));
 
 // Compare every NON-default locale against the default — never assume the
 // default is locales[0] (apply-template only guarantees it exists, not that
@@ -165,7 +170,7 @@ if (missingUiKeys) {
 } else {
   console.log(
     missingAnything
-      ? `ℹ️ Missing items fall back to English at runtime (articles 404-never, UI deepMerge).`
+      ? `ℹ️ Missing article versions serve default-locale content; missing UI keys use the English deepMerge fallback.`
       : `✅ All locales fully covered.`,
   );
 }

@@ -23,7 +23,7 @@ export async function getStaticPaths() {
   const all = await gc('handbook');
   return all
     .map((entry) => ({ entry, parsed: parseHandbookId(entry.id) }))
-    .filter((x) => x.parsed?.locale === 'en')
+    .filter((x) => x.parsed?.locale === 'zh')
     .map((x) => ({ params: { slug: x.parsed!.slug }, props: { entry: x.entry } }));
 }
 
@@ -33,7 +33,7 @@ const { Content, headings } = await render(entry);
 
 const t = landingContent.en;
 const all = await getCollection('handbook');
-const chapters = chaptersForLocale(all, 'en');
+const chapters = chaptersForLocale(all, 'zh');
 const { prev, next } = prevNext(chapters, entry.id);
 const chapterPath = handbookPath('en', slug);
 
@@ -86,7 +86,7 @@ const jsonLd = [
 <LandingLayout
   locale="en"
   alternates={alternates}
-  pageTitle={`${entry.data.title} | AnvilWiki Docs`}
+  pageTitle={`${entry.data.title} | AnvilWiki 文档`}
   pageDescription={entry.data.description}
   togglePath={handbookPath('zh', slug)}
   extraJsonLd={jsonLd}

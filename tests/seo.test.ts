@@ -116,15 +116,15 @@ describe('SEO helpers', () => {
         categoryLabel: 'ボス一覧',
         title: 'エンバーファング攻略',
         slug: 'emberfang',
-        locale: 'ja',
+        locale: 'en',
       });
-      expect(json.itemListElement[0].item).toMatch(/\/ja\/$/);
+      expect(json.itemListElement[0].item).toMatch(/\/en\/$/);
     });
   });
 
   describe('simpleBreadcrumbJsonLd', () => {
     it('emits the Home item with a trailing slash for every locale', () => {
-      for (const locale of ['en', 'ja'] as const) {
+      for (const locale of ['en', 'zh'] as const) {
         const json = simpleBreadcrumbJsonLd({
           pageLabel: 'All Bosses',
           path: '/bosses/',
@@ -182,8 +182,8 @@ describe('SEO helpers', () => {
     });
 
     it('skips the suffix when the title already carries the game name', () => {
-      const t = pageTitle('Anvil Quest Boss Guide');
-      expect(t).toBe('Anvil Quest Boss Guide');
+      const t = pageTitle('Songs of Glimmerwick Guide');
+      expect(t).toBe('Songs of Glimmerwick Guide');
     });
 
     it('switches to the short suffix for long titles (>50 chars)', () => {
@@ -194,36 +194,35 @@ describe('SEO helpers', () => {
   });
 
   describe('fallbackDetailPaths', () => {
-    const locales = ['en', 'ja'] as const;
+    const locales = ['zh', 'en'] as const;
     // Coverage shape mirrors astro.config's localeCoverage: "cat/slug" →
     // locales that really have a published MDX.
     const coverage = new Map<string, Set<string>>([
-      // English-only article → /ja/ URL is a fallback page.
-      ['bosses/stormcaller', new Set(['en'])],
+      // Chinese-only article → /en/ URL is a fallback page.
+      ['bosses/stormcaller', new Set(['zh'])],
       // Translated in both locales → both URLs are real pages.
-      ['bosses/emberfang', new Set(['en', 'ja'])],
-      // ja-only article → /ja/ is real; en never falls back (no /ja/-owned
-      // English URL exists to begin with).
-      ['guides/ja-only', new Set(['ja'])],
+      ['bosses/emberfang', new Set(['en', 'zh'])],
+      // English-only article is locale-owned and never creates a fallback.
+      ['guides/en-only', new Set(['en'])],
       // Nested slug folds into the key after the category.
-      ['guides/nested/deep-slug', new Set(['en'])],
+      ['guides/nested/deep-slug', new Set(['zh'])],
       // CJK slug keeps raw filesystem names (sitemap filter decodes first).
-      ['items/熔炉之心', new Set(['en'])],
+      ['items/熔炉之心', new Set(['zh'])],
     ]);
 
     it('derives one path per non-default locale missing a translation of a default-locale article', () => {
-      expect(fallbackDetailPaths(coverage, locales, 'en')).toEqual([
-        '/ja/bosses/stormcaller',
-        '/ja/guides/nested/deep-slug',
-        '/ja/items/熔炉之心',
+      expect(fallbackDetailPaths(coverage, locales, 'zh')).toEqual([
+        '/en/bosses/stormcaller',
+        '/en/guides/nested/deep-slug',
+        '/en/items/熔炉之心',
       ]);
     });
 
     it('never emits paths for the default locale, translated slugs, or locale-owned articles', () => {
-      const paths = fallbackDetailPaths(coverage, locales, 'en');
-      expect(paths).not.toContain('/en/bosses/stormcaller');
-      expect(paths).not.toContain('/ja/bosses/emberfang');
-      expect(paths).not.toContain('/en/guides/ja-only');
+      const paths = fallbackDetailPaths(coverage, locales, 'zh');
+      expect(paths).not.toContain('/zh/bosses/stormcaller');
+      expect(paths).not.toContain('/en/bosses/emberfang');
+      expect(paths).not.toContain('/en/guides/en-only');
       // With a single locale there is nothing to fall back to.
       expect(fallbackDetailPaths(coverage, ['en'], 'en')).toEqual([]);
     });
@@ -237,6 +236,14 @@ describe('SEO helpers', () => {
   });
 
   describe('fallback noindex wiring (contract)', () => {
+    it('uses the shared site URL for Astro canonical and sitemap origins', () => {
+      const config = src('astro.config.ts');
+      expect(config).toContain("import { siteUrl } from './src/config/site'");
+      expect(config).toContain('const siteOrigin = siteUrl');
+      expect(config).toContain('site: siteUrl');
+      expect(config).not.toContain('https://anvil.wiki');
+    });
+
     it('astro.config.ts derives sitemap exclusions from fallbackDetailPaths', () => {
       const config = src('astro.config.ts');
       expect(config).toContain("from './src/lib/fallback-paths'");

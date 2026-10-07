@@ -9,8 +9,9 @@ import BaseLayout from './BaseLayout.astro';
 import SiteHeader from '~/components/header/SiteHeader.astro';
 import SiteFooter from '~/components/footer/SiteFooter.astro';
 import StickyBanner from '~/components/ads/StickyBanner.astro';
-import { type Locale } from '~/i18n/routing';
+import { defaultLocale, type Locale } from '~/i18n/routing';
 import { getUi } from '~/i18n/ui';
+import { siteUrl } from '~/config/site';
 
 interface Props {
   locale: Locale;
@@ -25,6 +26,8 @@ interface Props {
   availableLocales?: readonly Locale[];
   /** Locale of the MAIN content (servedLocale) — fixes <html lang> on fallback pages. */
   contentLocale?: Locale;
+  /** Canonical URL override for retained locale aliases. */
+  canonicalUrl?: string;
   /** Real og:image dimensions (px) — forwarded to BaseLayout. */
   ogImageWidth?: number;
   ogImageHeight?: number;
@@ -32,12 +35,32 @@ interface Props {
   articlePublished?: Date;
   articleModified?: Date;
 }
-const { locale, availableLocales, ...rest } = Astro.props;
+const {
+  locale,
+  availableLocales,
+  contentLocale,
+  canonicalUrl,
+  noindex = false,
+  ...rest
+} = Astro.props;
 const currentPath = Astro.url.pathname;
 const shared = getUi(locale).shared;
+const mainContentLocale =
+  contentLocale ?? (locale === 'en' && defaultLocale !== 'en' ? defaultLocale : locale);
+const isDefaultContentAlias = locale === 'en' && mainContentLocale === defaultLocale;
+const aliasCanonicalUrl =
+  isDefaultContentAlias && !canonicalUrl
+    ? new URL(currentPath.replace(/^\/en(?=\/|$)/, '') || '/', siteUrl).href
+    : canonicalUrl;
 ---
 
-<BaseLayout locale={locale} {...rest}>
+<BaseLayout
+  locale={locale}
+  contentLocale={mainContentLocale}
+  canonicalUrl={aliasCanonicalUrl}
+  noindex={noindex || isDefaultContentAlias}
+  {...rest}
+>
   {/* Skip-to-content — first focusable element (WCAG 2.4.1). */}
   <a
     href="#main"

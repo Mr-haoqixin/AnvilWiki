@@ -86,8 +86,9 @@ jobs:
           PUBLIC_GISCUS_REPO_ID = ""
           PUBLIC_GISCUS_CATEGORY = ""
           PUBLIC_GISCUS_CATEGORY_ID = ""
+          PUBLIC_GISCUS_ENABLED = "false"
           PUBLIC_GISCUS_MAPPING = "pathname"
-          # Sponsor card — blank = disabled.
+          # Donation card — blank = disabled. Fill a link or WeChat/Alipay QR path.
           PUBLIC_SPONSOR_URL = ""
           PUBLIC_SPONSOR_IMAGE_URL = ""
           # Cloudflare Web Analytics — blank = disabled.
@@ -131,7 +132,8 @@ jobs:
           # destructive direction). Pinned by tests/workflows.test.ts.
           TEMPLATE_KEYS = {
               'SITE_URL', 'INDEXNOW_KEY', 'PUBLIC_GISCUS_REPO', 'PUBLIC_GISCUS_REPO_ID',
-              'PUBLIC_GISCUS_CATEGORY', 'PUBLIC_GISCUS_CATEGORY_ID', 'PUBLIC_GISCUS_MAPPING',
+              'PUBLIC_GISCUS_CATEGORY', 'PUBLIC_GISCUS_CATEGORY_ID', 'PUBLIC_GISCUS_ENABLED',
+              'PUBLIC_GISCUS_MAPPING',
               'PUBLIC_SPONSOR_URL', 'PUBLIC_SPONSOR_IMAGE_URL', 'PUBLIC_CF_BEACON_TOKEN',
               'PUBLIC_ADSENSE_CLIENT', 'PUBLIC_ADSENSE_SLOT_STICKY', 'PUBLIC_ADSENSE_SLOT_SIDEBAR',
               'PUBLIC_ADSENSE_SLOT_INCONTENT', 'PUBLIC_ADSTERRA_SLOT_SIDEBAR_300X250',

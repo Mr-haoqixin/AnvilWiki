@@ -1,44 +1,27 @@
 ---
 /**
- * Site header — logo, primary nav, theme toggle, language switcher.
+ * Site header — logo, primary nav, theme toggle, and search.
  * Mobile menu uses native <details> (zero JS).
  */
 import { Icon } from 'astro-icon/components';
 import { NAVIGATION_CONFIG } from '~/config/navigation';
 import { site } from '~/config/site';
-import { type Locale, defaultLocale, locales, LOCALE_LABELS } from '~/i18n/routing';
+import { type Locale } from '~/i18n/routing';
 import { getUi } from '~/i18n/ui';
 import { localizePath } from '~/lib/url';
 import ThemeToggle from './ThemeToggle.astro';
-import LanguageSwitcher from './LanguageSwitcher.astro';
 import SearchButton from './SearchButton.astro';
-import { landingLink, landingLinkEnabled, zhLandingLink } from '~/config/project';
+import { landingLink, landingLinkEnabled } from '~/config/project';
 
 interface Props {
   locale: Locale;
   currentPath: string;
-  /**
-   * Locales the current page exists in (optional). Pages that DON'T fall
-   * back to English (tag pages) pass their real coverage so the language
-   * switcher never links to a 404.
-   */
+  /** Retained for route call-site compatibility; this game wiki hides locale links. */
   availableLocales?: readonly Locale[];
 }
-const { locale, currentPath, availableLocales } = Astro.props;
+const { locale, currentPath } = Astro.props;
 const ui = getUi(locale);
 const nav: Record<string, string> = ui.nav as Record<string, string>;
-
-const headerLocales = availableLocales ?? locales;
-
-// Build the strip regex from `locales` — a hardcoded "en|ja" list would
-// silently break for forks that add languages (same rationale as BaseLayout).
-const localePrefixRe = new RegExp(`^/(${locales.filter((l) => l !== defaultLocale).join('|')})(?=/|$)`);
-
-const samePagePathFor = (loc: Locale) => {
-  // Strip existing locale prefix, then prepend the new one.
-  const stripped = currentPath.replace(localePrefixRe, '') || '/';
-  return localizePath(stripped, loc);
-};
 ---
 
 <header class="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur">
@@ -94,7 +77,6 @@ const samePagePathFor = (loc: Locale) => {
       )}
       <SearchButton locale={locale} />
       <ThemeToggle />
-      <LanguageSwitcher locale={locale} pathFor={samePagePathFor} availableLocales={availableLocales} />
 
       {/* Mobile menu */}
       <details class="relative md:hidden">
@@ -123,34 +105,6 @@ const samePagePathFor = (loc: Locale) => {
               </a>
             ))
           }
-          {/* Language switcher for mobile — flat list, not nested dropdown */}
-          <div class="border-t border-border pt-1">
-            <div class="flex items-center gap-1 px-3 pb-1 text-xs text-muted-foreground">
-              <Icon name="lucide:globe" class="h-3 w-3" />
-              <span>{nav.language ?? 'Language'}</span>
-            </div>
-            {
-              headerLocales.map((loc) => (
-                <a
-                  href={samePagePathFor(loc)}
-                  class:list={[
-                    'block px-3 py-2 text-sm transition hover:bg-muted',
-                    loc === locale && 'font-semibold text-nav',
-                  ]}
-                >
-                  {LOCALE_LABELS[loc]}
-                </a>
-              ))
-            }
-            {landingLinkEnabled && (
-              <a
-                href={zhLandingLink.href}
-                class="block border-t border-border px-3 py-2 text-sm text-muted-foreground transition hover:bg-muted hover:text-nav"
-              >
-                {zhLandingLink.label}
-              </a>
-            )}
-          </div>
           {landingLinkEnabled && (
             <a
               href={landingLink.href}

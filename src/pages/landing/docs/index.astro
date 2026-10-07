@@ -15,7 +15,7 @@ import { chaptersForLocale, handbookPath, parseHandbookId } from '~/lib/handbook
 
 const t = landingContent.en;
 const all = await getCollection('handbook');
-const chapters = chaptersForLocale(all, 'en');
+const chapters = chaptersForLocale(all, 'zh');
 
 const alternates = [
   { hreflang: 'en', href: `${siteUrl}/landing/docs/` },

@@ -16,11 +16,12 @@ export async function getStaticPaths() {
   const paths: Array<{ params: { locale: string; tag: string } }> = [];
   for (const locale of locales) {
     if (locale === defaultLocale) continue;
+    const sourceLocale = locale === 'en' ? defaultLocale : locale;
     const slugs = new Set<string>();
     for (const entry of all) {
       if (entry.data.draft && !isDev) continue;
       const parsedId = parseEntryId(entry.id);
-      if (!parsedId || parsedId.locale !== locale) continue;
+      if (!parsedId || parsedId.locale !== sourceLocale) continue;
       for (const tag of entry.data.tags) {
         const slug = slugifyTag(tag);
         if (slug) slugs.add(slug); // skip empty-string slugs (blank tags)

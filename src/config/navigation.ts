@@ -5,7 +5,7 @@
  *
  * The `key` MUST be identical in THREE places (rule enforced across the codebase):
  *   1. Here — NAVIGATION_CONFIG[].key
- *   2. src/locales/en.json — nav.<key> (display label) + overview.<key> (list page meta)
+ *   2. src/locales/<locale>.json — nav.<key> (display label) + overview.<key> (list page meta)
  *   3. src/content/wiki/<locale>/<key>/ — MDX directory name
  *
  * Changing this one file automatically affects: nav menu, URL routes, sitemap,
@@ -28,11 +28,9 @@ export interface NavigationItem {
 
 /** Menu order = array order — every consumer renders by physical position. */
 export const NAVIGATION_CONFIG: NavigationItem[] = [
-  { key: 'bosses', path: '/bosses', icon: 'lucide:swords', isContentType: true },
   { key: 'guides', path: '/guides', icon: 'lucide:book-open', isContentType: true },
-  { key: 'items', path: '/items', icon: 'lucide:package', isContentType: true },
-  { key: 'codes', path: '/codes', icon: 'lucide:gift', isContentType: true },
+  { key: 'updates', path: '/updates', icon: 'lucide:history', isContentType: true },
 ];
 
-/** Derived list of content type slugs (e.g. ['bosses', 'guides', 'items', 'codes']). */
+/** Derived list of content type slugs for the current game wiki. */
 export const CONTENT_TYPES: string[] = NAVIGATION_CONFIG.map((n) => n.key);

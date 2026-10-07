@@ -1,7 +1,7 @@
 ---
 /**
  * Non-default-locale legal pages: /[locale]/about, /[locale]/privacy-policy, etc.
- * Body stays in English (per PRD), but chrome respects locale.
+ * The routes remain locale-prefixed, while the site copy is Chinese.
  */
 import LegalPage from '~/components/layout/LegalPage.astro';
 import LegalContent from '~/components/layout/LegalContent.astro';
@@ -22,11 +22,11 @@ export function getStaticPaths() {
 
 const LEGAL_PAGES = ['about', 'privacy-policy', 'terms-of-service', 'copyright', 'contact'];
 const LEGAL_TITLES: Record<string, string> = {
-  about: 'About',
-  'privacy-policy': 'Privacy Policy',
-  'terms-of-service': 'Terms of Service',
-  copyright: 'Copyright',
-  contact: 'Contact',
+  about: '关于本站',
+  'privacy-policy': '隐私政策',
+  'terms-of-service': '服务条款',
+  copyright: '版权说明',
+  contact: '联系本站',
 };
 
 // Route params surface on Astro.params, NOT Astro.props (AGENTS.md gotcha #4).

@@ -7,7 +7,7 @@
  */
 import LocaleLayout from '~/components/layout/LocaleLayout.astro';
 import FaqSection from '~/components/home/FaqSection.astro';
-import { defaultLocale, locales } from '~/i18n/routing';
+import { defaultLocale } from '~/i18n/routing';
 import { getHomeFaq, getUi } from '~/i18n/ui';
 import { faqPageJsonLd, simpleBreadcrumbJsonLd } from '~/lib/seo';
 import { localizePath, languageAlternates } from '~/lib/url';
@@ -16,7 +16,7 @@ const locale = defaultLocale;
 const ui = getUi(locale);
 const faq = getHomeFaq(locale);
 const faqPath = localizePath('/faq', locale);
-const alternates = languageAlternates((loc) => localizePath('/faq', loc), locales);
+const alternates = languageAlternates((loc) => localizePath('/faq', loc), [defaultLocale]);
 const jsonLd = [
   ...(faq.items.length > 0 ? [faqPageJsonLd(faq.items)] : []),
   simpleBreadcrumbJsonLd({ pageLabel: faq.title, path: faqPath, locale, homeLabel: (ui.nav as Record<string, string>).home }),

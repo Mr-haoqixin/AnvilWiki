@@ -20,11 +20,13 @@
 export { COMMUNITY_SITES, PROJECT_VERSION } from './landing-shared';
 export type { LandingContent, LandingLocale } from './landing-types';
 
-import { en } from './landing-en';
 import { zh } from './landing-zh';
 import type { LandingContent, LandingLocale } from './landing-types';
 
-export const landingContent: Record<LandingLocale, LandingContent> = { en, zh };
+export const landingContent: Record<LandingLocale, LandingContent> = {
+  en: { ...zh, htmlLang: 'zh' },
+  zh,
+};
 
 /**
  * Landing root URL for a landing locale. trailingSlash:'always' — every

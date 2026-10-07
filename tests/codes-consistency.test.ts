@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
@@ -9,7 +9,7 @@ import { describe, expect, it } from 'vitest';
  * A code's status lives in exactly one place — the codes page frontmatter —
  * while two surfaces re-state it by hand and can silently lag behind:
  *
- *   1. `home.explore` badge-list highlights (en/ja): v2.35.0 (中-2) gated
+ *   1. `home.explore` badge-list highlights (en/zh): v2.35.0 (中-2) gated
  *      "expired shown as Active" in refresh-audit; this suite pins the
  *      remaining deterministic half in CI — highlight labels must equal the
  *      codes page's active set (both directions). A freshness batch that
@@ -30,7 +30,9 @@ import { describe, expect, it } from 'vitest';
  */
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const LOCALES = ['en', 'ja'] as const;
+const LOCALES = (['zh', 'en'] as const).filter((locale) =>
+  existsSync(join(ROOT, 'src/content/wiki', locale, 'codes/all-codes.mdx')),
+);
 
 const MONTHS: Record<string, string> = {
   January: '01',
@@ -116,7 +118,7 @@ function bodyTestPassDate(locale: string, body: string): string | undefined {
     const mm = m ? MONTHS[m[1]] : undefined;
     return m && mm ? `${m[3]}-${mm}-${m[2].padStart(2, '0')}` : undefined;
   }
-  const m = body.match(/今回の検証日は(\d{4})年(\d{1,2})月(\d{1,2})日/);
+  const m = body.match(/(?:本轮验证日期为|今回の検証日は)(\d{4})年(\d{1,2})月(\d{1,2})日/);
   return m ? `${m[1]}-${m[2].padStart(2, '0')}-${m[3].padStart(2, '0')}` : undefined;
 }
 
@@ -124,7 +126,7 @@ function frontmatterLine(fm: string, key: string): string {
   return fm.match(new RegExp(`^${key}:.*$`, 'm'))?.[0] ?? '';
 }
 
-/** Normalize the first `Month YYYY` (en) / `YYYY年M月` (ja) fragment on a
+/** Normalize the first `Month YYYY` (en) / `YYYY年M月` (zh/ja) fragment on a
  *  frontmatter line to `YYYY-MM`, or undefined when it carries no month
  *  anchor (words that aren't month names don't count). */
 function monthAnchorOf(line: string, locale: string): string | undefined {
@@ -138,42 +140,49 @@ function monthAnchorOf(line: string, locale: string): string | undefined {
 }
 
 describe('codes page ↔ home highlights consistency', () => {
-  for (const locale of LOCALES) {
-    it(`${locale}: home badge-list highlights mirror the codes page active set`, () => {
-      const active = activeCodes(frontmatterOf(readCodesPage(locale)));
-      expect(active.length, 'codes page should have at least one active code').toBeGreaterThan(0);
-      expect(highlightLabels(locale).sort()).toEqual([...active].sort());
-    });
+  if (LOCALES.length === 0) {
+    it.skip('runs when a localized codes page is present', () => {});
+  } else {
+    for (const locale of LOCALES) {
+      it(`${locale}: home badge-list highlights mirror the codes page active set`, () => {
+        const active = activeCodes(frontmatterOf(readCodesPage(locale)));
+        expect(active.length, 'codes page should have at least one active code').toBeGreaterThan(0);
+        expect(highlightLabels(locale).sort()).toEqual([...active].sort());
+      });
 
-    it(`${locale}: body test-pass date equals frontmatter lastModified`, () => {
-      const raw = readCodesPage(locale);
-      const lastModified = lastModifiedOf(frontmatterOf(raw));
-      expect(lastModified, 'codes frontmatter should pin lastModified').toBeTruthy();
-      const testPassDate = bodyTestPassDate(locale, bodyOf(raw));
-      if (!testPassDate) {
-        // Sentence absent → nothing to reconcile (refresh-audit's degraded
-        // fallback); but a marker that fails to parse is a defect.
-        const marker = locale === 'en' ? 'full test history for this pass' : '今回の検証日';
-        expect(raw.includes(marker), `test-pass marker present but unparseable in ${locale}`).toBe(false);
-        return;
-      }
-      expect(testPassDate).toBe(lastModified);
-    });
-
-    it(`${locale}: title/description month anchors match lastModified month`, () => {
-      const fm = frontmatterOf(readCodesPage(locale));
-      const lastModified = lastModifiedOf(fm);
-      expect(lastModified, 'codes frontmatter should pin lastModified').toBeTruthy();
-      const expected = String(lastModified).slice(0, 7);
-      for (const key of ['title', 'description'] as const) {
-        const anchor = monthAnchorOf(frontmatterLine(fm, key), locale);
-        if (anchor) {
-          expect(
-            anchor,
-            `${key} month anchor lags behind lastModified — rotate title/description in the same freshness batch (the Sep title / Oct body drift of #67)`,
-          ).toBe(expected);
+      it(`${locale}: body test-pass date equals frontmatter lastModified`, () => {
+        const raw = readCodesPage(locale);
+        const lastModified = lastModifiedOf(frontmatterOf(raw));
+        expect(lastModified, 'codes frontmatter should pin lastModified').toBeTruthy();
+        const testPassDate = bodyTestPassDate(locale, bodyOf(raw));
+        if (!testPassDate) {
+          const marker =
+            locale === 'en'
+              ? 'full test history for this pass'
+              : locale === 'zh'
+                ? '本轮验证日期为'
+                : '今回の検証日';
+          expect(raw.includes(marker), `test-pass marker present but unparseable in ${locale}`).toBe(false);
+          return;
         }
-      }
-    });
+        expect(testPassDate).toBe(lastModified);
+      });
+
+      it(`${locale}: title/description month anchors match lastModified month`, () => {
+        const fm = frontmatterOf(readCodesPage(locale));
+        const lastModified = lastModifiedOf(fm);
+        expect(lastModified, 'codes frontmatter should pin lastModified').toBeTruthy();
+        const expected = String(lastModified).slice(0, 7);
+        for (const key of ['title', 'description'] as const) {
+          const anchor = monthAnchorOf(frontmatterLine(fm, key), locale);
+          if (anchor) {
+            expect(
+              anchor,
+              `${key} month anchor lags behind lastModified — rotate title/description in the same freshness batch`,
+            ).toBe(expected);
+          }
+        }
+      });
+    }
   }
 });

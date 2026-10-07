@@ -239,15 +239,18 @@ Dashboard（方案 C）在 Pages → **Settings** → **Environment variables** 
 | `PUBLIC_GA_ID`              | 可选 | Google Analytics ID（有 cookie，经同意横幅门控）       |
 | `PUBLIC_CF_BEACON_TOKEN`    | 可选 | Cloudflare Web Analytics beacon token（无 cookie）     |
 | `PUBLIC_GSC_VERIFICATION`   | 可选 | Google Search Console 验证 meta token                 |
-| `PUBLIC_SPONSOR_URL`        | 可选 | 赞助/捐赠卡链接（空 = 不渲染）                         |
-| `PUBLIC_SPONSOR_IMAGE_URL`  | 可选 | 赞助卡二维码/横幅图（空 = 只显示文字卡）               |
+| `PUBLIC_SPONSOR_URL`        | 可选 | 外部赞助/捐赠链接；与图片均为空时不渲染                  |
+| `PUBLIC_SPONSOR_IMAGE_URL`  | 可选 | 赞助卡图片；可仅用合并收款码图片启用二维码捐赠卡         |
 | `PUBLIC_GISCUS_REPO`        | 可选 | Giscus 仓库（`owner/repo`，4 个必填项之一）            |
 | `PUBLIC_GISCUS_REPO_ID`     | 可选 | Giscus 仓库 ID（4 个必填项之一）                       |
 | `PUBLIC_GISCUS_CATEGORY`    | 可选 | Giscus Discussion 分类名（4 个必填项之一）             |
 | `PUBLIC_GISCUS_CATEGORY_ID` | 可选 | Giscus 分类 ID（4 个必填项之一）                       |
+| `PUBLIC_GISCUS_ENABLED`     | 可选 | 必须显式设为 `true` 才加载 Giscus；默认关闭，Giscus 需 GitHub 登录 |
 | `PUBLIC_GISCUS_MAPPING`     | 可选 | Giscus 页面映射方式，默认 `pathname`（唯一可选项）     |
 
-完整说明见 [`.env.example`](../.env.example)。所有广告/评论变量**留空时对应组件不渲染**——新手可以先不配广告把站上线，后续再加。
+完整说明见 [`.env.example`](../.env.example)。评论配置未完整填写时不渲染评论区；捐赠链接与两种二维码都留空时不渲染捐赠卡。新手可以先不配广告把站上线，后续再加。
+
+微信/支付宝合并收款码可放在 `public/` 下，再将 `PUBLIC_SPONSOR_IMAGE_URL` 设为对应公开路径（本项目现配置为 `/gaveme5.png`）。二维码是公开展示内容，请确认图片只包含你愿意公开的收款码，不要上传含个人敏感信息的截图。
 
 ---
 

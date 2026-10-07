@@ -6,13 +6,13 @@
  */
 
 export interface SiteConfig {
-  /** Full site name, used in <title> suffix and Organization JSON-LD. e.g. "Anvil Quest Wiki" */
+  /** Full site name, used in <title> suffix and Organization JSON-LD. */
   name: string;
-  /** Short name for PWA manifest, mobile logo, and the long-title <title> suffix (>50 chars). e.g. "AQ Wiki" */
+  /** Short name for PWA manifest, mobile logo, and the long-title <title> suffix (>50 chars). */
   shortName: string;
   /** Site description for Organization JSON-LD and og:site_name. */
   description: string;
-  /** Domain without protocol or trailing slash. e.g. "anvilquestwiki.wiki" */
+  /** Domain without protocol or trailing slash. */
   domain: string;
   /** Hero tagline shown under the site title. */
   tagline: string;
@@ -62,35 +62,31 @@ export interface SiteConfig {
 }
 
 export const site: SiteConfig = {
-  name: 'Anvil Quest Wiki',
-  shortName: 'AQ Wiki',
+  name: '格林默威克之歌（Songs of Glimmerwick）中文 Wiki',
+  shortName: '格林默威克 Wiki',
   description:
-    'Complete Anvil Quest wiki with boss guides, tier lists, codes, item locations, and beginner tips. Every guide carries a last-verified date.',
-  domain: 'anvil.wiki',
-  tagline: 'Your forge for everything Anvil Quest',
+    '《格林默威克之歌》（Songs of Glimmerwick）中文攻略与资料站，整理魔法歌曲、校园生活、园艺、任务、道具及版本更新信息，并标注来源与核对日期。',
+  domain: 'mygameszhwiki.cloud-ip.cc',
+  tagline: '格林默威克之歌中文攻略与玩家资料',
   legalNotice:
-    'Anvil Quest Wiki is a fan-made community site. Not affiliated with or endorsed by the game developer.',
+    '本站为非官方玩家资料站，与 Eastshade Studios 无隶属、赞助或背书关系。游戏名称、专有名词及原图版权归其各自权利人所有。',
   // 👉 APPLY TEMPLATE: set a real address if you run no social channels —
   // the contact page renders it as a mailto link.
   contactEmail: '',
   social: {
-    official: 'https://example.com/anvil-quest',
-    discord: 'https://discord.gg/example',
-    youtube: 'https://youtube.com/@example',
-    twitter: 'https://twitter.com/example',
-    reddit: 'https://reddit.com/r/anvilquest',
+    official: 'https://eastshade.com/songs-of-glimmerwick/',
   },
   // 👉 APPLY TEMPLATE: point these at the game's real canonical pages.
   sameAs: [
-    'https://example.com/anvil-quest',
-    'https://en.wikipedia.org/wiki/Anvil_Quest',
+    'https://eastshade.com/songs-of-glimmerwick/',
+    'https://store.steampowered.com/app/1706510/Songs_of_Glimmerwick/',
   ],
   game: {
-    name: 'Anvil Quest',
-    platform: 'Roblox',
-    developer: 'Forge Studios',
-    genre: 'Fantasy RPG',
-    releaseDate: '2026-01-15',
+    name: 'Songs of Glimmerwick',
+    platform: 'PC (Steam)',
+    developer: 'Eastshade Studios',
+    genre: '剧情向奇幻 RPG',
+    releaseDate: '2026-09-30',
   },
   // hero.webp is 1200×630 (the recommended OG share aspect ratio).
   ogImageWidth: 1200,

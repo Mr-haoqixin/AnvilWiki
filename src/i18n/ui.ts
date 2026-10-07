@@ -10,13 +10,13 @@
  */
 
 import en from '~/locales/en.json';
-import ja from '~/locales/ja.json';
+import zh from '~/locales/zh.json';
 
 import { defaultLocale, isLocale, type Locale } from './routing';
 
 const messages: Record<Locale, Record<string, unknown>> = {
+  zh: zh as Record<string, unknown>,
   en: en as Record<string, unknown>,
-  ja: ja as Record<string, unknown>,
 };
 
 /**
@@ -64,7 +64,7 @@ function deepFreeze<T>(value: T): T {
   return value;
 }
 
-// Freeze via the messages map, NOT via bare `en`/`ja` identifiers: the
+// Freeze via the messages map, NOT via bare locale identifiers: the
 // apply-template CLI rewrites the import block and this literal for forks
 // that drop locales (their imports are stripped), so any reference to a
 // stripped identifier outside those regions is a fork-only ReferenceError.
@@ -74,24 +74,26 @@ for (const table of Object.values(messages)) deepFreeze(table);
 
 /**
  * Get the full UI messages object for a locale, with English fallback.
- * Never throws — unknown locales return English. Non-default locales are
+ * Never throws — unknown locales return English. Localized messages are
  * deep-merged once and cached, and every result is deeply frozen: treat it
  * as read-only because it IS read-only (mutation throws).
  */
 const uiCache = new Map<Locale, typeof en>();
 
 export function getUi(locale: string): typeof en {
-  if (locale === defaultLocale) return en;
   if (isLocale(locale)) {
-    const cached = uiCache.get(locale);
+    // Non-default prefixes are retained as aliases on this single-language site.
+    const sourceLocale =
+      locale === 'en' && defaultLocale !== 'en' ? defaultLocale : locale;
+    const cached = uiCache.get(sourceLocale);
     if (cached) return cached;
     const merged = deepFreeze(
-      deepMerge(en as Record<string, unknown>, messages[locale]),
+      deepMerge(en as Record<string, unknown>, messages[sourceLocale]),
     ) as typeof en;
-    uiCache.set(locale, merged);
+    uiCache.set(sourceLocale, merged);
     return merged;
   }
-  return deepFreeze(deepMerge(en as Record<string, unknown>, {})) as typeof en;
+  return en;
 }
 
 /** The homepage `home` namespace (drives HomePage + the /faq pages). */

@@ -53,6 +53,7 @@ interface Props {
 }
 const { locale, resolved, alternates = [], availableLocales } = Astro.props;
 const { entry, servedLocale, isFallback } = resolved;
+const displayLocale = servedLocale === 'en' ? 'zh-CN' : servedLocale;
 const ui = getUi(locale);
 const nav = ui.nav as Record<string, string>;
 const shared = ui.shared;
@@ -68,18 +69,18 @@ const coverUrl = entry.data.image
   ? `${siteUrl}${entry.data.image.src}`
   : `${siteUrl}/images/hero.webp`;
 
-// Related articles come from the SERVED locale's pool — on an English-fallback
-// page (locale=ja serving English) the requested-locale pool doesn't contain
+// Related articles come from the SERVED locale's pool — on a fallback page
+// (locale=en serving Chinese) the requested-locale pool doesn't contain
 // this entry's siblings and "Related" would silently disappear.
 const related = await getRelatedEntries(entry, servedLocale, 3);
 
 // Visible codes FAQ — same strings feed faqPageJsonLd (marking up invisible
 // content violates Google's structured-data policy).
-const codesFaqItems =
+const codesFaqItems: Array<{ question: string; answer: string }> =
   entry.data.codes && entry.data.codes.length > 0
     ? (shared.codesFaq ?? [])
     : [];
-// Both keys exist in every locale JSON (en + ja; getUi deep-merges en under
+// Both keys exist in every locale JSON (en + zh; getUi deep-merges en under
 // partial translations), so no hardcoded English fallback — a renamed key
 // must surface, not silently degrade to English.
 const codesFaqTitle = shared.codesFaqTitle;
@@ -203,7 +204,7 @@ const jsonLd = [
       <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground">
         <span class="inline-flex items-center gap-1">
           <Icon name="lucide:calendar" class="h-3.5 w-3.5" />
-          {entry.data.date.toLocaleDateString(locale, { timeZone: 'UTC' })}
+          {entry.data.date.toLocaleDateString(displayLocale, { timeZone: 'UTC' })}
         </span>
         {entry.data.gameVersion && (
           <span
@@ -233,7 +234,7 @@ const jsonLd = [
           entry.data.lastModified && (
             <span class="inline-flex items-center gap-1">
               <Icon name="lucide:refresh-cw" class="h-3.5 w-3.5" />
-              {shared.lastUpdated}: {entry.data.lastModified.toLocaleDateString(locale, { timeZone: 'UTC' })}
+              {shared.lastUpdated}: {entry.data.lastModified.toLocaleDateString(displayLocale, { timeZone: 'UTC' })}
             </span>
           )
         }
@@ -292,7 +293,7 @@ const jsonLd = [
       <aside class="mt-4 flex items-start gap-2 rounded-lg border border-amber-500/40 bg-amber-500/10 p-3 text-sm text-foreground" role="note">
         <Icon name="lucide:alert-triangle" class="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
         <p>
-          {shared.possiblyOutdated} {(entry.data.lastModified ?? entry.data.date).toLocaleDateString(locale, { timeZone: 'UTC' })}
+          {shared.possiblyOutdated} {(entry.data.lastModified ?? entry.data.date).toLocaleDateString(displayLocale, { timeZone: 'UTC' })}
           {shared.outdatedNote}
         </p>
       </aside>
