@@ -80,6 +80,8 @@ git push           # 第 5 步 Cloudflare 连的是 GitHub 远端仓库,不推�
 
 > 💡 **SITE_URL 不用去 dashboard 配**:第 3 步已经把它写进 `wrangler.toml` 的 `[vars]`——只要这个文件存在,它就是 Cloudflare Pages 环境变量的**唯一真相源**,dashboard 里配的同名变量会被忽略。以后换域名,改 `[vars]` 里的 `SITE_URL`(必须含 `https://`)即可;也可以删掉该文件改用 dashboard 配置。完整说明 + 踩坑诊断见 [docs/deployment.md](docs/deployment.md)。
 
+**捐赠/支持卡片与二维码开关**:在仓库根目录 [`wrangler.toml`](wrangler.toml) 的 `[vars]` 修改 `PUBLIC_SPONSOR_URL` 和 `PUBLIC_SPONSOR_IMAGE_URL`。任一变量有值就会在文章页显示支持卡片；两项都留空则完全不显示。`PUBLIC_SPONSOR_URL` 可填捐赠平台链接；二维码图片放在 `public/` 下，变量填网站路径(例如文件 `public/images/support-qr.png` 对应 `/images/support-qr.png`)。本地预览可在 `.env` 设置；部署时若保留 `wrangler.toml`，请改这里而不是 Cloudflare dashboard，因为该文件是环境变量唯一来源。仓库提供 [.env.example](.env.example) 作为变量参考。
+
 **不想碰终端?有一条零命令路径**:fork 后打开你仓库的 **Actions** 页签 → 左侧选 **Initialize AnvilWiki** → **Run workflow**(填你的域名)→ 合并它开好的 PR → 直接做上面的第 5 步。游戏名、主题色等之后随时可以让 AI 助手帮你改。
 
 **完全新手?别从这里开始**——先去[学习手册](https://anvil.wiki/zh/landing/docs/learn):「选品找词」一个阶段帮你把游戏选对,「装好 6 样工具」把终端、Node、Git、AI 助手怎么装、每步会看到什么全部写清,然后「把站跑起来」才动手建站。手册源码在 [`docs/handbook/`](docs/handbook/),fork 后依然保留(但站内文档中心页面会自动移除,属正常)。
@@ -221,6 +223,8 @@ git push           # step 5 connects Cloudflare to the REMOTE repo — skip this
 ```
 
 > 💡 **No need to set SITE_URL in the dashboard**: step 3 already wrote it into `[vars]` in `wrangler.toml` — while that file exists it is the **sole source of truth** for Cloudflare Pages env, and same-named dashboard variables are ignored. To change domains later, edit `SITE_URL` in `[vars]` (must include `https://`), or delete the file and use the dashboard instead. Full explanation + troubleshooting: [docs/deployment.md](docs/deployment.md).
+
+**Donation / support card and QR toggle**: edit `PUBLIC_SPONSOR_URL` and `PUBLIC_SPONSOR_IMAGE_URL` under `[vars]` in the repo-root [`wrangler.toml`](wrangler.toml). The card appears on article pages when either value is set; leave both empty to hide it. `PUBLIC_SPONSOR_URL` can point to a donation platform. Put a QR image anywhere under `public/` and set its site path (for example, `public/images/support-qr.png` maps to `/images/support-qr.png`). For local preview, use `.env`. For deployment, edit `wrangler.toml` rather than the Cloudflare dashboard while that file exists; it is the sole env source. See [.env.example](.env.example) for the variable reference.
 
 **Prefer zero terminal?** There's a no-command path: open your fork's **Actions** tab → **Initialize AnvilWiki** → **Run workflow** (enter your domain) → merge the PR it opens → jump straight to step 5 above. Game name, theme color and more can be changed later with your AI assistant.
 
