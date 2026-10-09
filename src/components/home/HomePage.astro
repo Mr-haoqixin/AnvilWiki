@@ -23,7 +23,6 @@ import VideoSection from '~/components/home/VideoSection.astro';
 import QuickStart from '~/components/home/QuickStart.astro';
 import ExploreModules from '~/components/home/ExploreModules.astro';
 import { site } from '~/config/site';
-import { NAVIGATION_CONFIG } from '~/config/navigation';
 import { type Locale } from '~/i18n/routing';
 import { getUi, type HomeUi } from '~/i18n/ui';
 import { getRecentEntries, parseEntryId } from '~/lib/content';
@@ -123,7 +122,7 @@ function trendingLabel(link: QuickLink): string {
         }
         {
           hero.ctaSecondary && (
-            <a href={listPath(NAVIGATION_CONFIG[1]?.key ?? 'guides', locale)} class="btn-outline">
+            <a href={listPath('guides', locale)} class="btn-outline">
               {hero.ctaSecondary}
             </a>
           )
@@ -152,7 +151,7 @@ function trendingLabel(link: QuickLink): string {
       <div class="lg:col-span-2">
         <div class="flex items-baseline justify-between">
           <h2 class="text-2xl font-bold">{updates.title}</h2>
-          <a href={listPath(NAVIGATION_CONFIG[1]?.key ?? 'guides', locale)} class="text-sm text-foreground hover:text-nav hover:underline"
+          <a href={listPath('updates', locale)} class="text-sm text-foreground hover:text-nav hover:underline"
             >{shared.browseAll}</a
           >
         </div>

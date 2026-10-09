@@ -27,11 +27,7 @@ const year = new Date().getFullYear();
       </ul>
       <h2>玩家共建</h2>
       <p>
-        本站是独立玩家项目，不是官方 Wiki。资料可能因游戏更新而变化；发现错误或希望补充内容，可通过
-        <a href="https://github.com/mr-haoqixin/AnvilWiki/issues" target="_blank" rel="noopener noreferrer">
-          GitHub 仓库
-        </a>
-        提交反馈。本站内容无需登录即可浏览。
+        本站是独立玩家项目，不是官方 Wiki。资料可能因游戏更新而变化；联系渠道如有配置会列在联系页面。本站内容无需登录即可浏览。
       </p>
       <h2>官方信息</h2>
       <p>
@@ -59,9 +55,6 @@ const year = new Date().getFullYear();
       <p>只有在相应功能启用或你主动使用时，第三方服务才可能处理相关数据：</p>
       <ul>
         <li>
-          <strong>广告服务</strong>（如 Google AdSense、Adsterra）：可能使用 Cookie 或类似技术提供及衡量广告；个性化广告设置可在浏览器或服务商提供的选项中管理。
-        </li>
-        <li>
           <strong>流量分析</strong>（如 Google Analytics、Cloudflare Web Analytics）：Google Analytics 仅在你通过同意提示后才加载；Cloudflare Web Analytics 在启用时以汇总方式统计访问情况。
         </li>
         <li>
@@ -76,7 +69,7 @@ const year = new Date().getFullYear();
       </ul>
       <h2>Cookie</h2>
       <p>
-        第三方服务可能设置 Cookie。你可以在浏览器设置中管理 Cookie；关闭后可能影响广告个性化或部分服务，但通常不影响阅读本站静态内容。
+        Google Analytics 仅在你同意后加载，可能使用 Cookie 统计访问情况。你可以在浏览器设置中管理 Cookie；关闭后通常不影响阅读本站静态内容。
       </p>
       <h2>儿童隐私</h2>
       <p>
@@ -131,11 +124,7 @@ const year = new Date().getFullYear();
       </p>
       <h2>版权或下架请求</h2>
       <p>
-        如你认为本站内容侵犯了你的权利，请通过
-        <a href="https://github.com/mr-haoqixin/AnvilWiki/issues" target="_blank" rel="noopener noreferrer">
-          GitHub 仓库
-        </a>
-        联系维护者，并提供相关页面、权利证明及请求说明。本站会核查有效请求并及时处理。
+        如你认为本站内容侵犯了你的权利，请通过本站配置的公开联系渠道联系维护者，并提供相关页面、权利证明及请求说明。本站会核查有效请求并及时处理。
       </p>
       <h2>非官方声明</h2>
       <p>{site.legalNotice}</p>
@@ -147,7 +136,7 @@ const year = new Date().getFullYear();
   page === 'contact' && (
     <>
       <h2>联系 {site.name}</h2>
-      <p>本站是玩家维护的非官方 Wiki。可通过以下公开渠道联系维护者或提交更正建议。</p>
+      <p>本站是玩家维护的非官方 Wiki。以下渠道用于核实游戏官方信息或联系维护者；本站目前未配置专用反馈邮箱或社区渠道。</p>
       <h2>联系渠道</h2>
       <ul>
         {site.social.official && (
@@ -158,12 +147,6 @@ const year = new Date().getFullYear();
             </a>
           </li>
         )}
-        <li>
-          <strong>本站反馈：</strong>{' '}
-          <a href="https://github.com/mr-haoqixin/AnvilWiki/issues" target="_blank" rel="noopener noreferrer">
-            在 GitHub 提交问题或更正
-          </a>
-        </li>
         {site.social.discord && (
           <li>
             <strong>Discord：</strong>{' '}
@@ -196,7 +179,7 @@ const year = new Date().getFullYear();
       </ul>
       <h2>内容贡献</h2>
       <p>
-        发现错字、过期资料或希望补充攻略？欢迎通过 GitHub 提交问题或 Pull Request。请尽量附上游戏版本、来源与复现步骤。
+        发现错字、过期资料或希望补充攻略？本站目前未配置专用反馈邮箱或社区渠道。请尽量附上游戏版本、来源与复现步骤，待本站公布联系渠道后再提交。
       </p>
       <h2>版权问题</h2>
       <p>

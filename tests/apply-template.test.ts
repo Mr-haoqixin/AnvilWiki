@@ -648,12 +648,11 @@ describe('demo asset inventories stay in sync with setup.yml (drift has shipped 
     // The retired key file is deleted by exact name regardless of content —
     // forks initialized from older trees must lose it on the next rerun.
     expect(isDemoPublicFileContent(DEMO_INDEXNOW_KEY_FILE, 'any content')).toBe(true);
-    // Registry keys must match the shipped demo unit files — a regenerated
-    // demo key without updating the registry would silently keep demo
-    // residue in forks (isDemoPublicFileContent defaults to keep).
+    // Keep the marker registry for legacy fork cleanup, but do not ship the
+    // old demo ad snippets with this game-wiki site.
     for (const [rel, marker] of Object.entries(DEMO_ADSTERRA_UNIT_MARKERS)) {
-      const source = readFileSync(join(repoRoot, 'public', rel), 'utf8');
-      expect(source, rel).toContain(marker);
+      expect(isDemoPublicFileContent(rel, `before ${marker} after`), rel).toBe(true);
+      expect(existsSync(join(repoRoot, 'public', rel)), `${rel} must not ship`).toBe(false);
     }
   });
 

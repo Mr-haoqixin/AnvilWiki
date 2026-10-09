@@ -3,21 +3,19 @@
  * CookieConsent — GDPR/ePrivacy consent banner that actually GATES tracking.
  *
  * How it works (with BaseLayout):
- *   - BaseLayout no longer injects GA / AdSense statically. Instead it defines
- *     `window.__awLoadTrackers()` which injects them dynamically.
+ *   - BaseLayout defines `window.__awLoadTrackers()` for consent-gated analytics.
  *   - This component shows a banner when no choice is stored (only rendered
  *     at all when tracking env vars are set — see BaseLayout).
  *   - Accept  → store 'accepted', call __awLoadTrackers(), remove banner.
  *   - Decline → store 'declined', trackers never load (this session & future).
  *   - Returning visitors with a stored choice never see the banner again.
  *
- * Other consent-gated mounts (AdsterraSlot's deferred iframes, the mobile
- * anchor ad) can't reach __awLoadTrackers, so whenever consent becomes
+ * Other consent-gated mounts can't reach __awLoadTrackers, so whenever consent becomes
  * known-accepted this script also dispatches the `aw:consent-accepted`
  * document event. The script below compiles as its own module — it CANNOT
  * see frontmatter imports — so the event/storage names are hardcoded here;
  * canonical values live in src/lib/shared-ui.ts, and tests/consent.test.ts
- * pins this file's copies (plus AdsterraSlot's and MobileAnchorAd's) to them.
+ * pins this file's copies to them.
  *
  * Default-off contract preserved: no tracking env vars → this component is
  * never rendered → zero JS → Lighthouse unchanged.
@@ -70,7 +68,7 @@ const { labels, privacyHref, privacyLabel } = Astro.props;
 </div>
 
 <script>
-  // Type the tracker loader defined in BaseLayout (consent-gated GA/AdSense).
+  // Type the tracker loader defined in BaseLayout (consent-gated analytics).
   declare global {
     interface Window {
       __awLoadTrackers?: () => void;
@@ -92,8 +90,8 @@ const { labels, privacyHref, privacyLabel } = Astro.props;
       }
     })();
 
-    // Tell consent-gated third-party mounts (deferred Adsterra iframes) that
-    // loading may start. Safe to fire repeatedly — consumers are idempotent.
+    // Tell consent-gated components that the visitor accepted. Safe to fire
+    // repeatedly — consumers are idempotent.
     const announceAccepted = () => {
       document.dispatchEvent(new CustomEvent(ACCEPTED_EVENT));
     };

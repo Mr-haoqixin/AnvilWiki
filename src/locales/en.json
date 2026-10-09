@@ -10,6 +10,10 @@
   "nav": {
     "home": "Home",
     "guides": "Guides",
+    "glossary": "Glossary",
+    "characters": "Characters",
+    "locations": "Locations",
+    "items": "Items",
     "updates": "Updates",
     "toggleTheme": "Toggle theme",
     "menu": "Menu",
@@ -35,7 +39,7 @@
     "share": "Share",
     "copyLink": "Copy link",
     "copied": "Copied!",
-    "consentText": "We use cookies for analytics and ads to keep this site free.",
+    "consentText": "We use cookies for analytics.",
     "accept": "Accept",
     "decline": "Decline",
     "consentTitle": "Cookies",
@@ -114,6 +118,22 @@
     "guides": {
       "overviewTitle": "All Guides",
       "overviewDescription": "Player guides for Songs of Glimmerwick quests, songs, gardening, items, exploration, and controls."
+    },
+    "glossary": {
+      "overviewTitle": "Game Terms",
+      "overviewDescription": "A searchable index of character, place, item, quest, and ability names used across this wiki."
+    },
+    "characters": {
+      "overviewTitle": "Characters",
+      "overviewDescription": "Character entries are currently available in Chinese only."
+    },
+    "locations": {
+      "overviewTitle": "Locations",
+      "overviewDescription": "Location entries are currently available in Chinese only."
+    },
+    "items": {
+      "overviewTitle": "Items",
+      "overviewDescription": "Item entries are currently available in Chinese only."
     },
     "updates": {
       "overviewTitle": "Game Updates",

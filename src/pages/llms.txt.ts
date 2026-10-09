@@ -13,13 +13,11 @@
  */
 import type { APIRoute } from 'astro';
 import { site, siteUrl } from '~/config/site';
-import { landingLinkEnabled } from '~/config/project';
 import { getCollection } from 'astro:content';
 import { parseEntryId } from '~/lib/content';
 import { defaultLocale } from '~/i18n/routing';
 import { detailPath } from '~/lib/url';
 import { newestFirst } from '~/lib/content-utils';
-import { chaptersForLocale, handbookPath, parseHandbookId, sortChapters } from '~/lib/handbook';
 
 /**
  * llms.txt entries are ONE Markdown list item per line (`- [title](url): summary`).
@@ -63,40 +61,6 @@ export const GET: APIRoute = async () => {
     const url = `${siteUrl}${detailPath(e.data.category, slug, defaultLocale)}`;
     const summary = e.data.summary ?? e.data.description;
     lines.push(`- [${escapeLinkText(e.data.title)}](${url}): ${oneLine(summary)}`);
-  }
-
-  // Handbook (project docs center, /landing/docs) — this is AnvilWiki-project
-  // content, not the site's own game content, so it only appears while the
-  // project landing page exists. apply-template removes the landing routes
-  // and flips landingLinkEnabled → fork sites never list AnvilWiki URLs here.
-  if (landingLinkEnabled) {
-    const handbookAll = await getCollection('handbook');
-    const chapters = sortChapters(chaptersForLocale(handbookAll, 'en'));
-    if (chapters.length > 0) {
-      lines.push('', '## Handbook', '');
-      for (const c of chapters) {
-        const slug = parseHandbookId(c.id)?.slug ?? '';
-        lines.push(
-          `- [${escapeLinkText(c.data.title)}](${siteUrl}${handbookPath('en', slug)}): ${oneLine(c.data.description)}`,
-        );
-      }
-    }
-
-    // Comparison page — citable facts for "which wiki tool to pick" queries.
-    // The three project pages below are NOT handbook chapters — this heading
-    // splits them out of `## Handbook` so AI engines don't file them under
-    // the docs center.
-    lines.push('', '## Project pages', '');
-    lines.push(
-      `- [AnvilWiki vs Fandom vs Wiki.js — how to choose](${siteUrl}/landing/comparison/): The three species of wiki tooling — hosted platforms, self-hosted collaboration engines, and static publishing templates — and when each fits a game content site, plus why Fandom users switch (platform-fixed page templates, platform-run ads, no custom domain).`,
-    );
-
-    // Community highlights — daily AI-curated digest of the maintainer's
-    // WeChat builder group (Chinese). Same landing-layer lifecycle as above.
-    lines.push(
-      `- [AnvilWiki Community Highlights](${siteUrl}/landing/community/): Daily AI-curated digest of the AnvilWiki WeChat group — know-how, monetization pitfalls, real Q&A and template feedback from game-wiki builders (in Chinese).`,
-    );
-
   }
 
   return new Response(lines.join('\n') + '\n', {

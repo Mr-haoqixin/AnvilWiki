@@ -5,15 +5,12 @@
  * Contains:
  *   - Dynamic navigation (auto-generated from actual MDX files via
  *     getDynamicNavigation). Groups by category, lists articles.
- *   - Sidebar ad slots (desktop only).
  *
  * Sticky on desktop so it follows the reader as they scroll.
  *
  * Hidden on mobile (the main nav + in-page TOC cover mobile navigation).
  */
 import { Icon } from 'astro-icon/components';
-import SidebarAd from '~/components/ads/SidebarAd.astro';
-import AdsterraSlot from '~/components/ads/AdsterraSlot.astro';
 import { type Locale } from '~/i18n/routing';
 import { getUi } from '~/i18n/ui';
 import { getDynamicNavigation } from '~/lib/navigation';
@@ -24,10 +21,8 @@ interface Props {
   locale: Locale;
   /** Current article path (to highlight active link). */
   currentPath?: string;
-  /** When true, hide ad slots (used when sidebar shares space with a TOC). */
-  compact?: boolean;
 }
-const { locale, currentPath = '', compact = false } = Astro.props;
+const { locale, currentPath = '' } = Astro.props;
 const ui = getUi(locale);
 const nav = ui.nav as Record<string, string>;
 const shared = ui.shared;
@@ -82,8 +77,5 @@ const groups = await getDynamicNavigation(locale, nav);
       ))}
     </nav>
 
-    {/* Sidebar ads — hidden in compact mode (when sharing space with TOC) */}
-    {!compact && <SidebarAd />}
-    {!compact && <AdsterraSlot name="sidebar-300x250" width={300} height={250} />}
   </div>
 </div>

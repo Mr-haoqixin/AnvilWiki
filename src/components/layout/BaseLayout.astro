@@ -117,7 +117,7 @@ const localePrefixRe = new RegExp(`^/(${locales.join('|')})(?=/|$)`);
 // x-default should point at the default-language version when one exists.
 // When the caller passes alternates we derive it from them instead of blind
 // prefix-stripping — that way a page whose default-locale URL was never built
-// (e.g. a ja-only article, or /zh/landing) never emits a dead x-default.
+// (e.g. a ja-only article) never emits a dead x-default.
 const defaultAlt = alternates.find((a) => a.hreflang === defaultLocale);
 const xDefaultHref = defaultAlt
   ? defaultAlt.href
@@ -125,27 +125,25 @@ const xDefaultHref = defaultAlt
     ? alternates[0].href
     : `${siteUrl}${Astro.url.pathname.replace(localePrefixRe, '')}`;
 
-// Optional analytics / verification / ads (env-var gated — empty = not injected).
+// Optional analytics / verification (env-var gated — empty = not injected).
 const gaId = import.meta.env.PUBLIC_GA_ID as string | undefined;
 const cfBeaconToken = import.meta.env.PUBLIC_CF_BEACON_TOKEN as string | undefined;
 const gscVerification = import.meta.env.PUBLIC_GSC_VERIFICATION as string | undefined;
-const adsenseClient = import.meta.env.PUBLIC_ADSENSE_CLIENT as string | undefined;
 
 // Consent banner labels: wiki locales derive them from the locale JSON
 // (hardcoded English fallbacks for a locale whose JSON hasn't been translated
-// yet); landing-only htmlLangs (zh) pass a full override via LandingLayout.
+// yet).
 const sharedStrings = getUi(locale).shared;
 const consentLabels = consent
   ? { title: consent.title, text: consent.text, accept: consent.accept, decline: consent.decline }
   : {
       title: sharedStrings.consentTitle ?? 'Cookies',
-      text: sharedStrings.consentText ?? 'We use cookies for analytics and ads.',
+      text: sharedStrings.consentText ?? 'We use cookies for analytics.',
       accept: sharedStrings.accept ?? 'Accept',
       decline: sharedStrings.decline ?? 'Decline',
     };
 // Consent banner links to the localized privacy policy (informed consent).
-// The link must point at a page that EXISTS — landing-only htmlLangs like zh
-// have no legal page, so clamp the fallback to a real wiki locale.
+// The link must point at a page that EXISTS, so clamp the fallback to a wiki locale.
 const consentLocale = (locales as readonly string[]).includes(locale) ? locale : defaultLocale;
 const footerStrings = getUi(locale).footer;
 const privacyHref =
@@ -242,13 +240,13 @@ const privacyLabel = consent?.privacyLabel ?? footerStrings.privacyPolicy ?? 'Pr
     {gscVerification && <meta name="google-site-verification" content={gscVerification} />}
 
     {/*
-      Analytics / AdSense are injected DYNAMICALLY (consent-gated).
+      Analytics are injected DYNAMICALLY (consent-gated).
       BaseLayout only defines the loader; CookieConsent.astro calls it after
       the visitor accepts. See GDPR note in AGENTS.md. No tracking env vars
       → this block renders nothing → zero JS.
     */}
-    {(gaId || adsenseClient) && (
-      <script is:inline define:vars={{ gaId, adsenseClient }}>
+    {gaId && (
+      <script is:inline define:vars={{ gaId }}>
         window.__awLoadTrackers = () => {
           if (window.__awTrackersLoaded) return;
           window.__awTrackersLoaded = true;
@@ -264,21 +262,12 @@ const privacyLabel = consent?.privacyLabel ?? footerStrings.privacyPolicy ?? 'Pr
             gtag('js', new Date());
             gtag('config', gaId);
           }
-          if (adsenseClient) {
-            const s = document.createElement('script');
-            s.async = true;
-            s.crossOrigin = 'anonymous';
-            s.src =
-              'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' +
-              adsenseClient;
-            document.head.appendChild(s);
-          }
         };
       </script>
     )}
 
     {/*
-      Cloudflare Web Analytics (optional) — cookieless, so unlike GA/AdSense
+      Cloudflare Web Analytics (optional) — cookieless, so unlike GA
       it needs no consent gate. Empty token = nothing injected, zero JS.
     */}
     {cfBeaconToken && (
@@ -333,11 +322,18 @@ const privacyLabel = consent?.privacyLabel ?? footerStrings.privacyPolicy ?? 'Pr
         });
       })();
     </script>
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "yusju3ox3y");
+    </script>
   </head>
   <body class="min-h-screen bg-background text-foreground antialiased">
     <slot />
     {/* Consent banner — only rendered when tracking env vars are set. */}
-    {(gaId || adsenseClient) && (
+    {gaId && (
       <CookieConsent
         labels={{
           title: consentLabels.title,

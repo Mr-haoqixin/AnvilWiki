@@ -10,6 +10,10 @@
   "nav": {
     "home": "首页",
     "guides": "攻略与资料",
+    "glossary": "名词索引",
+    "characters": "人物",
+    "locations": "地点",
+    "items": "物品",
     "updates": "版本更新",
     "toggleTheme": "切换主题",
     "menu": "菜单",
@@ -35,7 +39,7 @@
     "share": "分享",
     "copyLink": "复制链接",
     "copied": "已复制",
-    "consentText": "本站使用 Cookie 运行分析与广告服务。",
+    "consentText": "本站使用 Cookie 进行访问统计。",
     "accept": "接受",
     "decline": "拒绝",
     "consentTitle": "Cookie 设置",
@@ -114,6 +118,22 @@
     "guides": {
       "overviewTitle": "游戏攻略与资料",
       "overviewDescription": "《格林默威克之歌》（Songs of Glimmerwick）的任务、歌曲、园艺、道具、探索与版本更新指南。"
+    },
+    "glossary": {
+      "overviewTitle": "游戏专有名词索引",
+      "overviewDescription": "按人物、地点、物品与玩法整理本站攻略中出现的游戏专有名词，并链接到对应资料。"
+    },
+    "characters": {
+      "overviewTitle": "人物词条",
+      "overviewDescription": "浏览《格林默威克之歌》序章中出现的人物及其已确认的流程关联。"
+    },
+    "locations": {
+      "overviewTitle": "地点词条",
+      "overviewDescription": "浏览入学流程涉及的城镇与商店地点，以及来源明确的用途说明。"
+    },
+    "items": {
+      "overviewTitle": "物品词条",
+      "overviewDescription": "浏览入学用品中的长笛、坩埚与校服长袍等物品资料。"
     },
     "updates": {
       "overviewTitle": "版本更新",

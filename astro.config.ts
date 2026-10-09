@@ -163,35 +163,6 @@ function buildLastmodMap(
     }
   }
 
-  // Handbook chapters (docs/handbook/<locale>/<slug>.md) → /landing/docs/<slug>
-  // (+ /zh/ prefix). Same frontmatter-driven lastmod contract; the `updated`
-  // field is optional, so chapters without it simply keep the default.
-  const hb = path.resolve('./docs/handbook');
-  if (fs.existsSync(hb)) {
-    for (const loc of ['en', 'zh']) {
-      const dir = path.join(hb, loc);
-      if (!fs.existsSync(dir)) continue;
-      for (const entry of fs.readdirSync(dir)) {
-        if (!entry.endsWith('.md')) continue;
-        const src = fs.readFileSync(path.join(dir, entry), 'utf8');
-        const fm = extractFrontmatter(src);
-        const iso = fm.match(/^updated:\s*(.+)$/m)?.[1]?.trim().replace(/['"]/g, '');
-        if (!iso) continue;
-        const date = new Date(iso);
-        if (Number.isNaN(date.getTime())) continue;
-        const slug = entry.replace(/\.md$/, '');
-        const pagePath = loc === 'en' ? `/landing/docs/${slug}` : `/zh/landing/docs/${slug}`;
-        map.set(pagePath, date.toISOString());
-        // Hub pages: newest chapter wins.
-        const hubPath = loc === 'en' ? '/landing/docs' : '/zh/landing/docs';
-        const existing = map.get(hubPath);
-        if (!existing || existing < date.toISOString()) {
-          map.set(hubPath, date.toISOString());
-        }
-      }
-    }
-  }
-
   return map;
 }
 
@@ -320,12 +291,8 @@ export default defineConfig({
       // otherwise — the page asks not to be indexed while the sitemap submits it).
       filter: (url) => {
         const pathname = normalizePath(decodeSitemapPath(url));
-        const chineseAlias =
-          pathname === '/en' ||
-          pathname.startsWith('/en/') ||
-          pathname === '/zh/landing' ||
-          pathname.startsWith('/zh/landing/');
-        return !chineseAlias && !noindexPaths.has(pathname);
+        const englishAlias = pathname === '/en' || pathname.startsWith('/en/');
+        return !englishAlias && !noindexPaths.has(pathname);
       },
       // Inject <lastmod> from article frontmatter (see buildLastmodMap) and
       // hreflang alternates that mirror the page-level truth (see alternatesFor).
