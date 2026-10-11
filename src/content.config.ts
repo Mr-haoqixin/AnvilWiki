@@ -2,6 +2,7 @@ import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 import { CONTENT_TYPES } from './config/navigation';
+import { locales } from './i18n/routing';
 
 /**
  * Wiki content collection.
@@ -21,8 +22,10 @@ import { CONTENT_TYPES } from './config/navigation';
  * At build time `entry.data.image` is `ImageMetadata | undefined`. For an
  * absolute og:image URL, read `.src` and prefix with `siteUrl`.
  */
+const localePattern = `{${locales.join(',')}}/**/*.mdx`;
+
 const wiki = defineCollection({
-  loader: glob({ pattern: '**/*.mdx', base: './src/content/wiki' }),
+  loader: glob({ pattern: localePattern, base: './src/content/wiki' }),
   schema: ({ image }) =>
     z.object({
       title: z.string().max(80),
@@ -82,6 +85,13 @@ const wiki = defineCollection({
        */
       videos: z
         .array(z.string().regex(/^[A-Za-z0-9_-]{11}$/, 'YouTube video ID (11 chars, not a URL)'))
+        .optional(),
+      /**
+       * Optional related Bilibili video BV IDs (lazy-loaded embeds).
+       * BV IDs are typically 10-12 chars starting with "BV".
+       */
+      bilibiliVideos: z
+        .array(z.string().regex(/^BV[A-Za-z0-9]{8,12}$/, 'Bilibili BV ID (e.g. BV1xx411c7mD)'))
         .optional(),
       /**
        * Optional image gallery — rendered as a thumbnail grid below the

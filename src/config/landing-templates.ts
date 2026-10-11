@@ -96,7 +96,7 @@ export const templatesContent: Record<LandingLocale, TemplatesPageContent> = {
           'summary frontmatter (a 40–60 word direct answer) → Quick Answer card + AI Overviews candidate',
           'Card images on headline entries',
         ],
-        links: [{ label: 'Weapon tier list', href: '/guides/weapon-tier-list/' }],
+        links: [{ label: 'Weapon tier list', href: '/tasks/weapon-tier-list/' }],
       },
       {
         name: 'Beginner guide',
@@ -107,7 +107,7 @@ export const templatesContent: Record<LandingLocale, TemplatesPageContent> = {
           'Accordion / Callout components for tips, warnings and collapsible depth',
           'check-content lints every page: no H1, heading order, alt text, ≥3 internal links',
         ],
-        links: [{ label: 'Beginner guide', href: '/guides/beginner-guide/' }],
+        links: [{ label: 'Beginner guide', href: '/tasks/beginner-guide/' }],
       },
       {
         name: 'Item & equipment pages',
@@ -187,7 +187,7 @@ export const templatesContent: Record<LandingLocale, TemplatesPageContent> = {
           'frontmatter summary(40–60 词直答)→ Quick Answer 卡片 + AI Overviews 摘要候选',
           '头部条目配卡片图',
         ],
-        links: [{ label: '武器强度榜', href: '/guides/weapon-tier-list/' }],
+        links: [{ label: '武器强度榜', href: '/tasks/weapon-tier-list/' }],
       },
       {
         name: '新手攻略页',
@@ -197,7 +197,7 @@ export const templatesContent: Record<LandingLocale, TemplatesPageContent> = {
           'Accordion / Callout 组件承载提示、警告与折叠细节',
           'check-content 逐页体检:禁 H1、标题层级、alt 文本、正文 ≥3 条站内链',
         ],
-        links: [{ label: '新手攻略', href: '/guides/beginner-guide/' }],
+        links: [{ label: '新手攻略', href: '/tasks/beginner-guide/' }],
       },
       {
         name: '装备 / 物品页',

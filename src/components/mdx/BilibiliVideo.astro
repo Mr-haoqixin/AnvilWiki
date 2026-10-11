@@ -1,0 +1,88 @@
+---
+/**
+ * BilibiliVideo — inline Bilibili video for MDX articles.
+ *
+ * 用法:
+ *   import BilibiliVideo from '~/components/mdx/BilibiliVideo.astro';
+ *
+ *   ## 演示视频
+ *   <BilibiliVideo id="BV1xxxxx" title="视频标题" />
+ *
+ * 懒加载：点击后才注入 iframe（与 LazyYouTube 同模式）。
+ * 缩略图从 bilibili API 获取（如有跨域问题则显示纯链接 fallback）。
+ */
+interface Props {
+  /** Bilibili 视频 BV 号（如 BV1xx411c7mD），不含前缀 URL。 */
+  id: string;
+  /** 视频标题（用于无障碍和显示）。 */
+  title?: string;
+}
+const { id, title = 'B站视频' } = Astro.props;
+---
+
+<div
+  data-bili-facade={id}
+  class="relative aspect-video w-full cursor-pointer overflow-hidden rounded-lg bg-black"
+  role="button"
+  tabindex="0"
+  aria-label={`播放: ${title}`}
+>
+  <div class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-pink-500/20 to-purple-600/20">
+    <span class="flex h-16 w-16 items-center justify-center rounded-full bg-pink-500 shadow-lg transition hover:scale-110 hover:bg-pink-400">
+      <svg class="ml-1 h-7 w-7 text-white" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M8 5v14l11-7z" />
+      </svg>
+    </span>
+  </div>
+  <p class="absolute bottom-2 left-3 right-3 truncate text-sm text-white/80">{title}</p>
+  <a
+    href={`https://www.bilibili.com/video/${id}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="fallback-link absolute inset-0 hidden items-center justify-center gap-2 bg-card text-sm font-medium text-nav hover:underline"
+  >
+    <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polygon points="5 3 19 12 5 21 5 3" />
+    </svg>
+    {title} — bilibili
+  </a>
+</div>
+
+<style>
+  div[data-bili-facade]:has(.fallback-link.visible) > div,
+  div[data-bili-facade]:has(.fallback-link.visible) > p {
+    display: none;
+  }
+  div[data-bili-facade]:has(.fallback-link.visible) .fallback-link {
+    display: flex;
+  }
+</style>
+
+<script>
+  const play = (el: HTMLElement) => {
+    const id = el.getAttribute('data-bili-facade');
+    if (!id || el.dataset.played === '1') return;
+    el.dataset.played = '1';
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://player.bilibili.com/player.html?bvid=${id}&autoplay=1&high_quality=1`;
+    iframe.title = el.getAttribute('aria-label') || 'Bilibili video';
+    iframe.allowFullscreen = true;
+    iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;';
+    el.innerHTML = '';
+    el.appendChild(iframe);
+  };
+  document.addEventListener('click', (e) => {
+    const facade = (e.target as HTMLElement).closest<HTMLElement>('[data-bili-facade]');
+    if (facade) play(facade);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const active = document.activeElement;
+    if (active && active.classList.contains('fallback-link')) return;
+    const facade = active?.closest<HTMLElement>('[data-bili-facade]');
+    if (facade) {
+      e.preventDefault();
+      play(facade);
+    }
+  });
+</script>

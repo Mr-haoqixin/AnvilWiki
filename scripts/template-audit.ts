@@ -262,7 +262,7 @@ check(() => {
   // Frontmatter-only (same idiom + regex as check-i18n.ts / refresh-audit.ts):
   // the old whole-file scan also matched prose or code fences that merely
   // MENTION `draft: true` and false-flagged published files.
-  const drafts = walkFiles(contentBase, { exts: ['.mdx'] })
+  const drafts = walkFiles(contentBase, { exts: ['.mdx'], skipDirs: ['temp', 'temp2'] })
     .map(REL)
     .filter((rel) => /^draft:\s*true\s*$/m.test(read(rel).split('---')[1] ?? ''));
   if (drafts.length > 0) {
@@ -335,7 +335,7 @@ check(() => {
   // Content-based (not filename-based): a fork may legitimately name its own
   // page "beginner-guide" or "all-codes", but no real article about THEIR
   // game contains the demo game's name. All 7 demo MDX files do.
-  const found = walkFiles(contentBase, { exts: ['.mdx'] })
+  const found = walkFiles(contentBase, { exts: ['.mdx'], skipDirs: ['temp', 'temp2'] })
     .map(REL)
     .filter((rel) => new RegExp(DEMO_GAME_NAME, 'i').test(read(rel)));
   if (found.length > 0) {

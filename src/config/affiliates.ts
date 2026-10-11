@@ -23,7 +23,7 @@ export interface AffiliateSuggestionItem {
   cta?: string;
   /**
    * Restrict the suggestion to specific article categories (CONTENT_TYPES
-   * keys, e.g. ["guides", "codes"]). Omit or leave empty to show everywhere.
+    * keys, e.g. ["tasks", "items"]). Omit or leave empty to show everywhere.
    */
   categories?: string[];
 }

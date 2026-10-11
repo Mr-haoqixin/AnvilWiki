@@ -11,12 +11,24 @@
 
 import en from '~/locales/en.json';
 import zh from '~/locales/zh.json';
+import de from '~/locales/de.json';
+import ru from '~/locales/ru.json';
+import pt from '~/locales/pt.json';
+import es from '~/locales/es.json';
+import fr from '~/locales/fr.json';
+import ja from '~/locales/ja.json';
 
 import { defaultLocale, isLocale, type Locale } from './routing';
 
 const messages: Record<Locale, Record<string, unknown>> = {
-  zh: zh as Record<string, unknown>,
   en: en as Record<string, unknown>,
+  zh: zh as Record<string, unknown>,
+  de: de as Record<string, unknown>,
+  ru: ru as Record<string, unknown>,
+  pt: pt as Record<string, unknown>,
+  es: es as Record<string, unknown>,
+  fr: fr as Record<string, unknown>,
+  ja: ja as Record<string, unknown>,
 };
 
 /**

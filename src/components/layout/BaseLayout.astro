@@ -134,6 +134,7 @@ const gscVerification = import.meta.env.PUBLIC_GSC_VERIFICATION as string | unde
 // (hardcoded English fallbacks for a locale whose JSON hasn't been translated
 // yet).
 const sharedStrings = getUi(locale).shared;
+const aiDisclaimer = (getUi(locale) as Record<string, unknown>).aiDisclaimer as string | undefined;
 const consentLabels = consent
   ? { title: consent.title, text: consent.text, accept: consent.accept, decline: consent.decline }
   : {
@@ -331,6 +332,7 @@ const privacyLabel = consent?.privacyLabel ?? footerStrings.privacyPolicy ?? 'Pr
     </script>
   </head>
   <body class="min-h-screen bg-background text-foreground antialiased">
+    {aiDisclaimer && <Fragment set:html={`<!-- AI Content Disclaimer (${locale}): ${aiDisclaimer} -->`} />}
     <slot />
     {/* Consent banner — only rendered when tracking env vars are set. */}
     {gaId && (
@@ -345,5 +347,36 @@ const privacyLabel = consent?.privacyLabel ?? footerStrings.privacyPolicy ?? 'Pr
         privacyLabel={privacyLabel}
       />
     )}
+
+    {/* imgckr.com lazy-load: thumbnail → original on scroll into view. */}
+    <script>
+      const setup = () => {
+        const els = document.querySelectorAll<HTMLElement>('.imgckr-lazy');
+        if (!els.length) return;
+        const io = new IntersectionObserver((entries) => {
+          for (const e of entries) {
+            if (!e.isIntersecting) continue;
+            const el = e.target as HTMLElement;
+            const full = el.dataset.full;
+            if (!full) continue;
+            const img = new Image();
+            img.decoding = 'async';
+            img.onload = () => {
+              const thumb = el.querySelector('img.imgckr-thumb') as HTMLImageElement | null;
+              if (thumb) {
+                thumb.src = full;
+                thumb.classList.remove('imgckr-thumb');
+                thumb.classList.add('imgckr-loaded');
+              }
+            };
+            img.src = full;
+            io.unobserve(el);
+          }
+        }, { rootMargin: '200px' });
+        els.forEach((el) => io.observe(el));
+      };
+      if (document.readyState !== 'loading') setup();
+      else document.addEventListener('DOMContentLoaded', setup);
+    </script>
   </body>
 </html>

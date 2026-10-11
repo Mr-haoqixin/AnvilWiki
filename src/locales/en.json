@@ -3,18 +3,21 @@
   "site": {
     "name": "Songs of Glimmerwick Wiki",
     "shortName": "Glimmerwick Wiki",
-    "description": "Independent player guides and version references for Songs of Glimmerwick, with source dates and build notes.",
+    "description": "Independent player wiki and version references for Songs of Glimmerwick, with source dates and build notes.",
     "tagline": "A player reference for the world of Glimmerwick",
     "legalNotice": "This is an independent fan project and is not affiliated with, sponsored by, or endorsed by Eastshade Studios."
   },
+  "aiDisclaimer": "The content you see may be summarized by a third-party AI based on Xindeca's [articles](/) and [videos](https://www.bilibili.com/video/BV1A1ph6pEYE/), and may differ from the original author's true intent. It does not represent Xindeca's views or position. Please click the [original link](/) to read the original and verify carefully.",
   "nav": {
     "home": "Home",
-    "guides": "Guides",
-    "glossary": "Glossary",
+    "tasks": "Tasks",
     "characters": "Characters",
     "locations": "Locations",
     "items": "Items",
+    "achievements": "Achievements",
     "updates": "Updates",
+    "ost": "OST",
+    "info": "Info",
     "toggleTheme": "Toggle theme",
     "menu": "Menu",
     "close": "Close",
@@ -77,7 +80,7 @@
     "recentTitle": "Recent Updates",
     "recentDescription": "The latest articles and updates across the wiki, newest first.",
     "sponsorTitle": "Support this wiki",
-    "sponsorText": "If these guides helped you, consider supporting the site.",
+    "sponsorText": "If these tasks helped you, consider supporting the site.",
     "sponsorButton": "Support us",
     "sponsorAlipayQr": "Alipay",
     "sponsorWechatQr": "WeChat Pay",
@@ -115,42 +118,50 @@
     "paginationAria": "Article pagination"
   },
   "overview": {
-    "guides": {
-      "overviewTitle": "All Guides",
-      "overviewDescription": "Player guides for Songs of Glimmerwick quests, songs, gardening, items, exploration, and controls."
-    },
-    "glossary": {
-      "overviewTitle": "Game Terms",
-      "overviewDescription": "A searchable index of character, place, item, quest, and ability names used across this wiki."
+    "tasks": {
+      "overviewTitle": "Tasks & Guides",
+      "overviewDescription": "Quest walkthroughs, song casting, gardening, items, exploration and mechanics for Songs of Glimmerwick."
     },
     "characters": {
       "overviewTitle": "Characters",
-      "overviewDescription": "Character entries are currently available in Chinese only."
+      "overviewDescription": "Character entries for Songs of Glimmerwick and their roles in quests and story."
     },
     "locations": {
       "overviewTitle": "Locations",
-      "overviewDescription": "Location entries are currently available in Chinese only."
+      "overviewDescription": "Towns, shops, campus and field locations with sourced usage notes."
     },
     "items": {
       "overviewTitle": "Items",
-      "overviewDescription": "Item entries are currently available in Chinese only."
+      "overviewDescription": "Items, equipment, songs and materials for Songs of Glimmerwick."
+    },
+    "achievements": {
+      "overviewTitle": "Achievements",
+      "overviewDescription": "Achievement list, unlock conditions and launch-week player distribution data."
     },
     "updates": {
       "overviewTitle": "Game Updates",
       "overviewDescription": "Version history and verified update notes for Songs of Glimmerwick."
+    },
+    "ost": {
+      "overviewTitle": "Original Soundtrack",
+      "overviewDescription": "Game soundtrack tracks with numbers and titles."
+    },
+    "info": {
+      "overviewTitle": "Info",
+      "overviewDescription": "Game overview, system requirements, platform compatibility, languages and FAQ."
     }
   },
   "home": {
     "meta": {
-      "title": "Songs of Glimmerwick Wiki - Guides, Quests & Updates",
-      "description": "Player guides for Songs of Glimmerwick, covering songs, classes, gardening, quests, exploration, and version updates with cited sources."
+      "title": "Songs of Glimmerwick Wiki - Tasks, Quests & Updates",
+      "description": "Player tasks for Songs of Glimmerwick, covering songs, classes, gardening, quests, exploration, and version updates with cited sources."
     },
     "hero": {
       "badge": "Independent Player Guide",
       "title": "Songs of Glimmerwick Wiki",
       "description": "Attend a woodland university of magic, learn ancient songs, tend a garden, meet classmates and townsfolk, and explore the island of Glimmerwick.",
       "ctaPrimary": "Visit the official game site",
-      "ctaSecondary": "Browse Guides",
+      "ctaSecondary": "Browse Tasks",
       "videoId": ""
     },
     "updates": {
@@ -165,21 +176,21 @@
           "title": "First Day at School",
           "description": "Review the available notes for early classes, supplies, and the garden route.",
           "icon": "lucide:book-open",
-          "href": "/guides/first-day-school-supplies"
+          "href": "/tasks/first-day-school-supplies"
         },
         {
           "number": "2",
           "title": "Songs and Spells",
-          "description": "Browse guides about music, the flute, and casting spells.",
+          "description": "Browse tasks about music, the flute, and casting spells.",
           "icon": "lucide:music",
-          "href": "/guides/cast-song-of-silence"
+          "href": "/tasks/cast-song-of-silence"
         },
         {
           "number": "3",
           "title": "Gardening and Brewing",
           "description": "Find notes on planting, gathering, tools, and potion tasks.",
           "icon": "lucide:sprout",
-          "href": "/guides/guarding-bush-hardiness-potion"
+          "href": "/tasks/guarding-bush-hardiness-potion"
         },
         {
           "number": "4",
@@ -192,29 +203,29 @@
     },
     "popular": {
       "badge": "Quick links",
-      "title": "Frequently Used Guides",
+      "title": "Frequently Used Tasks",
       "quickLinks": [
         {
           "label": "Cast the Song of Silence",
-          "href": "/guides/cast-song-of-silence"
+          "href": "/tasks/cast-song-of-silence"
         },
         {
           "label": "Potion of Hardiness",
-          "href": "/guides/guarding-bush-hardiness-potion"
+          "href": "/tasks/guarding-bush-hardiness-potion"
         },
         {
           "label": "Fishing Rod and Fishing",
-          "href": "/guides/fishing-rod-how-to-fish"
+          "href": "/tasks/fishing-rod-how-to-fish"
         },
         {
-          "label": "All player guides",
-          "href": "/guides"
+          "label": "All tasks",
+          "href": "/tasks"
         }
       ]
     },
     "explore": {
       "title": "Explore the Wiki",
-      "description": "Browse player guides and version references for Songs of Glimmerwick.",
+      "description": "Browse player tasks and version references for Songs of Glimmerwick.",
       "modules": []
     },
     "faq": {
@@ -237,9 +248,9 @@
     },
     "closingCta": {
       "title": "Begin Exploring Glimmerwick",
-      "description": "Use the guides for quests, songs, gardening, and updates; check in-game prompts and official announcements when details differ.",
+      "description": "Use the tasks for quests, songs, gardening, and updates; check in-game prompts and official announcements when details differ.",
       "primary": "Visit the official game site",
-      "secondary": "Browse player guides"
+      "secondary": "Browse tasks"
     }
   },
   "footer": {

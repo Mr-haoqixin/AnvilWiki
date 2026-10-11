@@ -7,22 +7,22 @@
  *   3. src/content/wiki/<locale>/ — directory must exist (can be empty)
  *
  * URL strategy (as-needed prefix):
- *   - Chinese (default) has NO prefix: /guides/example
- *   - Other locales ARE prefixed:     /en/guides/example
+ *   - English (default) has NO prefix: /tasks/example
+ *   - Other locales ARE prefixed:     /zh/tasks/example
  *
  * This is configured in astro.config.ts via `i18n.routing.prefixDefaultLocale: false`.
  */
 
-export const locales = ['zh', 'en'] as const;
+export const locales = ['en', 'zh'] as const;
 
 export type Locale = (typeof locales)[number];
 
-export const defaultLocale: Locale = 'zh';
+export const defaultLocale: Locale = 'en';
 
 /** Human-readable label for each locale (used in language switcher). */
 export const LOCALE_LABELS: Record<Locale, string> = {
-  zh: '简体中文',
   en: 'English',
+  zh: '简体中文',
 };
 
 /**
@@ -35,11 +35,10 @@ export const LOCALE_LABELS: Record<Locale, string> = {
  */
 export const OG_LOCALE_MAP: Record<string, string> = {
   en: 'en_US',
-  ja: 'ja_JP',
   zh: 'zh_CN',
 };
 
-/** Whether the given locale is the default (Chinese, no URL prefix). */
+/** Whether the given locale is the default (English, no URL prefix). */
 export function isDefaultLocale(locale: string): boolean {
   return locale === defaultLocale;
 }

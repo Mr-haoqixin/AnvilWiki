@@ -151,6 +151,26 @@
   }
 }
 
+/* imgckr.com lazy-load: thumbnail → original transition. */
+.imgckr-lazy {
+  display: block;
+  margin: 1.5rem 0;
+}
+.imgckr-lazy img {
+  width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  transition: opacity 0.3s ease;
+}
+.imgckr-lazy img.imgckr-thumb {
+  opacity: 0.8;
+  filter: blur(2px);
+}
+.imgckr-lazy img.imgckr-loaded {
+  opacity: 1;
+  filter: none;
+}
+
 /* Print styles — readers printing long guides get clean content only:
    no header/footer/ads/TOC/floating buttons, full-width article. */
 @media print {

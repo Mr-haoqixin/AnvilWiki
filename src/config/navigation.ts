@@ -28,12 +28,14 @@ export interface NavigationItem {
 
 /** Menu order = array order — every consumer renders by physical position. */
 export const NAVIGATION_CONFIG: NavigationItem[] = [
-  { key: 'guides', path: '/guides', icon: 'lucide:book-open', isContentType: true },
-  { key: 'glossary', path: '/glossary', icon: 'lucide:book-marked', isContentType: true },
+  { key: 'tasks', path: '/tasks', icon: 'lucide:book-open', isContentType: true },
   { key: 'characters', path: '/characters', icon: 'lucide:users', isContentType: true },
   { key: 'locations', path: '/locations', icon: 'lucide:map-pin', isContentType: true },
   { key: 'items', path: '/items', icon: 'lucide:package', isContentType: true },
+  { key: 'achievements', path: '/achievements', icon: 'lucide:trophy', isContentType: true },
   { key: 'updates', path: '/updates', icon: 'lucide:history', isContentType: true },
+  { key: 'ost', path: '/ost', icon: 'lucide:music', isContentType: true },
+  { key: 'info', path: '/info', icon: 'lucide:info', isContentType: true },
 ];
 
 /** Derived list of content type slugs for the current game wiki. */

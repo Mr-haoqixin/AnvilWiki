@@ -3,18 +3,21 @@
   "site": {
     "name": "格林默威克之歌（Songs of Glimmerwick）中文 Wiki",
     "shortName": "格林默威克 Wiki",
-    "description": "《格林默威克之歌》（Songs of Glimmerwick）中文攻略与资料站，整理魔法歌曲、校园生活、园艺、任务、道具及版本更新信息，并标注来源与核对日期。",
-    "tagline": "格林默威克之歌中文攻略与玩家资料",
+    "description": "《格林默威克之歌》（Songs of Glimmerwick）中文 Wiki，整理魔法歌曲、校园生活、园艺、任务、道具及版本更新信息，并标注来源与核对日期。",
+    "tagline": "格林默威克之歌中文 Wiki",
     "legalNotice": "本站为非官方玩家资料站，与 Eastshade Studios 无隶属、赞助或背书关系。"
   },
+  "aiDisclaimer": "你看到的内容可能由第三方 AI 基于新的小菜[文章](/zh/)、[视频](https://www.bilibili.com/video/BV1A1ph6pEYE/)提炼总结而成，可能与原文真实意图存在偏差。不代表新的小菜观点和立场。请点击[原文链接](/zh/)阅读原文细致比对和校验。",
   "nav": {
     "home": "首页",
-    "guides": "攻略与资料",
-    "glossary": "名词索引",
+    "tasks": "任务",
     "characters": "人物",
     "locations": "地点",
     "items": "物品",
+    "achievements": "成就",
     "updates": "版本更新",
+    "ost": "OST",
+    "info": "其他",
     "toggleTheme": "切换主题",
     "menu": "菜单",
     "close": "关闭",
@@ -115,29 +118,37 @@
     "paginationAria": "文章分页"
   },
   "overview": {
-    "guides": {
-      "overviewTitle": "游戏攻略与资料",
-      "overviewDescription": "《格林默威克之歌》（Songs of Glimmerwick）的任务、歌曲、园艺、道具、探索与版本更新指南。"
-    },
-    "glossary": {
-      "overviewTitle": "游戏专有名词索引",
-      "overviewDescription": "按人物、地点、物品与玩法整理本站攻略中出现的游戏专有名词，并链接到对应资料。"
+    "tasks": {
+      "overviewTitle": "任务与攻略",
+      "overviewDescription": "《格林默威克之歌》（Songs of Glimmerwick）的任务流程、歌曲施法、园艺、道具、探索与机制操作指南。"
     },
     "characters": {
-      "overviewTitle": "人物词条",
-      "overviewDescription": "浏览《格林默威克之歌》序章中出现的人物及其已确认的流程关联。"
+      "overviewTitle": "人物",
+      "overviewDescription": "浏览《格林默威克之歌》中出现的人物及其在任务与剧情中的关联。"
     },
     "locations": {
-      "overviewTitle": "地点词条",
-      "overviewDescription": "浏览入学流程涉及的城镇与商店地点，以及来源明确的用途说明。"
+      "overviewTitle": "地点",
+      "overviewDescription": "浏览游戏中的城镇、商店、学院与野外地点，以及来源明确的用途说明。"
     },
     "items": {
-      "overviewTitle": "物品词条",
-      "overviewDescription": "浏览入学用品中的长笛、坩埚与校服长袍等物品资料。"
+      "overviewTitle": "物品",
+      "overviewDescription": "浏览游戏中的道具、装备、歌曲（歌谱）与材料等物品资料。"
+    },
+    "achievements": {
+      "overviewTitle": "成就",
+      "overviewDescription": "《格林默威克之歌》（Songs of Glimmerwick）的成就列表、解锁条件与首发周玩家分布数据。"
     },
     "updates": {
       "overviewTitle": "版本更新",
       "overviewDescription": "《格林默威克之歌》（Songs of Glimmerwick）历史版本变更与已核实的更新说明。"
+    },
+    "ost": {
+      "overviewTitle": "原声音乐",
+      "overviewDescription": "《格林默威克之歌》（Songs of Glimmerwick）游戏原声音乐曲目列表。"
+    },
+    "info": {
+      "overviewTitle": "其他",
+      "overviewDescription": "游戏概览、系统需求、平台兼容、语言支持与常见问题等基础信息。"
     }
   },
   "home": {
@@ -150,7 +161,7 @@
       "title": "格林默威克之歌中文 Wiki",
       "description": "在格林默威克（Glimmerwick）的魔法大学开启一段林地奇幻旅程：学习古老歌曲、用音乐施展魔法、照料花园、结识同学与居民，并探索岛上的故事。",
       "ctaPrimary": "访问游戏官网",
-      "ctaSecondary": "浏览攻略资料",
+      "ctaSecondary": "浏览任务",
       "videoId": ""
     },
     "updates": {
@@ -165,21 +176,21 @@
           "title": "开学第一天",
           "description": "查看入学初期的课程、物品与花园路线资料。",
           "icon": "lucide:book-open",
-          "href": "/guides/first-day-school-supplies"
+          "href": "/tasks/first-day-school-supplies"
         },
         {
           "number": "2",
           "title": "歌曲与施法",
           "description": "了解歌曲、长笛与魔法操作相关资料。",
           "icon": "lucide:music",
-          "href": "/guides/cast-song-of-silence"
+          "href": "/tasks/cast-song-of-silence"
         },
         {
           "number": "3",
           "title": "园艺与制作",
           "description": "查找种植、采集、药剂与园艺工具指南。",
           "icon": "lucide:sprout",
-          "href": "/guides/guarding-bush-hardiness-potion"
+          "href": "/tasks/guarding-bush-hardiness-potion"
         },
         {
           "number": "4",
@@ -196,19 +207,19 @@
       "quickLinks": [
         {
           "label": "如何施放歌曲与魔法",
-          "href": "/guides/cast-song-of-silence"
+          "href": "/tasks/cast-song-of-silence"
         },
         {
           "label": "硬化药剂与南侧道路",
-          "href": "/guides/guarding-bush-hardiness-potion"
+          "href": "/tasks/guarding-bush-hardiness-potion"
         },
         {
           "label": "钓竿与钓鱼操作",
-          "href": "/guides/fishing-rod-how-to-fish"
+          "href": "/tasks/fishing-rod-how-to-fish"
         },
         {
-          "label": "全部攻略资料",
-          "href": "/guides"
+          "label": "全部任务",
+          "href": "/tasks"
         }
       ]
     },
@@ -243,7 +254,7 @@
       "title": "开始探索格林默威克（Glimmerwick）",
       "description": "查阅任务、歌曲、园艺与版本资料；遇到版本差异时，请以游戏内提示和官方公告为准。",
       "primary": "访问游戏官网",
-      "secondary": "浏览全部攻略"
+      "secondary": "浏览全部任务"
     }
   },
   "footer": {

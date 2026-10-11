@@ -48,7 +48,7 @@ interface Item {
   reason: string;
 }
 
-const files = walkFiles(BASE, { exts: ['.mdx'] });
+const files = walkFiles(BASE, { exts: ['.mdx'], skipDirs: ['temp', 'temp2'] });
 
 const items: Item[] = [];
 const now = Date.now();

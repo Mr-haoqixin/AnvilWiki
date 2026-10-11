@@ -6,22 +6,31 @@
 import { Icon } from 'astro-icon/components';
 import { NAVIGATION_CONFIG } from '~/config/navigation';
 import { site } from '~/config/site';
-import { type Locale } from '~/i18n/routing';
+import { type Locale, defaultLocale } from '~/i18n/routing';
 import { getUi } from '~/i18n/ui';
 import { localizePath } from '~/lib/url';
 import ThemeToggle from './ThemeToggle.astro';
 import SearchButton from './SearchButton.astro';
+import LanguageSwitcher from './LanguageSwitcher.astro';
 import { landingLink, landingLinkEnabled } from '~/config/project';
 
 interface Props {
   locale: Locale;
   currentPath: string;
-  /** Retained for route call-site compatibility; this game wiki hides locale links. */
+  /** Locales this page exists in — passed to the language switcher. */
   availableLocales?: readonly Locale[];
 }
-const { locale, currentPath } = Astro.props;
+const { locale, currentPath, availableLocales } = Astro.props;
 const ui = getUi(locale);
 const nav: Record<string, string> = ui.nav as Record<string, string>;
+
+const pathFor = (targetLocale: Locale): string => {
+  let basePath = currentPath;
+  if (locale !== defaultLocale) {
+    basePath = currentPath.replace(`/${locale}`, '') || '/';
+  }
+  return localizePath(basePath, targetLocale);
+};
 ---
 
 <header class="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur">
@@ -76,6 +85,7 @@ const nav: Record<string, string> = ui.nav as Record<string, string>;
         </a>
       )}
       <SearchButton locale={locale} />
+      <LanguageSwitcher locale={locale} pathFor={pathFor} availableLocales={availableLocales} />
       <ThemeToggle />
 
       {/* Mobile menu */}
@@ -114,6 +124,9 @@ const nav: Record<string, string> = ui.nav as Record<string, string>;
               <span>{landingLink.label}</span>
             </a>
           )}
+          <div class="border-t border-border px-3 py-2">
+            <LanguageSwitcher locale={locale} pathFor={pathFor} availableLocales={availableLocales} />
+          </div>
         </div>
       </details>
     </div>

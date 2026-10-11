@@ -41,7 +41,7 @@ const BASE = path.resolve(ROOT, 'src/content/wiki');
 // locale keep this rule honest.
 const DEFAULT_LOCALE = readDefaultLocale(ROOT);
 
-const files = walkFiles(BASE, { exts: ['.mdx'] });
+const files = walkFiles(BASE, { exts: ['.mdx'], skipDirs: ['temp', 'temp2'] });
 
 let errorCount = 0;
 const error = (file: string, line: number, msg: string) => {
