@@ -1,0 +1,272 @@
+{
+  "$schema": "../../docs/home.schema.json",
+  "site": {
+    "name": "Songs of Glimmerwick 日本語 Wiki",
+    "shortName": "Glimmerwick Wiki",
+    "description": "Songs of Glimmerwick の独立したプレイヤー Wiki とバージョン参考情報。出典日付とビルドノート付き。",
+    "tagline": "Glimmerwick の世界のためのプレイヤー参考資料",
+    "legalNotice": "これは独立したファンプロジェクトであり、Eastshade Studios と提携、スポンサー、または承認されているものではありません。"
+  },
+  "aiDisclaimer": "表示されている内容は、Xindeca の[記事](/)と[動画](https://www.bilibili.com/video/BV1A1ph6pEYE/)に基づき第三者 AI によって要約されている場合があり、原作者の真意とは異なる可能性があります。Xindeca の見解や立場を代表するものではありません。[原文リンク](/)をクリックして原文を読み、慎重に確認してください。",
+  "nav": {
+    "home": "ホーム",
+    "tasks": "タスク",
+    "characters": "キャラクター",
+    "locations": "場所",
+    "items": "アイテム",
+    "achievements": "実績",
+    "updates": "更新",
+    "ost": "OST",
+    "info": "情報",
+    "toggleTheme": "テーマ切替",
+    "menu": "メニュー",
+    "close": "閉じる",
+    "search": "検索",
+    "language": "言語"
+  },
+  "search": {
+    "placeholder": "Wiki を検索...",
+    "noResults": "一致する結果が見つかりません",
+    "loadError": "検索の読み込みに失敗しました — ページを更新して再試行してください。"
+  },
+  "shared": {
+    "lastUpdated": "最終更新",
+    "publishedOn": "公開",
+    "noArticles": "記事はまだありません。また後で確認してください！",
+    "defaultListDescription": "この Wiki で集められた {title} の記事とプレイヤー参考資料を閲覧してください。",
+    "relatedArticles": "関連記事",
+    "onThisPage": "このページの内容",
+    "browseAll": "すべて閲覧",
+    "viewAll": "すべて表示",
+    "commentsHeading": "コメント",
+    "share": "共有",
+    "copyLink": "リンクをコピー",
+    "copied": "コピーしました！",
+    "consentText": "分析のために Cookie を使用します。",
+    "accept": "同意",
+    "decline": "拒否",
+    "consentTitle": "Cookie",
+    "bossCard": {
+      "title": "Boss 概要",
+      "hp": "HP",
+      "weakness": "弱点",
+      "resistant": "耐性",
+      "location": "場所",
+      "level": "推奨レベル"
+    },
+    "codesTable": {
+      "active": "有効なコード",
+      "expired": "期限切れコード",
+      "reward": "報酬",
+      "expires": "期限",
+      "source": "出典",
+      "code": "コード"
+    },
+    "codesFaq": [],
+    "possiblyOutdated": "このガイドが最後に確認されたのは",
+    "outdatedNote": "— それ以降にゲームが変更された可能性があります。一部の詳細が古くなっている可能性があります。",
+    "prevArticle": "前へ",
+    "nextArticle": "次へ",
+    "minuteRead": "分で読了",
+    "wasThisHelpful": "役に立ちましたか？",
+    "feedbackThanks": "フィードバックありがとうございます！",
+    "sponsoredLabel": "スポンサー",
+    "relatedVideos": "関連動画",
+    "gallery": "ギャラリー",
+    "gameVersion": "ゲームバージョン",
+    "allTags": "すべてのタグ",
+    "tagsIndexDescription": "トピック別のすべての記事を閲覧。",
+    "articlesCount": "記事",
+    "recentTitle": "最近の更新",
+    "recentDescription": "Wiki 全体の最新の記事と更新、新しい順。",
+    "sponsorTitle": "この Wiki を支援する",
+    "sponsorText": "これらのタスクが役に立ったなら、サイトの支援をご検討ください。",
+    "sponsorButton": "支援する",
+    "sponsorAlipayQr": "Alipay",
+    "sponsorWechatQr": "WeChat Pay",
+    "notFoundSearchHint": "代わりに Wiki を検索してみてください。",
+    "notFoundPopular": "人気のページ",
+    "notFoundTitle": "404 - ページが見つかりません",
+    "notFoundDescription": "お探しのページは存在しません。",
+    "notFoundHeading": "ページが見つかりません",
+    "notFoundText": "お探しのページは削除されたか、一時的に利用できない可能性があります。",
+    "notFoundBackHome": "ホームに戻る",
+    "galleryLabels": {
+      "close": "閉じる",
+      "prev": "前の画像",
+      "next": "次の画像"
+    },
+    "quickAnswer": "クイック回答",
+    "skipToContent": "コンテンツへスキップ",
+    "tapToCopy": "タップしてコピー",
+    "open": "開く",
+    "playVideo": "動画を再生",
+    "watchVideo": "動画を見る",
+    "gameTrailer": "トレーラー",
+    "closeAd": "広告を閉じる",
+    "adLabel": "広告",
+    "codesFaqTitle": "コード FAQ",
+    "faqTitle": "FAQ",
+    "toggleTheme": "テーマ切替",
+    "themeToggleTitle": "ライト / ダーク / AMOLED ブラック",
+    "fallbackNotice": "デフォルト言語のコンテンツ",
+    "copyQuickAnswer": "クイック回答をコピー",
+    "feedbackYes": "はい",
+    "feedbackNo": "いいえ",
+    "breadcrumbAria": "パンくずリスト",
+    "wikiNavAria": "Wiki ナビゲーション",
+    "paginationAria": "記事のページネーション"
+  },
+  "overview": {
+    "tasks": {
+      "overviewTitle": "タスク & ガイド",
+      "overviewDescription": "Songs of Glimmerwick のクエスト攻略、歌の詠唱、園芸、アイテム、探索とメカニクス。"
+    },
+    "characters": {
+      "overviewTitle": "キャラクター",
+      "overviewDescription": "Songs of Glimmerwick のキャラクター項目と、クエストやストーリーにおける役割。"
+    },
+    "locations": {
+      "overviewTitle": "場所",
+      "overviewDescription": "町、店、キャンパスとフィールドの場所、出典付きの利用メモ。"
+    },
+    "items": {
+      "overviewTitle": "アイテム",
+      "overviewDescription": "Songs of Glimmerwick のアイテム、装備、歌と素材。"
+    },
+    "achievements": {
+      "overviewTitle": "実績",
+      "overviewDescription": "実績リスト、解放条件とローンチ週のプレイヤー分布データ。"
+    },
+    "updates": {
+      "overviewTitle": "ゲーム更新",
+      "overviewDescription": "Songs of Glimmerwick のバージョン履歴と検証済みの更新ノート。"
+    },
+    "ost": {
+      "overviewTitle": "オリジナルサウンドトラック",
+      "overviewDescription": "ゲームサウンドトラックのトラック番号とタイトル。"
+    },
+    "info": {
+      "overviewTitle": "情報",
+      "overviewDescription": "ゲーム概要、システム要件、プラットフォーム互換性、言語と FAQ。"
+    }
+  },
+  "home": {
+    "meta": {
+      "title": "Songs of Glimmerwick Wiki - タスク、クエスト & 更新",
+      "description": "Songs of Glimmerwick のプレイヤータスク。歌、クラス、園芸、クエスト、探索、バージョン更新を出典付きでカバー。"
+    },
+    "hero": {
+      "badge": "独立プレイヤーガイド",
+      "title": "Songs of Glimmerwick Wiki",
+      "description": "魔法の森の大学に通い、古代の歌を学び、庭を手入れし、同級生や町の人々と出会い、Glimmerwick の島を探索する。",
+      "ctaPrimary": "公式ゲームサイトを見る",
+      "ctaSecondary": "タスクを閲覧",
+      "videoId": ""
+    },
+    "updates": {
+      "title": "最近の更新"
+    },
+    "start": {
+      "badge": "ここから始める",
+      "title": "Glimmerwick を探索",
+      "cards": [
+        {
+          "number": "1",
+          "title": "初日の学校",
+          "description": "早期クラス、用品、庭のルートの利用可能なノートを確認。",
+          "icon": "lucide:book-open",
+          "href": "/tasks/first-day-school-supplies"
+        },
+        {
+          "number": "2",
+          "title": "歌と呪文",
+          "description": "音楽、フルート、呪文の詠唱に関するタスクを閲覧。",
+          "icon": "lucide:music",
+          "href": "/tasks/cast-song-of-silence"
+        },
+        {
+          "number": "3",
+          "title": "園芸と醸造",
+          "description": "植え付け、採集、道具、ポーションタスクのノートを見つける。",
+          "icon": "lucide:sprout",
+          "href": "/tasks/guarding-bush-hardiness-potion"
+        },
+        {
+          "number": "4",
+          "title": "バージョン履歴",
+          "description": "リリースされたゲーム更新の検証済みノートを読む。",
+          "icon": "lucide:scroll-text",
+          "href": "/updates/version-1-02"
+        }
+      ]
+    },
+    "popular": {
+      "badge": "クイックリンク",
+      "title": "よく使われるタスク",
+      "quickLinks": [
+        {
+          "label": "沈黙の歌を詠唱する",
+          "href": "/tasks/cast-song-of-silence"
+        },
+        {
+          "label": "堅牢のポーション",
+          "href": "/tasks/guarding-bush-hardiness-potion"
+        },
+        {
+          "label": "釣り竿と釣り",
+          "href": "/tasks/fishing-rod-how-to-fish"
+        },
+        {
+          "label": "すべてのタスク",
+          "href": "/tasks"
+        }
+      ]
+    },
+    "explore": {
+      "title": "Wiki を探索",
+      "description": "Songs of Glimmerwick のプレイヤータスクとバージョン参考情報を閲覧。",
+      "modules": []
+    },
+    "faq": {
+      "title": "よくある質問",
+      "description": "Songs of Glimmerwick とこの独立ガイドに関するクイック回答。",
+      "items": [
+        {
+          "question": "Songs of Glimmerwick はどんなゲームですか？",
+          "answer": "Eastshade Studios はこれを平和な、ストーリー駆動のファンタジー RPG と説明しています。魔法の大学に通い、音楽を使って呪文を詠唱し、庭を手入れし、同級生や町の人々と出会い、島を探索します。"
+        },
+        {
+          "question": "ゲームで音楽はどう機能しますか？",
+          "answer": "公式ゲームページによると、音楽は呪文を詠唱する秘訣です。古代の歌は園芸や探索に役立ちます。正確な操作と効果はゲーム内の説明を参照してください。"
+        },
+        {
+          "question": "これは公式 Wiki ですか？",
+          "answer": "いいえ。これは独立したファンプロジェクトであり、Eastshade Studios と提携、スポンサー、または承認されているものではありません。"
+        }
+      ]
+    },
+    "closingCta": {
+      "title": "Glimmerwick の探索を始める",
+      "description": "クエスト、歌、園芸、更新にタスクを使用。詳細が異なる場合はゲーム内のプロンプトと公式発表を確認してください。",
+      "primary": "公式ゲームサイトを見る",
+      "secondary": "タスクを閲覧"
+    }
+  },
+  "footer": {
+    "playGame": "公式ゲームサイトを見る",
+    "officialDiscord": "公式 Discord",
+    "officialYoutube": "公式 YouTube",
+    "officialTwitter": "公式 Twitter",
+    "officialReddit": "公式 Reddit",
+    "about": "概要",
+    "faq": "FAQ",
+    "privacyPolicy": "プライバシーポリシー",
+    "termsOfService": "利用規約",
+    "copyright": "著作権",
+    "contact": "お問い合わせ",
+    "copyrightText": "© 2026 Songs of Glimmerwick Wiki. 独立ファンプロジェクト。",
+    "community": "コミュニティ",
+    "legal": "法的"
+  }
+}

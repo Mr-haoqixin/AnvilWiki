@@ -1,7 +1,7 @@
 {
-  "name": "Anvil Quest Wiki",
-  "short_name": "AQ Wiki",
-  "description": "Complete Anvil Quest wiki with boss guides, codes, and tier lists.",
+  "name": "glimmerwick Wiki",
+  "short_name": "GW Wiki",
+  "description": "Complete Glimmerwick wiki with task guides.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

@@ -1,0 +1,272 @@
+{
+  "$schema": "../../docs/home.schema.json",
+  "site": {
+    "name": "Songs of Glimmerwick Wiki en Español",
+    "shortName": "Glimmerwick Wiki",
+    "description": "Wiki independiente de jugadores y referencias de versiones para Songs of Glimmerwick, con fechas de fuentes y notas de compilación.",
+    "tagline": "Una referencia de jugador para el mundo de Glimmerwick",
+    "legalNotice": "Este es un proyecto de fans independiente y no está afiliado, patrocinado ni respaldado por Eastshade Studios."
+  },
+  "aiDisclaimer": "El contenido que ves puede ser resumido por una IA de terceros basándose en los [artículos](/) y [videos](https://www.bilibili.com/video/BV1A1ph6pEYE/) de Xindeca, y puede diferir de la verdadera intención del autor original. No representa las opiniones ni la posición de Xindeca. Haz clic en el [enlace original](/) para leer el original y verificar cuidadosamente.",
+  "nav": {
+    "home": "Inicio",
+    "tasks": "Tareas",
+    "characters": "Personajes",
+    "locations": "Ubicaciones",
+    "items": "Objetos",
+    "achievements": "Logros",
+    "updates": "Actualizaciones",
+    "ost": "OST",
+    "info": "Info",
+    "toggleTheme": "Cambiar tema",
+    "menu": "Menú",
+    "close": "Cerrar",
+    "search": "Buscar",
+    "language": "Idioma"
+  },
+  "search": {
+    "placeholder": "Buscar en el wiki...",
+    "noResults": "No se encontraron coincidencias",
+    "loadError": "Error al cargar la búsqueda — actualiza la página e inténtalo de nuevo."
+  },
+  "shared": {
+    "lastUpdated": "Última actualización",
+    "publishedOn": "Publicado",
+    "noArticles": "Aún no hay artículos. ¡Vuelve pronto!",
+    "defaultListDescription": "Explora los artículos y referencias de jugadores de {title} recopilados en este wiki.",
+    "relatedArticles": "Artículos relacionados",
+    "onThisPage": "En esta página",
+    "browseAll": "Explorar todo",
+    "viewAll": "Ver todo",
+    "commentsHeading": "Comentarios",
+    "share": "Compartir",
+    "copyLink": "Copiar enlace",
+    "copied": "¡Copiado!",
+    "consentText": "Usamos cookies para analítica.",
+    "accept": "Aceptar",
+    "decline": "Rechazar",
+    "consentTitle": "Cookies",
+    "bossCard": {
+      "title": "Resumen del jefe",
+      "hp": "HP",
+      "weakness": "Debilidad",
+      "resistant": "Resistente",
+      "location": "Ubicación",
+      "level": "Nivel rec."
+    },
+    "codesTable": {
+      "active": "Códigos activos",
+      "expired": "Códigos expirados",
+      "reward": "Recompensa",
+      "expires": "Expira",
+      "source": "Fuente",
+      "code": "Código"
+    },
+    "codesFaq": [],
+    "possiblyOutdated": "Esta guía fue verificada por última vez el",
+    "outdatedNote": "— el juego puede haber cambiado desde entonces. Algunos detalles podrían estar desactualizados.",
+    "prevArticle": "Anterior",
+    "nextArticle": "Siguiente",
+    "minuteRead": "min de lectura",
+    "wasThisHelpful": "¿Te fue útil?",
+    "feedbackThanks": "¡Gracias por tu opinión!",
+    "sponsoredLabel": "Patrocinado",
+    "relatedVideos": "Videos relacionados",
+    "gallery": "Galería",
+    "gameVersion": "Versión del juego",
+    "allTags": "Todas las etiquetas",
+    "tagsIndexDescription": "Explora todos los artículos por tema.",
+    "articlesCount": "artículos",
+    "recentTitle": "Actualizaciones recientes",
+    "recentDescription": "Los últimos artículos y actualizaciones del wiki, ordenados del más nuevo al más antiguo.",
+    "sponsorTitle": "Apoya este wiki",
+    "sponsorText": "Si estas tareas te ayudaron, considera apoyar el sitio.",
+    "sponsorButton": "Apóyanos",
+    "sponsorAlipayQr": "Alipay",
+    "sponsorWechatQr": "WeChat Pay",
+    "notFoundSearchHint": "Intenta buscar en el wiki en su lugar.",
+    "notFoundPopular": "Páginas populares",
+    "notFoundTitle": "404 - Página no encontrada",
+    "notFoundDescription": "La página que buscas no existe.",
+    "notFoundHeading": "Página no encontrada",
+    "notFoundText": "La página que buscas puede haber sido eliminada o no está disponible temporalmente.",
+    "notFoundBackHome": "Volver al inicio",
+    "galleryLabels": {
+      "close": "Cerrar",
+      "prev": "Imagen anterior",
+      "next": "Imagen siguiente"
+    },
+    "quickAnswer": "Respuesta rápida",
+    "skipToContent": "Saltar al contenido",
+    "tapToCopy": "Toca para copiar",
+    "open": "Abrir",
+    "playVideo": "Reproducir video",
+    "watchVideo": "Ver video",
+    "gameTrailer": "tráiler",
+    "closeAd": "Cerrar anuncio",
+    "adLabel": "Anuncio",
+    "codesFaqTitle": "Preguntas frecuentes sobre códigos",
+    "faqTitle": "Preguntas frecuentes",
+    "toggleTheme": "Cambiar tema",
+    "themeToggleTitle": "Claro / Oscuro / Negro AMOLED",
+    "fallbackNotice": "Contenido en idioma predeterminado",
+    "copyQuickAnswer": "Copiar respuesta rápida",
+    "feedbackYes": "Sí",
+    "feedbackNo": "No",
+    "breadcrumbAria": "Migas de pan",
+    "wikiNavAria": "Navegación del wiki",
+    "paginationAria": "Paginación de artículos"
+  },
+  "overview": {
+    "tasks": {
+      "overviewTitle": "Tareas y guías",
+      "overviewDescription": "Recorridos de misiones, canciones mágicas, jardinería, objetos, exploración y mecánicas para Songs of Glimmerwick."
+    },
+    "characters": {
+      "overviewTitle": "Personajes",
+      "overviewDescription": "Entradas de personajes para Songs of Glimmerwick y sus roles en misiones e historia."
+    },
+    "locations": {
+      "overviewTitle": "Ubicaciones",
+      "overviewDescription": "Pueblos, tiendas, campus y ubicaciones de campo con notas de uso documentadas."
+    },
+    "items": {
+      "overviewTitle": "Objetos",
+      "overviewDescription": "Objetos, equipo, canciones y materiales para Songs of Glimmerwick."
+    },
+    "achievements": {
+      "overviewTitle": "Logros",
+      "overviewDescription": "Lista de logros, condiciones de desbloqueo y datos de distribución de jugadores durante la semana de lanzamiento."
+    },
+    "updates": {
+      "overviewTitle": "Actualizaciones del juego",
+      "overviewDescription": "Historial de versiones y notas de actualización verificadas para Songs of Glimmerwick."
+    },
+    "ost": {
+      "overviewTitle": "Banda sonora original",
+      "overviewDescription": "Pistas de la banda sonora del juego con números y títulos."
+    },
+    "info": {
+      "overviewTitle": "Información",
+      "overviewDescription": "Vista general del juego, requisitos del sistema, compatibilidad de plataformas, idiomas y preguntas frecuentes."
+    }
+  },
+  "home": {
+    "meta": {
+      "title": "Songs of Glimmerwick Wiki - Tareas, Misiones y Actualizaciones",
+      "description": "Tareas para jugadores de Songs of Glimmerwick, covering canciones, clases, jardinería, misiones, exploración y actualizaciones de versiones con fuentes citadas."
+    },
+    "hero": {
+      "badge": "Guía independiente de jugadores",
+      "title": "Songs of Glimmerwick Wiki",
+      "description": "Asiste a una universidad bosque de magia, aprende canciones antiguas, cultiva un jardín, conoce compañeros y vecinos, y explora la isla de Glimmerwick.",
+      "ctaPrimary": "Visita el sitio oficial del juego",
+      "ctaSecondary": "Explorar tareas",
+      "videoId": ""
+    },
+    "updates": {
+      "title": "Actualizaciones recientes"
+    },
+    "start": {
+      "badge": "Empieza aquí",
+      "title": "Explora Glimmerwick",
+      "cards": [
+        {
+          "number": "1",
+          "title": "Primer día de clases",
+          "description": "Revisa las notas disponibles para las primeras clases, suministros y la ruta del jardín.",
+          "icon": "lucide:book-open",
+          "href": "/tasks/first-day-school-supplies"
+        },
+        {
+          "number": "2",
+          "title": "Canciones y hechizos",
+          "description": "Explora tareas sobre música, la flauta y cómo lanzar hechizos.",
+          "icon": "lucide:music",
+          "href": "/tasks/cast-song-of-silence"
+        },
+        {
+          "number": "3",
+          "title": "Jardinería y elaboración",
+          "description": "Encuentra notas sobre plantar, recolectar, herramientas y tareas de pociones.",
+          "icon": "lucide:sprout",
+          "href": "/tasks/guarding-bush-hardiness-potion"
+        },
+        {
+          "number": "4",
+          "title": "Historial de versiones",
+          "description": "Lee notas verificadas de las actualizaciones lanzadas del juego.",
+          "icon": "lucide:scroll-text",
+          "href": "/updates/version-1-02"
+        }
+      ]
+    },
+    "popular": {
+      "badge": "Enlaces rápidos",
+      "title": "Tareas usadas con frecuencia",
+      "quickLinks": [
+        {
+          "label": "Lanzar la Canción del Silencio",
+          "href": "/tasks/cast-song-of-silence"
+        },
+        {
+          "label": "Poción de Resistencia",
+          "href": "/tasks/guarding-bush-hardiness-potion"
+        },
+        {
+          "label": "Caña de pescar y pesca",
+          "href": "/tasks/fishing-rod-how-to-fish"
+        },
+        {
+          "label": "Todas las tareas",
+          "href": "/tasks"
+        }
+      ]
+    },
+    "explore": {
+      "title": "Explora el wiki",
+      "description": "Explora las tareas de jugadores y referencias de versiones para Songs of Glimmerwick.",
+      "modules": []
+    },
+    "faq": {
+      "title": "Preguntas frecuentes",
+      "description": "Respuestas rápidas sobre Songs of Glimmerwick y esta guía independiente.",
+      "items": [
+        {
+          "question": "¿Qué tipo de juego es Songs of Glimmerwick?",
+          "answer": "Eastshade Studios lo describe como un RPG de fantasía pacífico y centrado en la historia. Asistes a una universidad de magia, usas música para lanzar hechizos, cultivas un jardín, conoces compañeros y vecinos, y exploras la isla."
+        },
+        {
+          "question": "¿Cómo funciona la música en el juego?",
+          "answer": "La página oficial del juego dice que la música es el secreto para lanzar hechizos. Las canciones antiguas ayudan con la jardinería y la exploración; consulta las instrucciones dentro del juego para los controles y efectos exactos."
+        },
+        {
+          "question": "¿Es este un wiki oficial?",
+          "answer": "No. Este es un proyecto de fans independiente y no está afiliado, patrocinado ni respaldado por Eastshade Studios."
+        }
+      ]
+    },
+    "closingCta": {
+      "title": "Comienza a explorar Glimmerwick",
+      "description": "Usa las tareas para misiones, canciones, jardinería y actualizaciones; revisa las indicaciones del juego y los anuncios oficiales cuando los detalles difieran.",
+      "primary": "Visita el sitio oficial del juego",
+      "secondary": "Explorar tareas"
+    }
+  },
+  "footer": {
+    "playGame": "Visita el sitio oficial del juego",
+    "officialDiscord": "Discord oficial",
+    "officialYoutube": "YouTube oficial",
+    "officialTwitter": "Twitter oficial",
+    "officialReddit": "Reddit oficial",
+    "about": "Acerca de",
+    "faq": "Preguntas frecuentes",
+    "privacyPolicy": "Política de privacidad",
+    "termsOfService": "Términos de servicio",
+    "copyright": "Derechos de autor",
+    "contact": "Contacto",
+    "copyrightText": "© 2026 Songs of Glimmerwick Wiki. Proyecto de fans independiente.",
+    "community": "Comunidad",
+    "legal": "Legal"
+  }
+}

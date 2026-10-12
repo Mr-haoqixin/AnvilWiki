@@ -1,0 +1,272 @@
+{
+  "$schema": "../../docs/home.schema.json",
+  "site": {
+    "name": "Songs of Glimmerwick Wiki на Русском",
+    "shortName": "Glimmerwick Wiki",
+    "description": "Независимая игроковая вики и справочники версий для Songs of Glimmerwick, с указанием источников и примечаниями к сборкам.",
+    "tagline": "Игроковый справочник по миру Glimmerwick",
+    "legalNotice": "Это независимый фанатский проект, не связанный с, спонсируемый или поддерживаемый Eastshade Studios."
+  },
+  "aiDisclaimer": "Контент, который вы видите, может быть кратко изложён сторонним ИИ на основе [статей](/) и [видео](https://www.bilibili.com/video/BV1A1ph6pEYE/) Xindeca, и может отличаться от истинных намерений первоначального автора. Он не отражает взгляды или позицию Xindeca. Пожалуйста, перейдите по [оригинальной ссылке](/), чтобы прочитать оригинал и тщательно проверить.",
+  "nav": {
+    "home": "Главная",
+    "tasks": "Задания",
+    "characters": "Персонажи",
+    "locations": "Локации",
+    "items": "Предметы",
+    "achievements": "Достижения",
+    "updates": "Обновления",
+    "ost": "OST",
+    "info": "Информация",
+    "toggleTheme": "Переключить тему",
+    "menu": "Меню",
+    "close": "Закрыть",
+    "search": "Поиск",
+    "language": "Язык"
+  },
+  "search": {
+    "placeholder": "Поиск по вики...",
+    "noResults": "Совпадений не найдено",
+    "loadError": "Поиск не загрузился — обновите страницу и попробуйте снова."
+  },
+  "shared": {
+    "lastUpdated": "Последнее обновление",
+    "publishedOn": "Опубликовано",
+    "noArticles": "Статей пока нет. Загляните позже!",
+    "defaultListDescription": "Просматривайте статьи и игроковые справочники по теме {title}, собранные в этой вики.",
+    "relatedArticles": "Похожие статьи",
+    "onThisPage": "На этой странице",
+    "browseAll": "Просмотреть все",
+    "viewAll": "Показать все",
+    "commentsHeading": "Комментарии",
+    "share": "Поделиться",
+    "copyLink": "Копировать ссылку",
+    "copied": "Скопировано!",
+    "consentText": "Мы используем файлы cookie для аналитики.",
+    "accept": "Принять",
+    "decline": "Отклонить",
+    "consentTitle": "Файлы cookie",
+    "bossCard": {
+      "title": "Обзор босса",
+      "hp": "HP",
+      "weakness": "Слабость",
+      "resistant": "Сопротивление",
+      "location": "Локация",
+      "level": "Рек. уровень"
+    },
+    "codesTable": {
+      "active": "Активные коды",
+      "expired": "Истёкшие коды",
+      "reward": "Награда",
+      "expires": "Истекает",
+      "source": "Источник",
+      "code": "Код"
+    },
+    "codesFaq": [],
+    "possiblyOutdated": "Это руководство последний раз проверялось",
+    "outdatedNote": "— игра могла измениться с тех пор. Некоторые детали могут быть устаревшими.",
+    "prevArticle": "Предыдущая",
+    "nextArticle": "Следующая",
+    "minuteRead": "мин чтения",
+    "wasThisHelpful": "Было ли это полезно?",
+    "feedbackThanks": "Спасибо за отзыв!",
+    "sponsoredLabel": "Спонсорское",
+    "relatedVideos": "Похожие видео",
+    "gallery": "Галерея",
+    "gameVersion": "Версия игры",
+    "allTags": "Все теги",
+    "tagsIndexDescription": "Просматривайте все статьи по темам.",
+    "articlesCount": "статей",
+    "recentTitle": "Последние обновления",
+    "recentDescription": "Самые новые статьи и обновления в вики, сначала новые.",
+    "sponsorTitle": "Поддержите эту вики",
+    "sponsorText": "Если эти задания вам помогли, подумайте о поддержке сайта.",
+    "sponsorButton": "Поддержать нас",
+    "sponsorAlipayQr": "Alipay",
+    "sponsorWechatQr": "WeChat Pay",
+    "notFoundSearchHint": "Попробуйте вместо этого воспользоваться поиском по вики.",
+    "notFoundPopular": "Популярные страницы",
+    "notFoundTitle": "404 - Страница не найдена",
+    "notFoundDescription": "Страница, которую вы ищете, не существует.",
+    "notFoundHeading": "Страница не найдена",
+    "notFoundText": "Страница, которую вы ищете, возможно, была удалена или временно недоступна.",
+    "notFoundBackHome": "Вернуться на главную",
+    "galleryLabels": {
+      "close": "Закрыть",
+      "prev": "Предыдущее изображение",
+      "next": "Следующее изображение"
+    },
+    "quickAnswer": "Быстрый ответ",
+    "skipToContent": "Перейти к содержимому",
+    "tapToCopy": "Нажмите, чтобы скопировать",
+    "open": "Открыть",
+    "playVideo": "Воспроизвести видео",
+    "watchVideo": "Смотреть видео",
+    "gameTrailer": "трейлер",
+    "closeAd": "Закрыть рекламу",
+    "adLabel": "Реклама",
+    "codesFaqTitle": "ЧАВО по кодам",
+    "faqTitle": "ЧАВО",
+    "toggleTheme": "Переключить тему",
+    "themeToggleTitle": "Светлая / Тёмная / AMOLED чёрная",
+    "fallbackNotice": "Контент на языке по умолчанию",
+    "copyQuickAnswer": "Копировать быстрый ответ",
+    "feedbackYes": "Да",
+    "feedbackNo": "Нет",
+    "breadcrumbAria": "Хлебные крошки",
+    "wikiNavAria": "Навигация по вики",
+    "paginationAria": "Пагинация статей"
+  },
+  "overview": {
+    "tasks": {
+      "overviewTitle": "Задания и руководства",
+      "overviewDescription": "Прохождения квестов, исполнение песен, садоводство, предметы, исследование и механики для Songs of Glimmerwick."
+    },
+    "characters": {
+      "overviewTitle": "Персонажи",
+      "overviewDescription": "Записи о персонажах Songs of Glimmerwick и их ролях в квестах и сюжете."
+    },
+    "locations": {
+      "overviewTitle": "Локации",
+      "overviewDescription": "Города, магазины, кампус и полевые локации с заметками об использовании из источников."
+    },
+    "items": {
+      "overviewTitle": "Предметы",
+      "overviewDescription": "Предметы, экипировка, песни и материалы для Songs of Glimmerwick."
+    },
+    "achievements": {
+      "overviewTitle": "Достижения",
+      "overviewDescription": "Список достижений, условия разблокировки и данные о распределении игроков на первой неделе после релиза."
+    },
+    "updates": {
+      "overviewTitle": "Обновления игры",
+      "overviewDescription": "История версий и проверенные заметки об обновлениях для Songs of Glimmerwick."
+    },
+    "ost": {
+      "overviewTitle": "Оригинальный саундтрек",
+      "overviewDescription": "Треки саундтрека игры с номерами и названиями."
+    },
+    "info": {
+      "overviewTitle": "Информация",
+      "overviewDescription": "Обзор игры, системные требования, совместимость с платформами, языки и ЧАВО."
+    }
+  },
+  "home": {
+    "meta": {
+      "title": "Songs of Glimmerwick Wiki - Задания, Квесты и Обновления",
+      "description": "Игроковые задания для Songs of Glimmerwick, охватывающие песни, классы, садоводство, квесты, исследование и обновления версий с указанием источников."
+    },
+    "hero": {
+      "badge": "Независимое игроковое руководство",
+      "title": "Songs of Glimmerwick Wiki",
+      "description": "Поступайте в лесной университет магии, изучайте древние песни, ухаживайте за садом, знакомьтесь с однокурсниками и горожанами и исследуйте остров Glimmerwick.",
+      "ctaPrimary": "Посетить официальный сайт игры",
+      "ctaSecondary": "Просмотреть задания",
+      "videoId": ""
+    },
+    "updates": {
+      "title": "Последние обновления"
+    },
+    "start": {
+      "badge": "Начните здесь",
+      "title": "Исследуйте Glimmerwick",
+      "cards": [
+        {
+          "number": "1",
+          "title": "Первый день в школе",
+          "description": "Просмотрите доступные заметки о первых занятиях, принадлежностях и маршруте по саду.",
+          "icon": "lucide:book-open",
+          "href": "/tasks/first-day-school-supplies"
+        },
+        {
+          "number": "2",
+          "title": "Песни и заклинания",
+          "description": "Просматривайте задания о музыке, флейте и наложении заклинаний.",
+          "icon": "lucide:music",
+          "href": "/tasks/cast-song-of-silence"
+        },
+        {
+          "number": "3",
+          "title": "Садоводство и зельеварение",
+          "description": "Найдите заметки о посадке, сборе, инструментах и заданиях на зелья.",
+          "icon": "lucide:sprout",
+          "href": "/tasks/guarding-bush-hardiness-potion"
+        },
+        {
+          "number": "4",
+          "title": "История версий",
+          "description": "Читайте проверенные заметки о выпущенных обновлениях игры.",
+          "icon": "lucide:scroll-text",
+          "href": "/updates/version-1-02"
+        }
+      ]
+    },
+    "popular": {
+      "badge": "Быстрые ссылки",
+      "title": "Часто используемые задания",
+      "quickLinks": [
+        {
+          "label": "Исполнить Song of Silence",
+          "href": "/tasks/cast-song-of-silence"
+        },
+        {
+          "label": "Зелье выносливости",
+          "href": "/tasks/guarding-bush-hardiness-potion"
+        },
+        {
+          "label": "Удочка и рыбалка",
+          "href": "/tasks/fishing-rod-how-to-fish"
+        },
+        {
+          "label": "Все задания",
+          "href": "/tasks"
+        }
+      ]
+    },
+    "explore": {
+      "title": "Исследуйте вики",
+      "description": "Просматривайте игроковые задания и справочники версий для Songs of Glimmerwick.",
+      "modules": []
+    },
+    "faq": {
+      "title": "Часто задаваемые вопросы",
+      "description": "Быстрые ответы о Songs of Glimmerwick и этом независимом руководстве.",
+      "items": [
+        {
+          "question": "Что это за игра — Songs of Glimmerwick?",
+          "answer": "Eastshade Studios описывает её как мирную, сюжетно-ориентированную фэнтези-RPG. Вы поступаете в университет магии, используете музыку для наложения заклинаний, ухаживаете за садом, знакомитесь с однокурсниками и горожанами и исследуете остров."
+        },
+        {
+          "question": "Как работает музыка в игре?",
+          "answer": "На официальной странице игры сказано, что музыка — это секрет наложения заклинаний. Древние песни помогают с садоводством и исследованием; сверьтесь с внутриигровыми инструкциями для точного управления и эффектов."
+        },
+        {
+          "question": "Это официальная вики?",
+          "answer": "Нет. Это независимый фанатский проект, не связанный с, спонсируемый или поддерживаемый Eastshade Studios."
+        }
+      ]
+    },
+    "closingCta": {
+      "title": "Начните исследовать Glimmerwick",
+      "description": "Используйте задания для квестов, песен, садоводства и обновлений; проверяйте внутриигровые подсказки и официальные объявления, когда детали расходятся.",
+      "primary": "Посетить официальный сайт игры",
+      "secondary": "Просмотреть задания"
+    }
+  },
+  "footer": {
+    "playGame": "Посетить официальный сайт игры",
+    "officialDiscord": "Официальный Discord",
+    "officialYoutube": "Официальный YouTube",
+    "officialTwitter": "Официальный Twitter",
+    "officialReddit": "Официальный Reddit",
+    "about": "О сайте",
+    "faq": "ЧАВО",
+    "privacyPolicy": "Политика конфиденциальности",
+    "termsOfService": "Условия использования",
+    "copyright": "Авторское право",
+    "contact": "Контакты",
+    "copyrightText": "© 2026 Songs of Glimmerwick Wiki. Независимый фанатский проект.",
+    "community": "Сообщество",
+    "legal": "Правовая информация"
+  }
+}
