@@ -1,0 +1,28 @@
+---
+title: 'Windows Demo Save Location and Missing Autosave Troubleshooting'
+description: 'Before checking demo saves, confirm the Windows user and look at the LocalLow path from Eastshade docs; finding the files does not prove progress can be restored.'
+category: info
+date: 2026-10-08
+lastModified: 2026-10-08
+gameVersion: 'Windows demo'
+summary: 'The Windows path from Eastshade is %USERPROFILE%\AppData\LocalLow\Eastshade Studios\Songs of Glimmerwick. Check files under the same Windows user and back up first; copying files has not been confirmed to restore missing saves.'
+tags: ['存档', 'Windows', '排错']
+---
+
+## Check the Correct Windows User
+
+Confirm that the currently logged-in account is the Windows account used when playing the demo. The save directory from Eastshade docs is:
+
+`%USERPROFILE%\AppData\LocalLow\Eastshade Studios\Songs of Glimmerwick`
+
+Enter this path in the File Explorer address bar, and Windows will auto-replace the current user directory. If you played on another account, check the path for that account.
+
+## Protect Save Files
+
+The original page recorded that a player found `Player`, `Player-prev`, and `steam_autocloud.vdf`, but after copying the files, progress still could not be loaded. Therefore, finding the files does not mean recovery is verified; copy a backup before trying any changes, and keep the original files.
+
+## Related Guides
+
+- [Lost Cauldron or Stuck Potions Class: Demo Handling Tips](/tasks/lost-cauldron-potions-class/)
+- [How to Save: Full Version Manual Saves and Demo Limits](/info/manual-save-time-freeze/)
+- [Laid Cobblestone Paths Disappeared: Update to Version 1.02](/tasks/cobblestone-paths-disappeared/)
