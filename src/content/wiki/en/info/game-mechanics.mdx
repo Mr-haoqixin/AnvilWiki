@@ -1,0 +1,118 @@
+---
+title: 'Game Mechanics: Time, Mana & Experience'
+description: 'Core datamined game mechanics for Songs of Glimmerwick: time system, weather, mana, 17 spell costs, XP & levels, selling, and assist options. Data from game version 1.06.'
+category: info
+date: 2026-10-13
+lastModified: 2026-10-13
+summary: '1 in-game hour = 75 real seconds, 1 day ≈ 30 min. Clock freezes at night and during events — no time pressure. Mana starts at 350 (cap 1000), 11 XP per level. Weather follows a fixed 56-day cycle: 12 rain, 10 snow, 24 fog.'
+tags: ['mechanics', 'time', 'mana', 'experience', 'overview', 'datamined']
+---
+
+
+## Time & Calendar
+
+| Parameter | Value |
+| --- | --- |
+| 1 in-game hour | 75 seconds |
+| 1 in-game day | ~30 minutes |
+| 1 season | 14 days |
+| 1 year | 56 days (4 seasons × 14) |
+| Wake up | 06:00 |
+| New game starts | 07:12 |
+| Night freeze | 22:00–05:17 |
+| Auto-save | 12:00 |
+
+**No time pressure**: Clock freezes at night and during calendar events. After Year 1 Winter, eternal spring begins. No exhaustion — v1.06 has no mechanism that forces your day to end.
+
+## Weather
+
+Weather is **not random**: the game follows a fixed 56-day schedule. 12 rain days, 10 snow days (6 heavy), 24 fog days. Rain/snow auto-waters all crops.
+
+| Season | Rain/Snow days |
+| --- | --- |
+| Spring | 5, 9, 12 |
+| Summer | 4, 12 |
+| Autumn | 2, 4, 6, 7, 8, 11, 12 |
+| Winter | 1, 2, 3, 4, 5, 7, 8, 9, 10, 12 (snow) |
+
+## Mana
+
+| Parameter | Value |
+| --- | --- |
+| Initial cap | 350 |
+| Maximum cap | 1,000 |
+| Recovery | Fully restores each morning |
+| Food recovery | 65% of base value (herbs half; +7 if below 21) |
+
+### Raising Mana Cap
+
+- **Mana Enrichment** ×3: +100 each
+- **Desolation Dirge**: +50 per shrine destroyed
+- **Moonstone** (shed ghost quest reward): +150
+
+## Spell Mana Costs (17)
+
+Mana is consumed only when the spell takes effect. Mastery reduces cost by 20%.
+
+| Spell/Action | Mana | Mastered | Billing |
+| --- | --- | --- | --- |
+| Scythe | 3 | — | Per swing |
+| Song of Awakening | 5 | 4 | Per cast |
+| Sandcastle Jingle | 15 | 12 | Per cast |
+| Fishing | 16 | — | On success only |
+| Snowpile Jingle | 20 | 16 | Per cast |
+| Dig up plant | 30 | — | Per plant (fixed) |
+| Song of Tilling | 35 | 28 | Per tile |
+| Song of Silence | 35 | 28 | Per cast |
+| Rain Dance | 40 | 32 | Per cast |
+| Chant of the Woodcutters | 45 | 36 | Per target |
+| Alchemical Resonance | 55 | 44 | Per cast |
+| Tangleknot Remover | 70 | 56 | Per cast |
+| Song of Earth | 75 | 60 | Per cast |
+| Fish Trap Refrain | 80 | 64 | Per cast |
+| Hymn of Sea's Abyss | 100 | 80 | Per cast |
+| Restoration Round | 140 | 112 | Per target |
+| Ballad of Growth | 180 | 144 | Per cast |
+
+## XP & Levels
+
+Every 11 XP grants 1 level and 1 skill point. Level = XP ÷ 11 (floor) + 1. Unlocking all 31 abilities requires 341 XP (level 32).
+
+### XP Sources
+
+| Source | XP |
+| --- | --- |
+| Complete quest (minor/major) | 3/5 |
+| Attend class | 2 |
+| Learn/perfect song (first time) | 1/1 |
+| Potion recipe new quality tier | 1 |
+| Restore shrine | 2 |
+| Summer Music Festival (perfect/otherwise) | 5/3 |
+| Camping trip | 3 |
+
+## Selling & End-of-Day Scroll
+
+No shops buy items — everything sells through the **Magic Well**. Payment is received when sleeping, itemized on the end-of-day scroll. Sell prices are identical everywhere.
+
+| Bonus | Source | Effect |
+| --- | --- | --- |
+| Gardening bonus | Farm Merchant | +10% |
+| Fishing bonus | Fishmonger | +20% |
+| Baking bonus | Esteemed Baker | +40% |
+
+## Assist Options (3 sliders)
+
+In Options → Game, three sliders make mini-games easier, each with 4 levels.
+
+| Option | None | Slight | Extra | Extra Double |
+| --- | --- | --- | --- | --- |
+| Potion Mastery Help | 100% | 80% | 60% | 40% |
+| Song Mastery Help | 100% | 75% | 50% | 25% |
+| Fishing Help | +0% | +30% | +60% | +90% |
+
+## Related Pages
+
+- [Ability Tree Overview](/info/abilities-overview/) — 31 abilities & skill points
+- [All 22 Songs Overview](/info/songs-overview/) — Spell mana costs
+- [Complete Calendar Overview](/info/calendar-overview/) — Weather & events
+- [Crops Guide](/info/crops-overview/) — Rain/snow auto-watering
