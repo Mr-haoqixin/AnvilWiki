@@ -3,7 +3,15 @@
  *
  * 👉 APPLY TEMPLATE: Change every field here when building a new game wiki.
  * This is part of the CONFIG LAYER — framework code reads from here, never the reverse.
+ *
+ * The DOMAIN is the exception to "everything lives in this file": AGENTS.md
+ * rule #9 puts it in the `SITE_URL` environment variable. The `domain` field
+ * below is the FALLBACK for when no env is set (and the field apply-template
+ * rewrites); the effective host is always resolved by `siteUrl` / `siteHost`
+ * at the bottom of this file. Never read `site.domain` directly — use
+ * `siteHost` / `siteUrl` so both agree with the deployed environment.
  */
+import { resolveSiteHost, resolveSiteUrl } from '~/lib/site-url';
 
 export interface SiteConfig {
   /** Full site name, used in <title> suffix and Organization JSON-LD. */
@@ -66,7 +74,11 @@ export const site: SiteConfig = {
   shortName: '格林默威克 Wiki',
   description:
     '《格林默威克之歌》（Songs of Glimmerwick）中文攻略与资料站，整理魔法歌曲、校园生活、园艺、任务、道具及版本更新信息，并标注来源与核对日期。',
-  domain: 'mygameszhwiki.cloud-ip.cc',
+  /**
+   * Fallback domain (host without protocol or trailing slash) — used only
+   * when SITE_URL is not set. SITE_URL always wins (AGENTS.md rule #9).
+   */
+  domain: 'glimmerwickwiki-8rm.pages.dev',
   tagline: '格林默威克之歌中文攻略与玩家资料',
   legalNotice:
     '本站为非官方玩家资料站，与 Eastshade Studios 无隶属、赞助或背书关系。游戏名称、专有名词及原图版权归其各自权利人所有。',
@@ -93,8 +105,19 @@ export const site: SiteConfig = {
   ogImageHeight: 630,
 };
 
-/** Absolute site URL (no trailing slash). Falls back to the Astro `site` config. */
-export const siteUrl: string = (process.env.SITE_URL || `https://${site.domain}`).replace(
-  /\/$/,
-  '',
-);
+/**
+ * Absolute site URL (no trailing slash).
+ *
+ * SITE_URL (env) wins; `site.domain` is the fallback. Resolved through
+ * `~/lib/site-url` so the site config, the cover generator and the config
+ * gates all derive the host the same way.
+ */
+export const siteUrl: string = resolveSiteUrl(process.env.SITE_URL, site.domain);
+
+/**
+ * The effective host (no protocol, no trailing slash).
+ *
+ * Read THIS instead of `site.domain` — it follows SITE_URL when the
+ * deployment sets one.
+ */
+export const siteHost: string = resolveSiteHost(process.env.SITE_URL, site.domain);

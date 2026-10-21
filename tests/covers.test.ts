@@ -5,13 +5,20 @@
  */
 import { describe, expect, test } from 'vitest';
 import {
+  COVER_FORMAT,
+  coverBrandLine,
+  coverBrandName,
   coverFilename,
+  coverFontScript,
+  frontmatterImage,
   hasCjk,
   hexToHsl,
   hslToHex,
+  isStaleCoverRef,
   parseBrandHsl,
   pickCjkScript,
   pickFontSize,
+  replaceImageInFrontmatter,
   spliceImageIntoFrontmatter,
   stableHash,
   stripEmoji,
@@ -103,6 +110,48 @@ describe('spliceImageIntoFrontmatter', () => {
   });
 });
 
+describe('frontmatterImage / isStaleCoverRef / replaceImageInFrontmatter', () => {
+  test('reads a relative image path and ignores absolute URLs', () => {
+    expect(frontmatterImage("---\nimage: '../../assets/covers/x.webp'\n---\n")).toBe(
+      '../../assets/covers/x.webp',
+    );
+    expect(frontmatterImage('---\nimage: "https://cdn.example.com/a.png"\n---\n')).toBeNull();
+    expect(frontmatterImage('---\ntitle: T\n---\n')).toBeNull();
+  });
+
+  test('a leftover .png of the same cover is stale (must be re-pointed)', () => {
+    const src = "---\ntitle: T\nimage: '../../assets/covers/en-tasks-x.png'\n---\n";
+    expect(isStaleCoverRef(src, 'en-tasks-x.webp')).toBe(true);
+  });
+
+  test('hand-made cover art under another name is NOT stale', () => {
+    // A fork's own illustration must never be overwritten by the generator.
+    const src = "---\ntitle: T\nimage: '../../assets/covers/my-art.png'\n---\n";
+    expect(isStaleCoverRef(src, 'en-tasks-x.webp')).toBe(false);
+  });
+
+  test('a matching reference is not stale', () => {
+    const src = "---\ntitle: T\nimage: '../../assets/covers/en-tasks-x.webp'\n---\n";
+    expect(isStaleCoverRef(src, 'en-tasks-x.webp')).toBe(false);
+  });
+
+  test('replaceImageInFrontmatter rewrites the path and keeps EOL style', () => {
+    const lf = "---\ntitle: T\nimage: 'old.png'\n---\n\nBody";
+    expect(replaceImageInFrontmatter(lf, 'new.webp')).toBe(
+      "---\ntitle: T\nimage: 'new.webp'\n---\n\nBody",
+    );
+    const crlf = "---\r\ntitle: T\r\nimage: 'old.png'\r\n---\r\n\r\nBody";
+    const out = replaceImageInFrontmatter(crlf, 'new.webp');
+    expect(out).toContain("image: 'new.webp'\r\n");
+    expect(out!.includes('\r\r')).toBe(false);
+  });
+
+  test('replaceImageInFrontmatter returns null without an image line', () => {
+    expect(replaceImageInFrontmatter('---\ntitle: T\n---\n', 'new.webp')).toBeNull();
+    expect(replaceImageInFrontmatter('no frontmatter', 'new.webp')).toBeNull();
+  });
+});
+
 describe('CJK detection', () => {
   test('hasCjk flags Han and kana, not Latin', () => {
     expect(hasCjk('Emberfang ボス攻略')).toBe(true);
@@ -122,6 +171,54 @@ describe('CJK detection', () => {
   });
 });
 
+describe('coverBrandLine', () => {
+  test('uppercases and turns plain spaces into no-break spaces', () => {
+    // satori drops a space that follows a CJK run — the Latin word would
+    // overlap the last Han glyph. U+00A0 survives shaping.
+    const line = coverBrandLine('格林默威克 Wiki');
+    expect(line).toBe('格林默威克\u00A0WIKI');
+    expect(line.includes('\u00A0')).toBe(true);
+    expect(line.includes(' ')).toBe(false);
+  });
+
+  test('Latin-only names keep their space (still a no-break space)', () => {
+    expect(coverBrandLine('AQ Wiki')).toBe('AQ WIKI');
+  });
+});
+
+describe('coverBrandName', () => {
+  test('uses the LOCALE own shortName, not the global one', () => {
+    // The Chinese wordmark on an English/German cover was unreadable for
+    // exactly the readers of that page.
+    const perLocale = { en: 'Glimmerwick Wiki', de: 'Glimmerwick Wiki', zh: '格林默威克 Wiki' };
+    expect(coverBrandName('en', perLocale, '格林默威克 Wiki')).toBe('Glimmerwick Wiki');
+    expect(coverBrandName('de', perLocale, '格林默威克 Wiki')).toBe('Glimmerwick Wiki');
+    expect(coverBrandName('zh', perLocale, '格林默威克 Wiki')).toBe('格林默威克 Wiki');
+  });
+
+  test('falls back to the global shortName for an unknown locale', () => {
+    expect(coverBrandName('ko', {}, '格林默威克 Wiki')).toBe('格林默威克 Wiki');
+  });
+});
+
+describe('coverFontScript', () => {
+  test('picks the font from ALL cover strings, not just the title', () => {
+    // Latin title + Han brand line: the brand is drawn on every cover, so a
+    // CJK font is required even though the title alone needs none.
+    expect(pickCjkScript('en', 'Abigailia: Prologue Headmistress')).toBeNull();
+    expect(coverFontScript('en', ['Abigailia: Prologue Headmistress', '格林默威克 Wiki'])).toBe('zh');
+  });
+
+  test('no CJK anywhere → no CJK font', () => {
+    expect(coverFontScript('en', ['Abigailia: Prologue Headmistress', 'AQ Wiki'])).toBeNull();
+  });
+
+  test('ja locale and kana still win over SC', () => {
+    expect(coverFontScript('ja', ['ボス攻略', '格林默威克 Wiki'])).toBe('ja');
+    expect(coverFontScript('en', ['古代神殿', '格林默威克'])).toBe('zh');
+  });
+});
+
 describe('stripEmoji', () => {
   test('strips pictographs but keeps text', () => {
     expect(stripEmoji('Fire Titan ⚔️🔥')).toBe('Fire Titan');
@@ -131,8 +228,12 @@ describe('stripEmoji', () => {
 
 describe('naming / hashing / subsetting', () => {
   test('coverFilename flattens the content id', () => {
-    expect(coverFilename('en/bosses/emberfang')).toBe('en-bosses-emberfang.png');
-    expect(coverFilename('ja/guides/beginner-guide')).toBe('ja-guides-beginner-guide.png');
+    expect(coverFilename('en/bosses/emberfang')).toBe('en-bosses-emberfang.webp');
+    expect(coverFilename('ja/guides/beginner-guide')).toBe('ja-guides-beginner-guide.webp');
+  });
+
+  test('covers are WebP — a cover library must not fill the git repo', () => {
+    expect(COVER_FORMAT).toBe('webp');
   });
 
   test('stableHash is deterministic and hash-like', () => {

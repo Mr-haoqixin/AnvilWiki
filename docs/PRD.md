@@ -413,7 +413,7 @@ description: "Complete strategy guide for defeating Emberfang, including attack 
 category: "bosses"
 date: 2026-08-11
 lastModified: 2026-08-12
-image: "../../../../assets/covers/emberfang-cover.png"
+image: "../../../../assets/covers/emberfang-cover.webp"
 tags: ["boss", "ice", "early-game"]
 ---
 

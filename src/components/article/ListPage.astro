@@ -104,7 +104,7 @@ const jsonLd = [
             const slug = parseEntryId(entry.id)?.slug ?? '';
             return (
               <a href={detailPath(category, slug, locale)} class="card p-5">
-                {entry.data.image && <ArticleCover src={entry.data.image} />}
+                {entry.data.image && <ArticleCover src={entry.data.image} alt={entry.data.title} />}
                 <h2 class="font-semibold leading-snug">{entry.data.title}</h2>
                 <p class="mt-1 line-clamp-2 text-sm text-muted-foreground">
                   {entry.data.description}

@@ -23,17 +23,11 @@ export interface IndexNowKeyInfo {
 /**
  * Load a local .env file into process.env for backward compatibility.
  * Existing process.env values win; a missing file is a no-op.
+ *
+ * Lives in ./env now (it is a generic helper, not IndexNow-specific) —
+ * re-exported here because callers already import it from this module.
  */
-export function loadLocalEnv(filePath = '.env'): void {
-  try {
-    process.loadEnvFile(path.resolve(filePath));
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === 'ENOENT') return;
-    console.warn(
-      `⚠️ Could not parse ${filePath} (${error instanceof Error ? error.message : String(error)}) — continuing with the process environment only.`,
-    );
-  }
-}
+export { loadLocalEnv } from './env';
 
 export function normalizeIndexNowKey(raw: string | undefined | null): string | null {
   const value = raw?.trim() ?? '';

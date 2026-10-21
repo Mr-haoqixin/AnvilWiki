@@ -112,6 +112,54 @@ export function spliceImageIntoFrontmatter(src: string, imageRelPath: string): s
 const CJK_RE = /[\u{3040}-\u{30ff}\u{31f0}-\u{31ff}\u{3400}-\u{4dbf}\u{4e00}-\u{9fff}\u{f900}-\u{faff}]/u;
 const KANA_RE = /[\u{3040}-\u{30ff}]/u;
 
+/**
+ * The `image:` value in an article's frontmatter, or null when it has none.
+ * Only relative asset paths count — an absolute URL is a hand-written
+ * external image and must never be rewritten.
+ */
+export function frontmatterImage(src: string): string | null {
+  const fmRe = /^---\r?\n([\s\S]*?)\r?\n---/;
+  const m = src.match(fmRe);
+  if (!m) return null;
+  const im = m[1].match(/^image:[ \t]*['"]?([^'"\r\n]+?)['"]?[ \t]*$/m);
+  if (!im) return null;
+  const value = im[1].trim();
+  if (!value || /^[a-z]+:\/\//i.test(value)) return null;
+  return value;
+}
+
+/**
+ * True when the frontmatter points at the SAME cover in another format — e.g.
+ * a leftover `.png` from before covers became WebP. Such an article must be
+ * re-pointed at the new file instead of being skipped as "already covered".
+ *
+ * Only a same-basename match counts: a differently named file is hand-made
+ * cover art (a fork's own illustration), which this script must never
+ * overwrite.
+ */
+export function isStaleCoverRef(src: string, expectedFile: string): boolean {
+  const current = frontmatterImage(src);
+  if (!current) return false;
+  const file = current.split('/').pop() ?? '';
+  if (file === expectedFile) return false;
+  const stem = (f: string) => f.replace(/\.[^.]+$/, '');
+  return stem(file) === stem(expectedFile);
+}
+
+/**
+ * Rewrite an article's `image:` to point at the given relative path.
+ * Returns null when there is no frontmatter or no image line to replace.
+ */
+export function replaceImageInFrontmatter(src: string, imageRelPath: string): string | null {
+  const fmRe = /^---\r?\n([\s\S]*?)\r?\n---/;
+  const m = src.match(fmRe);
+  if (!m || !/^image:/m.test(m[1])) return null;
+  const block = m[1];
+  const eol = block.includes('\r\n') ? '\r\n' : '\n';
+  const newBlock = block.replace(/^image:[^\r\n]*$/m, () => `image: '${imageRelPath}'`);
+  return src.replace(fmRe, () => `---${eol}${newBlock}${eol}---`);
+}
+
 export function hasCjk(text: string): boolean {
   return CJK_RE.test(text);
 }
@@ -127,6 +175,59 @@ export function pickCjkScript(locale: string, text: string): 'ja' | 'zh' | null 
 }
 
 /**
+ * The brand line printed in the cover's top-left corner.
+ *
+ * Uppercased (it reads as a wordmark) and with every plain space turned into
+ * a no-break space: satori drops a space that directly follows a CJK run, so
+ * "格林默威克 WIKI" would render with the W overlapping the last Han glyph.
+ */
+export function coverBrandLine(shortName: string): string {
+  return shortName.toUpperCase().replace(/ /g, '\u00A0');
+}
+
+/**
+ * The brand name a cover shows, per locale.
+ *
+ * Every locale JSON already carries its own `site.shortName` ("Glimmerwick
+ * Wiki" for en/de/es/fr/ja/nl/pt/ru, the Chinese name for zh/zh-hant), so
+ * the cover must use THAT locale's value — printing the Chinese wordmark on
+ * an English or German cover showed readers a brand they cannot read.
+ *
+ * Falls back to the global site.shortName when a locale has no entry.
+ */
+export function coverBrandName(
+  locale: string,
+  perLocaleShortNames: Record<string, string | undefined>,
+  fallback: string,
+): string {
+  return perLocaleShortNames[locale] ?? fallback;
+}
+
+/**
+ * Which CJK font a cover needs — decided from EVERY string the cover shows,
+ * not just the title.
+ *
+ * The brand line (site.shortName) and the game name are rendered on every
+ * cover, so a Han brand name ("格林默威克 Wiki") needs a CJK font even when
+ * the article title is pure Latin. Deciding from the title alone loaded only
+ * Lato for those covers, and satori then drew the Han brand glyphs from
+ * Lato's .notdef — a box-with-question-mark per character (the "????? WIKI"
+ * tofu in the top-left corner).
+ *
+ * Kana anywhere → JP glyph shapes; otherwise Han → SC. The title still wins
+ * on locale (a ja article keeps JP shapes even if the brand is Han).
+ */
+export function coverFontScript(
+  locale: string,
+  texts: readonly string[],
+): 'ja' | 'zh' | null {
+  const joined = texts.join('');
+  if (!hasCjk(joined)) return null;
+  if (locale.toLowerCase().startsWith('ja') || KANA_RE.test(joined)) return 'ja';
+  return 'zh';
+}
+
+/**
  * satori ships no emoji font (emoji render as images there, not glyphs) —
  * strip pictographs from cover text. The caller warns when this changes it.
  */
@@ -134,13 +235,19 @@ export function stripEmoji(text: string): string {
   return text.replace(/[\p{Extended_Pictographic}\u{FE0F}]/gu, '').trim();
 }
 
-/** Cover filename from a content id: "en/bosses/emberfang" → "en-bosses-emberfang.png". */
+/** Cover file format — WebP, not PNG: a 1200×675 cover is ~7 KB as WebP vs
+ *  ~160 KB as PNG (the flat gradient + text compresses far better), which
+ *  keeps 800+ committed covers out of git's way and out of the Pages file
+ *  budget. resvg only rasterizes to PNG, so the script pipes PNG → sharp. */
+export const COVER_FORMAT = 'webp';
+
+/** Cover filename from a content id: "en/bosses/emberfang" → "en-bosses-emberfang.webp". */
 export function coverFilename(entryId: string): string {
   return (
     entryId
       .split('/')
       .filter(Boolean)
-      .join('-') + '.png'
+      .join('-') + `.${COVER_FORMAT}`
   );
 }
 

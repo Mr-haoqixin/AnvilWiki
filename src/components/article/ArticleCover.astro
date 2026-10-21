@@ -14,16 +14,25 @@ import type { ImageMetadata } from 'astro';
 
 interface Props {
   src: ImageMetadata;
+  /**
+   * Alt text. Required in practice: a cover that is decorative next to a
+   * visible title still needs a description for screen readers and image
+   * search. The prop stays optional (Astro's Props contract) but a missing
+   * value fails the build instead of shipping `alt=""` silently.
+   */
   alt?: string;
   class?: string;
   sizes?: string;
 }
 const {
   src,
-  alt = '',
+  alt,
   class: className = 'mb-3 aspect-video w-full rounded-md object-cover',
   sizes = '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw',
 } = Astro.props;
+if (!alt) {
+  throw new Error('ArticleCover: `alt` is required — pass the article title.');
+}
 ---
 
 <Image

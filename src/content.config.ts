@@ -18,7 +18,7 @@ import { locales } from './i18n/routing';
  *
  * `image` uses the `image()` helper so covers are processed by Astro Image
  * (auto WebP/AVIF + responsive srcset). Frontmatter value is a path relative
- * to the MDX file, e.g. `image: '../../../assets/covers/emberfang-cover.svg'`.
+ * to the MDX file, e.g. `image: '../../../assets/covers/emberfang-cover.webp'`.
  * At build time `entry.data.image` is `ImageMetadata | undefined`. For an
  * absolute og:image URL, read `.src` and prefix with `siteUrl`.
  */

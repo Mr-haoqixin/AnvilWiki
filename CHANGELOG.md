@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **封面品牌行按语言显示 + 封面域名修正 + 封面 alt 缺失修复**：
+  - **品牌行此前对所有语言都显示中文**：`gen-covers` 用全局 `site.shortName`（中文「格林默威克 Wiki」），而每个 locale JSON 里早已存在各自的 `site.shortName`（en/de/es/fr/ja/nl/pt/ru = "Glimmerwick Wiki"，zh/zh-hant = 中文）—— 非中文读者看到的是读不懂的汉字 wordmark。封面改用该 locale 自己的 shortName（`coverBrandName()`，新单测钉住；locale JSON 缺失时回退全局值）。
+  - **封面右下角域名过期**：`site.domain` 仍是旧值 `mygameszhwiki.cloud-ip.cc`（全仓唯一残留点），而 `.env.example` 的 `SITE_URL` 早已是 `glimmerwickwiki-8rm.pages.dev` —— 封面广告的域名与页面 canonical/og:image 不一致。`site.domain` 修正为新域名，且封面改用 `SITE_URL` 优先（与站点 canonical 同一优先级，`coverDomain()` 去掉协议只留 host）。**顺带修一个隐藏缺陷**：manifest 缓存键原先不含域名，改域名不会触发重新生成（这正是旧域名留在 843 张封面里的原因）→ 缓存键加入域名与 per-locale 品牌名，`MANIFEST_VERSION` 1→2 强制全量刷新。
+  - **列表页封面 `alt` 为空**：`ArticleCover` 的 `alt` 默认 `''`，三处调用点（`ListPage` / `RecentPage` / `TagListPage`）都没传，产物里是空 alt（SEO + 无障碍缺陷）。三处均补 `alt={entry.data.title}`，并把 `ArticleCover` 改为**缺 alt 直接抛错**（构建期失败，不再静默产出 `alt=""`）。
+
+- **封面左上角品牌行乱码（`????? WIKI`）+ 封面改 WebP + 生成提速 6.4 倍**：`pnpm gen-covers` 判定 CJK 字体时只看了**标题**，品牌行 `site.shortName`（中文）不在判定范围内 → 纯拉丁标题的封面（en/de/es/fr/nl/pt 共 490 张）只加载 Lato，而 Lato 无汉字字形（`.notdef` 是「带问号方框」），5 个汉字逐字渲染成方框。判定改为「标题 ∪ 品牌文案 ∪ 游戏名」（`coverFontScript()`，新单测钉住），satori 支持按字符回退到 font-family 里的第二个字体，只要字体被加载即可。顺带修 satori 吞掉紧跟 CJK 的普通空格（致「WIKI」的 W 压住「克」）→ 品牌行改用 NBSP（`coverBrandLine()`，新单测）。**输出改 WebP**（resvg 只出 PNG，sharp 转码）：1200×675 封面 160KB→23KB（-87%），843 张 131.7MB→19.2MB，全量封面进 git 不再撑仓库。**生成提速 6.4 倍**：Noto OTF 改为整轮内存缓存（原先每张封面重读 16MB），8.27 s/篇→1.29 s/篇，843 张 110 分钟→约 18 分钟。**健壮性**：manifest 改为每张落盘（中断不再丢失全量进度）、字体下载重试 4 次（16MB 文件传输常被 ECONNRESET）、单篇渲染失败不中断整批、失败数 >0 时 exit 1（部分成功不冒充成功）、旧 `.png` 封面引用自动重指向 `.webp`（同名同 stem 才动，手绘封面不动）。新增 `--only <id>`（可重复）便于单张预览。test 366→373（covers 套件 25→32）。
+
 - **第 37 轮 24h 审计深挖修复（社群日报 summary 条数与 stats 内部矛盾）**：#73（10-04 日报）的 `daily.summary` 写「假期安静日（13 条）」，同日 `report.stats.messages` 是 12（管道自己的 stats 提取文件 `stats-2026-10-04.json` 同为 12；13 系 day 文件含「拍了拍」系统事件的行数）——社群页同一屏幕同时渲染两者（`CommunityHighlights.astro` daily 带 :221 与 stats 卡 :263），公开数据自相矛盾；49 期全量对照仅此一期失配（10-03 前例 2==2）。summary 对齐结构化 stats 改 12，并按 33 轮 codes 月锚点门禁先例新增契约测试：summary 括号内「N 条」出现时必须等于同日 `stats.messages`（缺席优雅跳过 + checker 零命中自防假绿），同族漂移由纪律变红灯；test 394→395。
 
 - **第 36 轮 24h 审计深挖修复（ui.ts 重写区域正则单源化）**：c98602d 新增的契约测试「ui.ts 重写区域外不得引用可剥离 locale 标识符」里，`const messages` 字面量的剥除正则是测试内联副本——与 `rewriteUiTs` 的 `messagesRe`（apply-template.ts）是两份独立文本，界定「区域外」的正确性完全依赖两者逐字节同步，任一侧改动即静默漂移（漏报方向=契约假绿）。现按 `UI_IMPORT_BLOCK_RE` 先例提为 `UI_MESSAGES_BLOCK_RE` 单源导出（lib/apply-rewrites.ts），CLI 与契约测试同源引用，该契约的界定面从此不可漂移；零行为变更。
@@ -1009,7 +1016,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **中英 18 章全部重写同源**(2 并行 agent + 事实守恒校验):13 个提示词块数量守恒、验证条款与禁令原义保留、全部数字与限定词(仅上游生效/不含换肤/8 行主题变量/P1 仅 bosses+tier-list/NODE_VERSION 进 [vars]/2-8 周/15-20 篇/≥60 分/双源)逐条 grep 验收存活。
 
 ### Fixed
-- en 两章 title 超 80 字符(schema 拒收)裁剪;frontmatter 全部双引号转义防 YAML 冒号问题。
+
+- **域名单一真相源：`SITE_URL` 环境变量取代代码里写死的域名**（AGENTS.md 规则 #9「域名走 `SITE_URL` 环境变量——不在代码里写死域名」此前只写在文档里，代码仍有 `src/config/site.ts` 的 `domain` 硬编码字段，与 `.env` 的 `SITE_URL` 并存 → 改一处漏一处，封面右下角曾印着旧域名而页面 canonical 指向新域名）。新增 `src/lib/site-url.ts`（纯函数：`hostFromUrl` / `resolveSiteHost` / `resolveSiteUrl` / `displayHost`，新套件 `tests/site-url.test.ts` 8 例），`site.ts` 导出 `siteHost`（按 `SITE_URL` 优先派生），`site.domain` 降级为**兜底值**且不再被直接读取。**独立脚本此前读不到 `.env`**（Astro 构建时 Vite 会加载，tsx 不会）→ 新增 `scripts/lib/env.ts` 的 `loadLocalEnv()`（Node 内置 `process.loadEnvFile`，无新依赖；`scripts/lib/indexnow.ts` 改为 re-export），`gen-covers.ts` 与 `check-config.ts` 启动时加载 `.env`，真实环境变量优先于 `.env`。`check-config` 的域名门禁改为「SITE_URL 是真相源、`site.domain` 不得与它矛盾」并给出可操作提示。`.env` 已被 gitignore（本地私有），`.env.example` 保持可提交的模板。test 375→385。
+
 
 ## [1.12.1] — 2026-08-17
 

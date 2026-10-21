@@ -69,6 +69,8 @@ Cloudflare 会自动检测 Astro，但请确认以下设置：
 
 > ⚠️ **`SITE_URL` 必须含 `https://` 前缀**（如 `https://your-domain.wiki`，不是裸域名 `your-domain.wiki`）。Astro 把它当 URL 解析，裸域名会让 build 报 `Invalid url`。它影响 sitemap、og:image、robots.txt 里所有绝对 URL 的生成。
 
+> **本地开发：把 `SITE_URL` 写进 `.env`**（复制 `.env.example` 改名即可，该文件被 gitignore，不会提交）。`SITE_URL` 是域名的**唯一真相源**——`src/config/site.ts` 的 `domain` 字段只是它的兜底值（`SITE_URL` 永远优先）。本地没有 `.env` 时构建仍会成功，但会回退到 `domain` 字段；`pnpm check-config` 会把这个状态报成错误，提示设置 `SITE_URL`。`pnpm gen-covers` 同样会读 `.env`（封面右下角印的域名必须与页面 canonical 一致）。
+
 #### wrangler.toml 接管警告
 
 > 🚨 **重要：`wrangler.toml` 会接管 env 配置。** 本仓库根目录有 `wrangler.toml`，里面声明了 `[vars]` 段。**当 wrangler.toml 存在时，Cloudflare dashboard 的 Environment variables 会被完全忽略**（[官方文档](https://developers.cloudflare.com/pages/functions/wrangler-configuration/)）。所以你有两个选择：

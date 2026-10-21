@@ -2,28 +2,41 @@
  * gen-covers — generate og:image covers for wiki articles (v2.0).
  *
  * Usage:
- *   pnpm gen-covers                    # articles WITHOUT a cover (PNG + wires frontmatter)
+ *   pnpm gen-covers                    # articles WITHOUT a cover (WebP + wires frontmatter)
  *   pnpm gen-covers --all              # also refresh covers this script generated before
  *   pnpm gen-covers --force            # ignore the manifest cache
  *   pnpm gen-covers --out <dir>        # render elsewhere — frontmatter is NOT touched
  *   pnpm gen-covers --fonts-dir <dir>  # offline source for Noto CJK OTFs (see below)
+ *   pnpm gen-covers --only <id>        # one content id ("en/characters/abigailia");
+ *                                      # repeatable for several
  *
- * Covers are 1200×675 PNGs (og:image standard since v2.0: Google Discover
- * large-image previews need ≥1200px width) rendered with satori + resvg.
+ * Covers are 1200×675 (og:image standard since v2.0: Google Discover
+ * large-image previews need ≥1200px width) rendered with satori + resvg and
+ * encoded as WebP (~7 KB vs ~160 KB as PNG).
  *
  * Fonts:
  *   - Latin: bundled OFL Lato (scripts/fonts/) — deterministic, no network.
- *   - CJK titles: Noto Sans SC/JP. Full OTFs (~16MB each) are NOT committed;
- *     they download once into node_modules/.cache/gen-covers/fonts/ (or use
- *     --fonts-dir with pre-downloaded files) and are subset per title with
- *     subset-font (60–200KB per render) — satori only accepts TTF/OTF.
+ *   - CJK: Noto Sans SC/JP. The variant is picked from EVERY string the cover
+ *     shows (title + site.shortName + site.game.name) — the brand line is
+ *     rendered on every cover, so a Han site.shortName needs a CJK font even
+ *     for Latin titles (Lato has no Han glyphs: satori would draw its .notdef,
+ *     i.e. a box-with-question-mark per character). Full OTFs (~16MB each)
+ *     are NOT committed; they download once into
+ *     node_modules/.cache/gen-covers/fonts/ (or use --fonts-dir with
+ *     pre-downloaded files) and are subset per cover with subset-font
+ *     (60–200KB per render) — satori only accepts TTF/OTF.
+ *
+ * Performance: the Noto OTF is loaded ONCE per run and subset per article
+ * from that in-memory copy — downloading and re-reading the 16MB file for
+ * every cover was the dominant cost (a full 800-article run is minutes, not
+ * hours).
  *
  * Cache: <out>/.gen-covers-manifest.json maps filename → hash(title + brand +
  * size). Unchanged entries are skipped; --force regenerates everything.
  *
  * Frontmatter wiring (only when writing to the default covers dir and the
  * article has no `image:` yet): inserts `image: '<relative path>'` after the
- * `category:` line so the Zod image() helper picks the PNG up on next build.
+ * `category:` line so the Zod image() helper picks the WebP up on next build.
  */
 import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
@@ -31,14 +44,22 @@ import { fileURLToPath } from 'node:url';
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
 import subsetFont from 'subset-font';
+import sharp from 'sharp';
 import { site } from '~/config/site';
+import { displayHost } from '~/lib/site-url';
 import { NOTO_BASE } from './lib/fonts';
+import { loadLocalEnv } from './lib/env';
 import {
+  COVER_FORMAT,
+  coverBrandLine,
+  coverBrandName,
   coverFilename,
+  coverFontScript,
   hslToHex,
+  isStaleCoverRef,
   parseBrandHsl,
-  pickCjkScript,
   pickFontSize,
+  replaceImageInFrontmatter,
   spliceImageIntoFrontmatter,
   stableHash,
   stripEmoji,
@@ -46,12 +67,28 @@ import {
 } from '~/lib/covers';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+// Astro loads .env at build time; a standalone tsx script does not. Without
+// this the cover would resolve SITE_URL differently from the site it belongs
+// to (the bug class AGENTS.md rule #9 exists to prevent).
+loadLocalEnv(join(root, '.env'));
 const W = 1200;
 const H = 675;
 const CONTENT_DIR = join(root, 'src/content/wiki');
 const COVERS_DIR = join(root, 'src/assets/covers');
 const FONT_CACHE = join(root, 'node_modules/.cache/gen-covers/fonts');
-const MANIFEST_VERSION = 1;
+const MANIFEST_VERSION = 2;
+
+/**
+ * The host printed in the cover's bottom-right corner.
+ *
+ * Resolved through the shared `~/lib/site-url` helper with the same
+ * precedence the site's canonical / og:image URLs use (SITE_URL wins over
+ * the `site.domain` fallback), so the cover never advertises a different
+ * host than the page it links to.
+ */
+function coverDomain(): string {
+  return displayHost(process.env.SITE_URL, site.domain);
+}
 
 // Per-locale merged CJK fonts (NotoSansCJKjp/sc, ~16MB each) — family names
 // must match the internal font family satori matches on. The download base
@@ -69,7 +106,35 @@ interface Article {
   locale: string;
   title: string;
   hasImage: boolean;
+  /** The frontmatter `image:` points at a cover of a different format. */
+  staleImage: boolean;
   draft: boolean;
+}
+
+// --- per-locale brand names ------------------------------------------------------
+//
+// Every locale JSON carries its own `site.shortName` ("Glimmerwick Wiki" for
+// en/de/es/fr/ja/nl/pt/ru, the Chinese name for zh/zh-hant). A cover must show
+// the brand of the locale it belongs to — printing the Chinese wordmark on an
+// English or German cover showed readers a brand they cannot read.
+
+const LOCALE_BRAND: Record<string, string> = {};
+{
+  const dir = join(root, 'src/locales');
+  for (const file of readdirSync(dir)) {
+    if (!file.endsWith('.json')) continue;
+    const locale = file.replace(/\.json$/, '');
+    try {
+      const json = JSON.parse(readFileSync(join(dir, file), 'utf8')) as {
+        site?: { shortName?: string };
+      };
+      const name = json.site?.shortName?.trim();
+      if (name) LOCALE_BRAND[locale] = name;
+    } catch {
+      // A malformed locale JSON is a config-layer bug the i18n gates catch;
+      // the cover generator just falls back to the global shortName.
+    }
+  }
 }
 
 // --- CLI ---------------------------------------------------------------------
@@ -80,11 +145,26 @@ const opt = (name: string): string | undefined => {
   const i = args.indexOf(`--${name}`);
   return i >= 0 ? args[i + 1] : undefined;
 };
+/** Every value passed after a flag until the next flag: `--only a/b --only c/d`. */
+const opts = (name: string): string[] => {
+  const out: string[] = [];
+  for (let i = 0; i < args.length; i++) {
+    if (args[i] !== `--${name}`) continue;
+    const next = args[i + 1];
+    if (next === undefined || next.startsWith('--')) break;
+    out.push(next);
+    i++;
+  }
+  return out;
+};
 const ALL = flag('all');
 const FORCE = flag('force');
 const OUT_DIR = opt('out') ? resolve(opt('out') as string) : COVERS_DIR;
 const FONTS_DIR = opt('fonts-dir') ? resolve(opt('fonts-dir') as string) : undefined;
 const WIRE_FRONTMATTER = OUT_DIR === COVERS_DIR;
+/** Restrict the run to the given content ids ("en/characters/abigailia") —
+ *  for previewing a few covers without touching the rest of the library. */
+const ONLY = opts('only');
 
 // --- content scanning ----------------------------------------------------------
 
@@ -121,6 +201,9 @@ function collectArticles(): Article[] {
       locale,
       title: fmValue(fm, 'title') ?? rel,
       hasImage: /^image:/m.test(fm),
+      // Points at a cover of another format (a leftover .png) — the article
+      // must be re-rendered and re-pointed, not treated as "already covered".
+      staleImage: isStaleCoverRef(src, coverFilename(rel)),
       draft: /^draft:\s*true/m.test(fm),
     };
   });
@@ -150,27 +233,67 @@ function readLatinFonts(): SatoriFont[] {
   }));
 }
 
+/**
+ * The full Noto OTF per (script, weight), kept in memory for the whole run.
+ * Re-reading and re-downloading the 16MB file per cover was the dominant
+ * cost of a full-library run.
+ */
+const notoOtfCache = new Map<string, Buffer>();
+
+/** Download attempts per font before giving up. */
+const FONT_DOWNLOAD_ATTEMPTS = 4;
+
+async function downloadNotoOtf(url: string, file: string): Promise<Buffer> {
+  let lastError = '';
+  for (let attempt = 1; attempt <= FONT_DOWNLOAD_ATTEMPTS; attempt++) {
+    try {
+      // AbortSignal — without it a stalled connection hangs the script forever.
+      const res = await fetch(url, { signal: AbortSignal.timeout(120_000) });
+      if (!res.ok) {
+        throw new Error(
+          `${url} → HTTP ${res.status}. Offline? Pre-download ${file} into a dir and pass --fonts-dir <dir>.`,
+        );
+      }
+      const buf = Buffer.from(await res.arrayBuffer());
+      if (buf.length < 1_000_000) {
+        throw new Error(`${file} looks truncated (${buf.length} bytes) — not cached.`);
+      }
+      return buf;
+    } catch (err) {
+      lastError = err instanceof Error ? err.message : String(err);
+      // A 16MB file over a flaky link is routinely reset mid-transfer; a
+      // single failed attempt must not abort a run that has hundreds of
+      // covers left to render.
+      console.warn(`  ⚠ ${file} download attempt ${attempt} failed: ${lastError}`);
+      if (attempt < FONT_DOWNLOAD_ATTEMPTS) {
+        await new Promise((r) => setTimeout(r, 3_000 * attempt));
+      }
+    }
+  }
+  throw new Error(`${file} could not be downloaded after ${FONT_DOWNLOAD_ATTEMPTS} attempts: ${lastError}`);
+}
+
 async function ensureNotoOtf(script: Script, weight: 'Regular' | 'Bold'): Promise<Buffer> {
   const v = NOTO_VARIANTS[script];
+  const key = `${script}:${weight}`;
+  const cached = notoOtfCache.get(key);
+  if (cached) return cached;
   const file = `${v.prefix}-${weight}.otf`;
   const candidates = [FONTS_DIR, FONT_CACHE].filter(Boolean) as string[];
   for (const dir of candidates) {
     const p = join(dir, file);
-    if (existsSync(p)) return readFileSync(p);
+    if (existsSync(p)) {
+      const buf = readFileSync(p);
+      notoOtfCache.set(key, buf);
+      return buf;
+    }
   }
   const url = `${NOTO_BASE}/${v.region}/${file}`;
   console.log(`  downloading ${file} (~16MB, cached for future runs) …`);
-  // AbortSignal — without it a stalled connection hangs the script forever.
-  const res = await fetch(url, { signal: AbortSignal.timeout(120_000) });
-  if (!res.ok) {
-    throw new Error(
-      `${url} → HTTP ${res.status}. Offline? Pre-download ${file} into a dir and pass --fonts-dir <dir>.`,
-    );
-  }
-  const buf = Buffer.from(await res.arrayBuffer());
-  if (buf.length < 1_000_000) throw new Error(`${file} looks truncated (${buf.length} bytes) — not cached.`);
+  const buf = await downloadNotoOtf(url, file);
   mkdirSync(FONT_CACHE, { recursive: true });
   writeFileSync(join(FONT_CACHE, file), buf);
+  notoOtfCache.set(key, buf);
   return buf;
 }
 
@@ -217,8 +340,9 @@ function coverElement(opts: {
   brandDeepHex: string;
   lang: string;
   fontFamily: string;
+  brandName: string;
 }): Element {
-  const shortName = site.shortName.toUpperCase();
+  const brandLine = coverBrandLine(opts.brandName);
   return el(
     'div',
     {
@@ -248,7 +372,7 @@ function coverElement(opts: {
             color: opts.brandHex,
             letterSpacing: '6px',
           },
-          shortName,
+          brandLine,
         ),
       ),
       // Title — sized by pickFontSize to stay within ~2 lines.
@@ -279,7 +403,7 @@ function coverElement(opts: {
           el(
             'div',
             { fontSize: '26px', color: '#8b95a8', letterSpacing: '1px' },
-            `${site.game.name}  ·  ${site.domain}`,
+            `${site.game.name}  ·  ${coverDomain()}`,
           ),
         ],
       ),
@@ -291,30 +415,53 @@ function coverElement(opts: {
 async function renderCover(article: Article, brandHex: string, brandDeepHex: string): Promise<Buffer> {
   const title = stripEmoji(article.title);
   if (title !== article.title) console.warn(`  ⚠ stripped emoji from "${article.title}"`);
-  const script = pickCjkScript(article.locale, title);
+  // The brand line is the locale's OWN site.shortName (en/de/es/… read
+  // "Glimmerwick Wiki", zh/zh-hant read the Chinese name) — the global
+  // site.shortName would put a Chinese wordmark on every language's cover.
+  const brandName = coverBrandName(article.locale, LOCALE_BRAND, site.shortName);
+  // The cover shows the brand line and the game name on EVERY article, so the
+  // CJK font decision must span all three strings — deciding from the title
+  // alone left a Han brand name rendered from Lato's .notdef (tofu).
+  const script = coverFontScript(article.locale, [title, brandName, site.game.name]);
   const fonts: SatoriFont[] = readLatinFonts();
   let fontFamily = 'Lato';
   let lang = 'en';
   if (script) {
-    const glyphs = subsetText(title, site.shortName, site.game.name);
+    // The brand line carries the no-break space, so the subset needs the
+    // exact strings that get rendered — not the raw config values.
+    const glyphs = subsetText(title, coverBrandLine(brandName), site.game.name);
     fonts.push(...(await subsetNoto(script, glyphs)));
     fontFamily = `Lato, ${NOTO_VARIANTS[script].family}`;
     lang = script === 'ja' ? 'ja-JP' : 'zh-CN';
   }
-  const element = coverElement({ title, fontSize: pickFontSize(title), brandHex, brandDeepHex, lang, fontFamily });
+  const element = coverElement({
+    title,
+    fontSize: pickFontSize(title),
+    brandHex,
+    brandDeepHex,
+    lang,
+    fontFamily,
+    brandName,
+  });
   const svg = await satori(element as unknown as Parameters<typeof satori>[0], {
     width: W,
     height: H,
     fonts,
   });
-  return new Resvg(svg, { fitTo: { mode: 'width', value: W } }).render().asPng();
+  // resvg only rasterizes to PNG; sharp re-encodes to WebP. A cover is a flat
+  // gradient plus text, so WebP is ~7 KB against ~160 KB for PNG — the whole
+  // library of covers then fits in git (and in the Pages file budget).
+  const png = new Resvg(svg, { fitTo: { mode: 'width', value: W } }).render().asPng();
+  return sharp(png).webp({ quality: 82, effort: 4 }).toBuffer();
 }
 
 // --- frontmatter wiring ------------------------------------------------------------
 
-function wireFrontmatter(mdxPath: string, imageRelPath: string): boolean {
+function wireFrontmatter(mdxPath: string, imageRelPath: string, replace: boolean): boolean {
   const src = readFileSync(mdxPath, 'utf8');
-  const updated = spliceImageIntoFrontmatter(src, imageRelPath);
+  const updated = replace
+    ? replaceImageInFrontmatter(src, imageRelPath)
+    : spliceImageIntoFrontmatter(src, imageRelPath);
   if (updated === null) return false;
   // Atomic replace (same dir + rename): a crash mid-write must never leave a
   // truncated MDX behind — same contract as sync-codes.
@@ -355,16 +502,21 @@ async function main(): Promise<void> {
   let generated = 0;
   let skipped = 0;
   let wired = 0;
+  let failed = 0;
 
   for (const article of articles) {
-    const ours = manifest.entries[coverFilename(article.id)] !== undefined;
+    if (ONLY.length > 0 && !ONLY.includes(article.id)) continue;
+    const file = coverFilename(article.id);
+    const ours = manifest.entries[file] !== undefined;
     // Custom --out is a preview run: render everything (frontmatter untouched).
-    const eligible = !WIRE_FRONTMATTER || !article.hasImage || (ALL && ours);
+    // A stale `image:` (wrong format) is always eligible — it must be
+    // re-rendered and re-pointed, not skipped as "already covered".
+    const eligible =
+      !WIRE_FRONTMATTER || !article.hasImage || article.staleImage || (ALL && ours);
     if (!eligible) continue;
 
-    const file = coverFilename(article.id);
     const key = stableHash(
-      `${article.title}|${site.shortName}|${site.game.name}|${brandHex}|${W}x${H}|v${MANIFEST_VERSION}`,
+      `${article.title}|${coverBrandName(article.locale, LOCALE_BRAND, site.shortName)}|${site.game.name}|${coverDomain()}|${brandHex}|${W}x${H}|${COVER_FORMAT}|v${MANIFEST_VERSION}`,
     );
     if (!FORCE && manifest.entries[file] === key && existsSync(join(OUT_DIR, file))) {
       skipped++;
@@ -372,15 +524,31 @@ async function main(): Promise<void> {
     }
 
     console.log(`▸ ${file} — ${article.title}`);
-    const png = await renderCover(article, brandHex, brandDeepHex);
-    writeFileSync(join(OUT_DIR, file), png);
+    let image: Buffer;
+    try {
+      image = await renderCover(article, brandHex, brandDeepHex);
+    } catch (err) {
+      // One unrenderable article must not abandon the other hundreds — the
+      // failure is reported and the run continues.
+      failed++;
+      console.error(
+        `  ✗ ${file} failed: ${err instanceof Error ? err.message : String(err)}`,
+      );
+      continue;
+    }
+    writeFileSync(join(OUT_DIR, file), image);
     manifest.entries[file] = key;
     generated++;
+    // Persist after every cover: a run interrupted halfway (Ctrl-C, a
+    // network drop on the font download, a crash) used to lose the whole
+    // manifest — and with it the knowledge that those covers already exist,
+    // so the next run re-rendered everything from scratch.
+    writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
 
-    if (WIRE_FRONTMATTER && !article.hasImage) {
+    if (WIRE_FRONTMATTER && (!article.hasImage || article.staleImage)) {
       const absCover = join(COVERS_DIR, file);
       const relFromMdx = relative(dirname(article.absPath), absCover).split('\\').join('/');
-      if (wireFrontmatter(article.absPath, relFromMdx)) {
+      if (wireFrontmatter(article.absPath, relFromMdx, article.hasImage)) {
         wired++;
         console.log('  wired frontmatter image');
       }
@@ -388,8 +556,13 @@ async function main(): Promise<void> {
   }
 
   writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
-  console.log(`\nDone: ${generated} generated, ${skipped} cached, ${wired} wired → ${relative(root, OUT_DIR)}`);
+  console.log(
+    `\nDone: ${generated} generated, ${skipped} cached, ${wired} wired, ${failed} failed → ${relative(root, OUT_DIR)}`,
+  );
   if (!WIRE_FRONTMATTER) console.log('(custom --out: frontmatter untouched)');
+  // A partial run must not look like a success: the caller (CI, a human)
+  // needs to know some covers are missing.
+  if (failed > 0) process.exit(1);
 }
 
 main().catch((err: unknown) => {

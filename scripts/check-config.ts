@@ -32,9 +32,15 @@
 
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { hostFromUrl } from '~/lib/site-url';
+import { loadLocalEnv } from './lib/env';
 import { readLocales } from './lib/routing-flags';
 
 const ROOT = process.cwd();
+// The domain gate below compares the deployed SITE_URL with the fallback in
+// site.ts — a developer's local .env is part of that picture, so load it
+// (Astro does this for the build; a standalone script does not).
+loadLocalEnv(path.join(ROOT, '.env'));
 const read = (p: string) => fs.readFileSync(path.resolve(ROOT, p), 'utf8');
 
 const DISPLAY_TYPES = ['badge-list', 'steps', 'ranked-grid', 'labeled-cards', 'timeline', 'video-grid'];
@@ -161,8 +167,8 @@ for (const loc of routingLocales) {
 }
 if (displayErrors === 0) console.log('  ✅ all displayTypes valid');
 
-// --- Check 5: deployment domain gate (wrangler.toml ↔ site.ts) -------------
-console.log('\n4. Deployment domain (wrangler.toml SITE_URL ↔ site.ts domain)');
+// --- Check 5: deployment domain gate (SITE_URL ↔ site.ts domain) -------------
+console.log('\n4. Deployment domain (SITE_URL ↔ site.ts domain)');
 const siteSrc = read('src/config/site.ts');
 // Both quote styles (template-audit.ts parses this same field the same way):
 // a fork reformatting site.ts to double quotes must not fail the domain gate.
@@ -176,19 +182,25 @@ if (!effectiveUrl && fs.existsSync(path.resolve(ROOT, 'wrangler.toml'))) {
 if (!domain) {
   err('could not parse `domain` in src/config/site.ts');
 } else if (!effectiveUrl) {
-  err(`no SITE_URL found (env or wrangler.toml) — canonical/sitemap would fall back to https://${domain}`);
+  err(
+    `no SITE_URL found (env or wrangler.toml) — canonical/sitemap would fall back to https://${domain}. ` +
+      'Set SITE_URL (see .env.example) so the deployed host is the single source of truth (AGENTS.md rule #9).',
+  );
 } else {
-  try {
-    const host = new URL(effectiveUrl).host;
-    if (host !== domain) {
-      err(
-        `${urlSource} SITE_URL host "${host}" ≠ site.ts domain "${domain}" — every canonical/og:url/sitemap URL would point at the wrong site. Fix wrangler.toml [vars] (or delete the file, see docs/deployment.md).`,
-      );
-    } else {
-      console.log(`  ✅ ${urlSource} → ${effectiveUrl} matches site.ts domain`);
-    }
-  } catch {
+  // SITE_URL is the source of truth (AGENTS.md rule #9); site.domain is only
+  // the fallback for when no env is set. It must not CONTRADICT the env —
+  // a stale fallback would silently point every URL at the wrong host the
+  // moment SITE_URL is removed (or a script runs without it).
+  const host = hostFromUrl(effectiveUrl);
+  if (!host) {
     err(`${urlSource} SITE_URL "${effectiveUrl}" is not a valid URL (must include https://)`);
+  } else if (host !== domain) {
+    err(
+      `${urlSource} SITE_URL host "${host}" ≠ site.ts domain "${domain}" — the fallback domain in src/config/site.ts is stale. ` +
+        'SITE_URL wins at runtime, but a script or a build without the env would fall back to the wrong host. Update site.ts `domain` (or remove it and rely on SITE_URL).',
+    );
+  } else {
+    console.log(`  ✅ ${urlSource} → ${effectiveUrl} matches site.ts domain`);
   }
 }
 

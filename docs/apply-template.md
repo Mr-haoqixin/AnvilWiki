@@ -266,7 +266,7 @@ description: "155 字符以内的描述，含关键词"
 category: "bosses"
 date: 2026-08-11
 lastModified: 2026-08-11
-image: "../../../../assets/covers/your-cover.png"
+image: "../../../../assets/covers/your-cover.webp"
 tags: ["boss", "guide"]
 ---
 

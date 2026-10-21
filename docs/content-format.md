@@ -29,7 +29,7 @@ description: 'Complete strategy guide for defeating Emberfang, including attack 
 category: 'bosses'
 date: 2026-08-11
 lastModified: 2026-08-12
-image: '../../../../assets/covers/emberfang-cover.png'
+image: '../../../../assets/covers/emberfang-cover.webp'
 tags: ['boss', 'ice', 'early-game']
 noindex: false
 ---
@@ -98,7 +98,7 @@ import Accordion from '~/components/mdx/Accordion.astro';
 
 > **封面图质量 = 图片搜索入口**（2026-03 起 Google 选图首选 og:image）：封面不再是装饰，每篇文章的封面直接决定该页在 Google 图片搜索里的展示。挑图三原则：清晰可辨（缩略图下仍认得出游戏）、带游戏视觉标识（角色/logo/UI，不用纯文字图）、与文章主题对应（boss 文章不配风景图）。
 >
-> **尺寸标准（v2.0）：1200×675**（16:9 且满足 Google Discover 大图预览的 ≥1200px 宽要求；全站已声明 `max-image-preview:large`）。没有制图条件时跑 `pnpm gen-covers`——用站点名+品牌色+标题自动生成排版封面（中/日文标题自动子集 Noto 字体），并自动写入 frontmatter `image` 字段。
+> **尺寸标准（v2.0）：1200×675**（16:9 且满足 Google Discover 大图预览的 ≥1200px 宽要求；全站已声明 `max-image-preview:large`）。没有制图条件时跑 `pnpm gen-covers`——用站点名+品牌色+标题自动生成排版封面（中/日文标题自动子集 Noto 字体），并自动写入 frontmatter `image` 字段。输出为 **WebP**（约 20KB/张，PNG 约 160KB/张）。
 
 ### 作者体系（v1.7）
 

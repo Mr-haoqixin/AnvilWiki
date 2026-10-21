@@ -89,7 +89,7 @@ const jsonLd = [
             const category = parsed?.category ?? '';
             return (
               <a href={detailPath(category, parsed?.slug ?? '', locale)} class="card p-5">
-                {entry.data.image && <ArticleCover src={entry.data.image} />}
+                {entry.data.image && <ArticleCover src={entry.data.image} alt={entry.data.title} />}
                 <p class="text-xs uppercase tracking-wider text-muted-foreground">
                   {categories[category]?.overviewTitle ?? nav[category] ?? category}
                 </p>
