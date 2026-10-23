@@ -7,6 +7,6 @@
 # real publisher ID (shown in the AdSense dashboard) and DELETE the leading
 # "#" from the line below:
 #
-# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+google.com, pub-5278679035941576, DIRECT, f08c47fec0942fa0
 #
 # Learn more: https://iabtechlab.com/ads-txt/
