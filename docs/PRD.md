@@ -305,7 +305,8 @@ anvilwiki/
 │   ├── content/
 │   │   └── wiki/<locale>/<category>/*.mdx  # ⭐ 内容层（须在 wiki/ 子目录下，避免 legacy 自动集合）
 │   ├── pages/                    # ⭐ 代码层：路由（英文无前缀，其他语言 /<locale>/ 前缀）
-│   │   ├── index.astro           # 英文首页（inline 渲染，不 redirect —— redirect 会毁 SEO）
+│   │   ├── index.astro           # 英文首页（fork：inline 渲染不 redirect；demo：landingLinkEnabled 门控渲染 RootGateway 门面网关，英文首页在 demo.astro 的 /demo/）
+│   │   ├── demo.astro            # demo 站英文 wiki 首页 /demo/（demo 专属，fork 初始化删除）
 │   │   ├── [...slug].astro       # ⭐ 英文统一路由：slug.length=1→列表页，>1→详情页
 │   │   ├── [locale]/
 │   │   │   ├── index.astro       # 非默认语言首页
@@ -1407,7 +1408,7 @@ describe('sitemap', () => {
 
 ### 15.3 Demo 站策略
 
-- **官方 demo**：`anvil.wiki`，用虚构游戏 "Anvil Quest" 做一个完整 demo 站。
+- **官方 demo**：`anvil.wiki`，用虚构游戏 "Anvil Quest" 做一个完整 demo 站。根路径 `/` 为项目门面入口（301 跳 `/zh/landing/`，`_redirects` 根规则 + `index.astro` 内 RootGateway 影子页双保险），英文 wiki demo 首页在 `anvil.wiki/demo/`。
 - **源码**：demo 内容就在本仓库内（`src/content/wiki/`，英文在根、日文带前缀）——fork 后由 `pnpm apply-template` / setup 工作流整体替换。
 - **目的**：让用户直观看到 AnvilWiki 长什么样、性能如何。
 - **文档中心**：站内 `/landing/docs` 双手册（learn 29 课+3 附录 + dev 9 课，中英），markdown 源在 `docs/handbook/`，fork 保留。
@@ -1481,6 +1482,7 @@ describe('sitemap', () => {
 |---|---|
 | `PUBLIC_GA_ID` | Google Analytics ID（如 `G-XXXXXXXX`；有 cookie，经同意横幅门控） |
 | `PUBLIC_CF_BEACON_TOKEN` | Cloudflare Web Analytics beacon token（无 cookie，不需同意横幅） |
+| `PUBLIC_VIBECAFE_PRODUCT_ID` / `PUBLIC_VIBECAFE_AUTH_KEY` | VibeCafé 产品遥测（可选，两值齐备才注入，任一为空 = 不渲染） |
 | `PUBLIC_GSC_VERIFICATION` | Google Search Console 验证 token |
 | `INDEXNOW_KEY` | 旧站 IndexNow key 的兼容覆盖；新 fork 由初始化流程生成仓库根 `.indexnow-key`，postbuild 与自动提交共同读取，无需额外变量 |
 | `PUBLIC_SPONSOR_URL` | 赞助/捐赠卡链接（空 = 不渲染） |
@@ -1515,6 +1517,8 @@ PUBLIC_ADSTERRA_SLOT_SIDEBAR_160X600=
 # 分析（可选）
 PUBLIC_GA_ID=
 PUBLIC_CF_BEACON_TOKEN=
+PUBLIC_VIBECAFE_PRODUCT_ID=
+PUBLIC_VIBECAFE_AUTH_KEY=
 PUBLIC_GSC_VERIFICATION=
 # IndexNow 旧站兼容覆盖；新 fork 默认由 .indexnow-key 提供
 INDEXNOW_KEY=
@@ -1705,4 +1709,5 @@ PUBLIC_GISCUS_MAPPING=pathname
 | 2026-09-23 | v2.36.0 | IndexNow 新 fork 零配置化+文档保鲜批：#57（cc6f0a2，oyjq0000 Follow-up to #46）把 IndexNow 站点身份改为仓库根单一 `.indexnow-key`（Initialize/apply-template 首跑生成 64 位 hex、重跑严格复用；新增 `pnpm init-indexnow-key` 供旧站迁移/主动轮换；postbuild 与 CI 自动提交优先读它，旧 `INDEXNOW_KEY` 环境变量降级为兼容通道；indexnow.yml checkout 后探测配置，未初始化 fork 安装依赖前退出零请求；round-21 安全链全保留）；文档保鲜：Adsterra 反欺诈政策边界写入 docs/ads.md 与手册课 22 双语（合规三条件）+ PRD 架构树运维脚本计数 15→16（七天文档漂移审计发现）；test 322→325+八门禁全绿；详见 CHANGELOG [2.36.0] |
 | 2026-09-27 | v2.36.1 | 第四次全项目三维代码审查全面修复批（0高+4中+27低全修；六路审查代理按文件所有权并行+主会话逐条亲验，五路修复代理并行+脚本 world.run 确定性门禁收口）：中危×4=rewriteSiteTs 重跑值感知保留手填可选字段（DEMO_SITE_OPTIONAL_VALUES 注册表，对齐 wrangler 通道哲学）/rewriteLocaleJson 重跑保留手写 overview+home 覆盖前警告（v2.6.3 首跑防泄漏语义原样）/check-content 图片包裹链接对规则 4/5/6 隐形根治（新 `scripts/lib/link-scan.ts`，资产 href 退出计数）/sync-codes expired→active 复活独立 reactivated 桶+CLI ⚠️；低危×27 覆盖重跑/门禁/管道/渲染/CI+ops 五面（新 lib：atomic/asset-extensions/slugify/fonts，Noto 钉 tag Sans2.004；pnpm 版本单源化删 8 处 version: 输入；setup.yml 补 concurrency；ops insights 走 offload）；新套件 tests/content-links.test.ts（22→23），test 325→375+九项门禁（含 ops test）全绿+CHANGELOG 记账后复核绿+E2E 绿；ops 1.0.6 随批发 npm；详见 CHANGELOG [2.36.1] |
 | 2026-10-03 | v2.37.0 | apply-template 双语界面（中/英）+第五次全项目代码审查全面修复批+zh 入口与 codes 保鲜补漏：CLI 中文化（新 scripts/lib/apply-template-i18n.ts en/zh 键级对齐词典；交互 TTY 开头问界面语言，1=中文/回车按 LANG 推导/--lang zh\|en 标志；非交互永不提问缺省英文，18 项答案位置序与 E2E 英文标记字节不动；契约测试 6 条）；审查批 28 文件分片评审+独立复核 10/10 确认（0高+1中+9低）：中=consent 两字面量 3 组件硬编码零契约（fail-closed=单侧改名广告静默永不加载）→新 tests/consent.test.ts 钉死+四处注释口径统一；低×9=NavigationItem.order 死字段四面根除（navigation/apply-template 生成串/docs 误导表述）/covers.ts replace $ 特殊展开改函数回调（$' 可把正文拖进 frontmatter 且 build 不红，v2.7.1 同族）/getUi 模块级缓存/删 t() 死代码/isLocaleSafe 改 routing.isLocale 单源/content.ts 双 import 合并/llms.txt 删与 site.description 双源漂移枚举句/rss language 走 defaultLocale/landing.ts 悬空注释；附带 eslint ignores 补 .zcode/**（工作流草稿炸 parser）；另含 /zh 裸路径 301 四条（外部访客 404 实证立案）+文档漂移修复批+codes 页 title/description 月锚点门禁（codes-consistency 第三组）；test 375→390（24 套件）+八门禁绿；详见 CHANGELOG [2.37.0] |
+| 2026-10-22 | v2.38.0 | 根路径项目门面+广告挂载+遥测门控+作者身份批（[Unreleased] 自 v2.37.0 累计全量入本版）：demo 根路径 / 301→/zh/landing/、英文 wiki 样品首页迁 /demo/（d4fce65；RootGateway 影子页为 survive 文件永不进删除清单，fork 构建逐字节零变化，redirects.test 契约钉）；手册课页/落地页顶部各挂紧凑 native banner（700×240 复用既有单元，实测定档最小横排形态）；VibeCafé 遥测改 PUBLIC_VIBECAFE_* 双键 env 门控（堵 b031948 硬编码 demo 值经 BaseLayout 泄漏给 fork，env 门控+三通道注册+双语隐私披露+CHANGELOG 四件套，deployment「开箱零第三方脚本」表述自动恢复真）；落地页新增「关于作者」区块（AuthorCard 组件+landing author 数据段，typecheck 强制中英齐备）+README 中英作者行+authors.ts 过期域名 yuanruiqin.dev→ruiqin.dev 修正；另含第 35 轮以来 24h 审计深挖修复与文档漂移批全量记账；test 401（24 套件）+八门禁绿；详见 CHANGELOG [2.38.0] |
 > **✅ v1.0 已交付**：demo 站 [anvil.wiki](https://anvil.wiki/) 已上线，Lighthouse 全 100。后续按 [§14.2 迭代方向](#142-v10-后的迭代方向) 推进 v1.3+ 功能。

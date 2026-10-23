@@ -28,3 +28,37 @@ export const landingLink = {
   label: 'Built with AnvilWiki',
   ariaLabel: 'About the AnvilWiki template',
 } as const;
+
+/**
+ * Demo-only extra entry in the wiki language switcher: the marketing site has
+ * a Chinese edition at /zh/landing/, but zh is NOT a wiki UI locale (routing
+ * stays en+ja for content), so Chinese visitors landing on the wiki had zero
+ * Chinese entry point (community feedback 2026-09-05 — two members hit it).
+ * Gated by `landingLinkEnabled`: apply-template removes the landing layer and
+ * flips the flag, so forks never render this.
+ */
+export const zhLandingLink = { label: '中文 · 官网', href: '/zh/landing/' } as const;
+
+/**
+ * Demo root gateway — the shadow page served at `/` by demo builds. In the
+ * demo, `/` is the project storefront: it 301s to /zh/landing/ (the root rule
+ * in public/_redirects is the live channel; this component is the in-dist
+ * fallback for any asset-direct-serving scenario), and the English wiki home
+ * moves to /demo/. Gated by `landingLinkEnabled` — apply-template flips the
+ * flag when it removes the landing layer, so forks NEVER render it. This file
+ * survives apply-template, so forks merely carry these as dead constants
+ * (same contract as `landingLink` above).
+ *
+ * The `target` must stay byte-identical to the root rule's target in
+ * public/_redirects — tests/redirects.test.ts pins both literals.
+ *
+ * Copy sync: title/description mirror the /zh/landing/ <head> (landing-zh.ts)
+ * so the root share card matches the landing card — update both together.
+ */
+export const demoRootGateway = {
+  target: '/zh/landing/',
+  linkLabel: '进入 AnvilWiki 官网',
+  title: 'AnvilWiki — 开源游戏 Wiki 模板 + AI 内容工作流',
+  description:
+    '开源游戏 wiki 模板 + AI 原生内容工作流:选对游戏、和 AI 对话就能产页、codes 页自动保鲜。Lighthouse 4×100、Cloudflare 免费部署、广告收入 100% 归你。',
+} as const;

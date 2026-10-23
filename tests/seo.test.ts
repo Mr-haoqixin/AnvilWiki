@@ -16,7 +16,8 @@ import { site } from '~/config/site';
 import { authors } from '~/config/authors';
 
 /** Repo-root-relative source text (contract-test helper, handbook.test.ts style). */
-const src = (rel: string) => readFileSync(fileURLToPath(new URL(`../${rel}`, import.meta.url)), 'utf8');
+const src = (rel: string) =>
+  readFileSync(fileURLToPath(new URL(`../${rel}`, import.meta.url)), 'utf8');
 
 describe('SEO helpers', () => {
   describe('organizationJsonLd', () => {
@@ -60,7 +61,7 @@ describe('SEO helpers', () => {
       const modified = new Date('2026-06-01');
       const withModified = articleJsonLd({
         title: 'T',
- description: 'Desc that is long enough for validation here.',
+        description: 'Desc that is long enough for validation here.',
         datePublished: published,
         dateModified: modified,
         category: 'bosses',
@@ -71,7 +72,7 @@ describe('SEO helpers', () => {
 
       const noModified = articleJsonLd({
         title: 'T',
- description: 'Desc that is long enough for validation here.',
+        description: 'Desc that is long enough for validation here.',
         datePublished: published,
         category: 'bosses',
         slug: 's',
@@ -113,12 +114,12 @@ describe('SEO helpers', () => {
     it('emits the localized Home item with a trailing slash for non-default locales', () => {
       const json = breadcrumbJsonLd({
         category: 'bosses',
-        categoryLabel: 'ボス一覧',
-        title: 'エンバーファング攻略',
+        categoryLabel: '全部 Boss',
+        title: '余烬之牙攻略',
         slug: 'emberfang',
-        locale: 'en',
+        locale: 'zh',
       });
-      expect(json.itemListElement[0].item).toMatch(/\/en\/$/);
+      expect(json.itemListElement[0].item).toMatch(/\/zh\/$/);
     });
   });
 
@@ -164,9 +165,7 @@ describe('SEO helpers', () => {
 
   describe('faqPageJsonLd', () => {
     it('maps Q&A pairs to Question/Answer schema', () => {
-      const json = faqPageJsonLd([
-        { question: 'What is X?', answer: 'X is Y.' },
-      ]);
+      const json = faqPageJsonLd([{ question: 'What is X?', answer: 'X is Y.' }]);
       expect(json['@type']).toBe('FAQPage');
       expect(json.mainEntity[0]['@type']).toBe('Question');
       expect(json.mainEntity[0].acceptedAnswer.text).toBe('X is Y.');

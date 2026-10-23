@@ -55,7 +55,7 @@ export const templatesContent: Record<LandingLocale, TemplatesPageContent> = {
     subtitle:
       '"Wiki page templates" (~870 searches/mo), "wiki template" (~1,000/mo) and "wiki template character" (~1,490/mo — SimilarWeb, 2026-08): people run these searches to see what a game wiki\'s pages actually look like. This page shows every page type the AnvilWiki template produces, each linked to a real page on the live demo.',
     intro:
-      'Templates are easier to judge by output than by feature lists. Below is every page type AnvilWiki ships, each card linking to a real page on the demo wiki — a complete wiki for the fictional game "Anvil Quest" at anvil.wiki. Read a page, then picture your game\'s name on it.',
+      'Templates are easier to judge by output than by feature lists. Below is every page type AnvilWiki ships, each card linking to a real page on the demo wiki — a complete wiki for the fictional game "Anvil Quest" at anvil.wiki/demo. Read a page, then picture your game\'s name on it.',
     cardsTitle: 'The page types',
     cardsHint:
       'Every link opens a real page running this template right now — nothing below is a mockup.',
@@ -150,7 +150,7 @@ export const templatesContent: Record<LandingLocale, TemplatesPageContent> = {
     subtitle:
       '「wiki page templates」(约 870 次/月)、「wiki template」(约 1,000 次/月)、「wiki template character」(约 1,490 次/月——SimilarWeb,2026-08):搜这些词的人想看的是「游戏 wiki 的页面到底长什么样」。本页把 AnvilWiki 模板能产出的每种页型摆出来,每一型都挂着线上 demo 的真实页面。',
     intro:
-      '判断一个模板,看产出比看功能清单直接。下面是 AnvilWiki 内建的每一种页型,每张卡片都链到 demo 站的真实页面——demo 是虚构游戏「Anvil Quest」的完整 wiki(anvil.wiki)。读完一页,再把页面里的游戏名换成你的。',
+      '判断一个模板,看产出比看功能清单直接。下面是 AnvilWiki 内建的每一种页型,每张卡片都链到 demo 站的真实页面——demo 是虚构游戏「Anvil Quest」的完整 wiki(anvil.wiki/demo)。读完一页,再把页面里的游戏名换成你的。',
     cardsTitle: '页型清单',
     cardsHint: '每条链接打开的都是当前跑着这套模板的真实页面——没有任何一张是设计稿。',
     compareNote: {

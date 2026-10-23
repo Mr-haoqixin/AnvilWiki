@@ -13,7 +13,7 @@ import { Icon } from 'astro-icon/components';
 import { NAVIGATION_CONFIG } from '~/config/navigation';
 import { defaultLocale } from '~/i18n/routing';
 import { getUi } from '~/i18n/ui';
-import { listPath } from '~/lib/url';
+import { listPath, homeUrl } from '~/lib/url';
 
 const ui = getUi(defaultLocale);
 const nav = ui.nav as Record<string, string>;
@@ -42,7 +42,7 @@ const shared = ui.shared;
         </span>
         <SearchButton locale={defaultLocale} />
       </div>
-      <a href="/" class="btn-primary">
+      <a href={homeUrl(defaultLocale)} class="btn-primary">
         <Icon name="lucide:home" class="mr-2 h-4 w-4" />
         {shared.notFoundBackHome}
       </a>

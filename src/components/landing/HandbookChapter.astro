@@ -73,6 +73,13 @@ const updated = chapter.data.updated?.toLocaleDateString(locale === 'zh' ? 'zh-C
         <span aria-current="page" class="text-foreground">{chapterNo}</span>
       </nav>
 
+      {/* Top-of-content native banner — same 700×240 slot as the
+          end-of-chapter one. Width is load-bearing: the responsive script
+          keeps the horizontal card row at ~700px but flips to a much taller
+          vertical stack below it (measured: 560w → 525h), so "smaller" here
+          means this compact row, not a narrower iframe. */}
+      <AdsterraSlot name="native-banner" width={700} height={240} />
+
       <header class="mt-6">
         <div class="flex flex-wrap items-center gap-3">
           <span

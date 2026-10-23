@@ -604,6 +604,7 @@ const LANDING_PATHS = [
   'src/config/landing-zh.ts', // Chinese landing copy
   'src/config/landing-templates.ts', // "wiki page templates" showcase copy (v2.32.0)
   'src/pages/landing.astro', // file — coexists with the src/pages/landing/ dir
+  'src/pages/demo.astro', // demo wiki English homepage — root / is the landing gateway in the demo
   'src/pages/landing', // directory (docs hub + chapter routes)
   'src/pages/zh/landing.astro', // file — coexists with the src/pages/zh/landing/ dir
   'src/pages/zh/landing', // directory (zh docs routes)
@@ -611,6 +612,13 @@ const LANDING_PATHS = [
   'public/images/wechat-qr.jpg', // maintainer's personal QR — not needed by forks
   'public/_redirects', // 301s for renamed handbook lesson slugs — only the demo serves /landing/docs routes
 ];
+// ⚠️ NEVER add src/components/RootGateway.astro to this list (unquoted here
+// on purpose — the survive pin in tests/redirects.test.ts greps for the
+// quoted form) — src/pages/index.astro statically imports it, so build-time
+// module resolution runs even with landingLinkEnabled=false; deleting it
+// makes the fork's build fail to resolve the import. Same for the setup.yml
+// rm line. Pinned by the survive pins in tests/redirects.test.ts and the e2e
+// positive tripwire.
 
 function removeLandingPage(): number {
   let removed = 0;

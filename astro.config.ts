@@ -10,6 +10,7 @@ import { locales, defaultLocale } from './src/i18n/routing';
 import { CONTENT_TYPES } from './src/config/navigation';
 import { siteUrl } from './src/config/site';
 import { fallbackDetailPaths } from './src/lib/fallback-paths';
+import { landingLinkEnabled } from './src/config/project';
 
 /**
  * Build a map of page path → lastmod ISO date, read from MDX frontmatter
@@ -292,7 +293,13 @@ export default defineConfig({
       filter: (url) => {
         const pathname = normalizePath(decodeSitemapPath(url));
         const englishAlias = pathname === '/en' || pathname.startsWith('/en/');
-        return !englishAlias && !noindexPaths.has(pathname);
+        return (
+          !englishAlias &&
+          !noindexPaths.has(pathname) &&
+          // Demo builds drop `/` (301 → /zh/landing/); a fork's `/` is its real
+          // homepage and must stay listed.
+          !(landingLinkEnabled && pathname === '/')
+        );
       },
       // Inject <lastmod> from article frontmatter (see buildLastmodMap) and
       // hreflang alternates that mirror the page-level truth (see alternatesFor).

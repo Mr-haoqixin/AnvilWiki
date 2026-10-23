@@ -1,21 +1,39 @@
 ---
 /**
- * Root index — handles the default-locale (Chinese) homepage.
+ * Root index — handles the default-locale (English) homepage.
  *
- * With `prefixDefaultLocale: false`, the root URL `/` maps here directly
- * (not to /zh/). We render the Chinese homepage inline rather than redirecting,
- * because a redirect adds a round-trip and hurts LCP.
+ * Demo builds replace the default-locale homepage with the project storefront
+ * gateway (RootGateway: meta-refresh to /zh/landing/ + canonical + full
+ * OG/twitter card); the English wiki homepage lives at /demo/ instead. Forks
+ * (apply-template / setup.yml flip landingLinkEnabled to false when removing
+ * the landing layer) take the HomePage branch and inline-render the homepage
+ * with no redirect — that branch is the fork's only live path, byte-identical
+ * to the pre-gateway behavior. With `prefixDefaultLocale: false`, the root
+ * URL `/` maps here directly (not to /en/); we render inline rather than
+ * redirecting because a redirect adds a round-trip and hurts LCP.
  *
- * Non-default locales use /en/, /ja/, etc., handled by src/pages/[locale]/index.astro.
+ * Both import targets below SURVIVE fork initialization — RootGateway.astro
+ * is statically imported here, so build-time module resolution runs even when
+ * landingLinkEnabled is false: deleting it breaks fork builds (see the
+ * component's docstring; pinned by tests/redirects.test.ts + e2e tripwire).
+ *
+ * Non-default locales use /ja/ etc., handled by src/pages/[locale]/index.astro.
  */
 import HomePage from '~/components/home/HomePage.astro';
-import { defaultLocale } from '~/i18n/routing';
+import RootGateway from '~/components/RootGateway.astro';
+import { landingLinkEnabled } from '~/config/project';
+import { defaultLocale, locales } from '~/i18n/routing';
 import { videoGameJsonLd, websiteJsonLd } from '~/lib/seo';
 import { homeUrl, languageAlternates } from '~/lib/url';
 
 const locale = defaultLocale;
 const jsonLd = [websiteJsonLd(locale), videoGameJsonLd()];
-const alternates = languageAlternates((loc) => homeUrl(loc), [defaultLocale]);
+// hreflang alternates: Home → / (en) or /<locale> for each locale. In fork
+// builds homeUrl('en') is '/' — identical to the historical output; in demo
+// builds the gateway branch below wins and these are never rendered.
+const alternates = languageAlternates((loc) => homeUrl(loc), locales);
+
+const isGateway = landingLinkEnabled;
 ---
 
-<HomePage locale={locale} jsonLd={jsonLd} alternates={alternates} />
+{isGateway ? <RootGateway /> : <HomePage locale={locale} jsonLd={jsonLd} alternates={alternates} />}

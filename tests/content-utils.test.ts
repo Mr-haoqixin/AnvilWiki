@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { parseEntryId, isPossiblyOutdated, selectRelatedEntries, estimateReadMinutes, STALE_AFTER_DAYS } from '~/lib/content-utils';
+import {
+  parseEntryId,
+  isPossiblyOutdated,
+  selectRelatedEntries,
+  estimateReadMinutes,
+  STALE_AFTER_DAYS,
+} from '~/lib/content-utils';
 
 describe('parseEntryId', () => {
   it('parses a simple id into locale/category/slug', () => {
@@ -27,7 +33,7 @@ describe('parseEntryId', () => {
   });
 
   it('returns null when the locale segment is not a configured locale', () => {
-    expect(parseEntryId('fr/bosses/emberfang')).toBeNull();
+    expect(parseEntryId('zz/bosses/emberfang')).toBeNull();
   });
 
   it('returns null when there are fewer than 3 segments', () => {
@@ -103,13 +109,19 @@ describe('selectRelatedEntries', () => {
   const current = mk('en/bosses/a.mdx', ['fire'], 'bosses', '2026-01-01');
 
   it('tier 1: matches by shared tags, newest first', () => {
-    const pool = [mk('en/bosses/old.mdx', ['fire'], 'bosses', '2025-01-01'), mk('en/guides/new.mdx', ['fire'], 'guides', '2026-06-01')];
+    const pool = [
+      mk('en/bosses/old.mdx', ['fire'], 'bosses', '2025-01-01'),
+      mk('en/guides/new.mdx', ['fire'], 'guides', '2026-06-01'),
+    ];
     const rel = selectRelatedEntries(pool, current, 2);
     expect(rel.map((e) => e.id)).toEqual(['en/guides/new.mdx', 'en/bosses/old.mdx']);
   });
 
   it('tier 2: fills up to the limit from the same category when tags run out', () => {
-    const pool = [mk('en/bosses/b.mdx', ['ice'], 'bosses', '2026-02-01'), mk('en/bosses/c.mdx', [], 'bosses', '2026-03-01')];
+    const pool = [
+      mk('en/bosses/b.mdx', ['ice'], 'bosses', '2026-02-01'),
+      mk('en/bosses/c.mdx', [], 'bosses', '2026-03-01'),
+    ];
     const rel = selectRelatedEntries(pool, current, 3);
     expect(rel.map((e) => e.id)).toEqual(['en/bosses/c.mdx', 'en/bosses/b.mdx']);
   });
@@ -134,7 +146,10 @@ describe('selectRelatedEntries', () => {
   });
 
   it('no tag overlap and no category siblings → falls through to newest', () => {
-    const pool = [mk('ja/bosses/other.mdx', ['fire'], 'bosses', '2026-07-01'), mk('en/codes/z.mdx', [], 'codes', '2026-06-01')];
+    const pool = [
+      mk('ja/bosses/other.mdx', ['fire'], 'bosses', '2026-07-01'),
+      mk('en/codes/z.mdx', [], 'codes', '2026-06-01'),
+    ];
     // ja entry excluded by the caller's locale filter in real use; here the
     // pure function only proves category/tag tiers then newest fallback.
     const rel = selectRelatedEntries([pool[1]], current, 3);

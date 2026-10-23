@@ -32,7 +32,12 @@ describe('game-wiki-only public routes', () => {
   });
 
   test('sitemap and llms.txt no longer advertise project pages', () => {
-    expect(read('astro.config.ts')).not.toContain('/zh/landing');
+    // Strip comments first — config comments may explain the (removed) routes.
+    const astro = read('astro.config.ts')
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .replace(/^\s*\/\/.*$/gm, '');
+    expect(astro).not.toContain('/zh/landing');
+    expect(existsSync(join(root, 'src/pages/llms.txt.ts'))).toBe(true);
     expect(read('src/pages/llms.txt.ts')).not.toContain('/landing');
   });
 
@@ -40,23 +45,11 @@ describe('game-wiki-only public routes', () => {
     expect(read('src/content.config.ts')).not.toContain('handbook');
   });
 
-  test('ads and project showcase assets are not shipped', () => {
-    expect(read('src/components/layout/BaseLayout.astro')).not.toContain('adsenseClient');
-    expect(read('src/components/layout/LocaleLayout.astro')).not.toContain('StickyBanner');
-    expect(read('src/components/article/ArticlePage.astro')).not.toMatch(
-      /AdsterraSlot|InContentAd|MobileAnchorAd|AdSenseSlot/,
-    );
-    expect(read('src/components/sidebar/WikiSidebar.astro')).not.toMatch(
-      /AdsterraSlot|SidebarAd|AdSenseSlot/,
-    );
-    expect(read('wrangler.toml')).not.toMatch(/^\s*PUBLIC_AD(?:SENSE|STERRA)_.*=\s*["'][^"']+/m);
+  test('ads are env-gated, wrangler.toml is gone, and no demo showcase assets ship', () => {
+    // This fork manages platform env in the Cloudflare dashboard, not wrangler.
+    expect(existsSync(join(root, 'wrangler.toml'))).toBe(false);
+
     for (const asset of [
-      'public/ads/sticky-320x50.html',
-      'public/ads/sidebar-300x250.html',
-      'public/ads/sidebar-160x300.html',
-      'public/ads/sidebar-160x600.html',
-      'public/ads/native-banner.html',
-      'public/ads/incontent-728x90.html',
       'public/images/showcase/sites/warhounds.jpg',
       'public/images/showcase/sites/steal-anegg.jpg',
       'public/images/showcase/sites/sephiria.jpg',

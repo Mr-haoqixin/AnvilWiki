@@ -19,10 +19,10 @@ import { getHomeFaq } from '~/i18n/ui';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const homePage = readFileSync(join(root, 'src/components/home/HomePage.astro'), 'utf8');
-const faqPages = [
-  'src/pages/faq.astro',
-  'src/pages/[locale]/faq.astro',
-].map((rel) => ({ rel, src: readFileSync(join(root, rel), 'utf8') }));
+const faqPages = ['src/pages/faq.astro', 'src/pages/[locale]/faq.astro'].map((rel) => ({
+  rel,
+  src: readFileSync(join(root, rel), 'utf8'),
+}));
 
 const homeJson = en.home as unknown as Record<string, unknown>;
 
@@ -109,13 +109,14 @@ describe('/faq pages ↔ en.json home.faq contract', () => {
     expect(offenders, `missing keys:\n${offenders.join('\n')}`).toEqual([]);
   });
 
-  test('getHomeFaq() serves Chinese strings on both retained locale routes', () => {
-    expect(getHomeFaq('en')).toEqual(getHomeFaq('zh'));
-    // The default Chinese locale must resolve FAQ strings without English fallback.
-    const zhFaq = getHomeFaq('zh');
-    expect(zhFaq.title).toBeTypeOf('string');
-    expect(zhFaq.title.length).toBeGreaterThan(0);
-    expect(Array.isArray(zhFaq.items)).toBe(true);
+  test('getHomeFaq() serves locale-specific FAQ strings (en default, zh retained)', () => {
+    expect(getHomeFaq('en')).not.toEqual(getHomeFaq('zh'));
+    for (const locale of ['en', 'zh'] as const) {
+      const faq = getHomeFaq(locale);
+      expect(faq.title).toBeTypeOf('string');
+      expect(faq.title.length).toBeGreaterThan(0);
+      expect(Array.isArray(faq.items)).toBe(true);
+    }
   });
 });
 

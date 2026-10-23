@@ -1,12 +1,12 @@
 ---
 title: "Run Your Site: See It Working in Three Steps"
-description: "Fork the template into your account, clone it to your computer, and pnpm dev opens the sample site at localhost:4321 — three steps, each with what you'll see."
+description: "Fork the template into your account, clone it to your computer, and pnpm dev runs the sample site at localhost:4321/demo/ — three steps, each with what you'll see."
 manual: learn
 order: 10
 stage: "Stand It Up"
 icon: lucide:rocket
-tldr: "Three steps: ① fork — hit Fork on GitHub to copy the whole store into your name (the original keeps trading; yours is free to change); ② clone + pnpm install — move the repo onto your computer and install every part; ③ pnpm dev — open localhost:4321 and see the sample wiki for the fictional game Anvil Quest. This lesson runs the sample as-is; rebranding is the next lesson's job."
-updated: 2026-09-02
+tldr: "Three steps: ① fork — hit Fork on GitHub to copy the whole store into your name (the original keeps trading; yours is free to change); ② clone + pnpm install — move the repo onto your computer and install every part; ③ pnpm dev — open localhost:4321 (it jumps to the project site) and see the sample wiki at /demo/, for the fictional game Anvil Quest. This lesson runs the sample as-is; rebranding is the next lesson's job."
+updated: 2026-10-14
 ---
 
 ## A true scene first
@@ -16,7 +16,7 @@ The AnvilWiki template is a **fully decorated bakery**: shelves, register, and l
 ## What you'll have when this lesson is done
 
 - A complete copy of the site code under your name (one on GitHub, one on your computer)
-- A running website in your browser: `http://localhost:4321` shows the sample guide site
+- A running website in your browser: `http://localhost:4321/demo/` shows the sample guide site (the bare root jumps to the project site)
 
 ### Step 1: copy the template into your name (fork)
 
@@ -49,7 +49,7 @@ pnpm dev
 ```
 
 **You'll see**: a few green startup lines containing `localhost:4321`.
-**Check**: open [localhost:4321](http://localhost:4321) — a guide site for the fictional game "Anvil Quest", the exact thing you'll rebrand next lesson. When done, return to the terminal and press `Control + C` to stop it (you'll start it again next lesson).
+**Check**: open [localhost:4321/demo/](http://localhost:4321/demo/) — a guide site for the fictional game "Anvil Quest", the exact thing you'll rebrand next lesson (the bare root auto-jumps to the AnvilWiki project site, the demo's storefront; after next lesson's rebrand the root is your own site). When done, return to the terminal and press `Control + C` to stop it (you'll start it again next lesson).
 
 ## Three classic mistakes (made for you in advance)
 
@@ -67,7 +67,7 @@ pnpm dev
 
 - ☐ `your-username/AnvilWiki` exists under your account
 - ☐ `ls` shows `package.json`
-- ☐ localhost:4321 showed the sample site, and you stopped it with `Control + C`
+- ☐ localhost:4321/demo/ showed the sample site, and you stopped it with `Control + C`
 
 ## Next lesson
 

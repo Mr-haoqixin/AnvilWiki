@@ -6,9 +6,9 @@
 import { Icon } from 'astro-icon/components';
 import { NAVIGATION_CONFIG } from '~/config/navigation';
 import { site } from '~/config/site';
-import { type Locale, defaultLocale } from '~/i18n/routing';
+import { type Locale, defaultLocale, locales } from '~/i18n/routing';
 import { getUi } from '~/i18n/ui';
-import { localizePath } from '~/lib/url';
+import { homeUrl, localizePath } from '~/lib/url';
 import ThemeToggle from './ThemeToggle.astro';
 import SearchButton from './SearchButton.astro';
 import LanguageSwitcher from './LanguageSwitcher.astro';
@@ -24,20 +24,30 @@ const { locale, currentPath, availableLocales } = Astro.props;
 const ui = getUi(locale);
 const nav: Record<string, string> = ui.nav as Record<string, string>;
 
-const pathFor = (targetLocale: Locale): string => {
-  let basePath = currentPath;
-  if (locale !== defaultLocale) {
-    basePath = currentPath.replace(`/${locale}`, '') || '/';
-  }
-  return localizePath(basePath, targetLocale);
+// Build the strip regex from `locales` — a hardcoded "en|ja" list would
+// silently break for forks that add languages (same rationale as BaseLayout).
+const localePrefixRe = new RegExp(`^/(${locales.filter((l) => l !== defaultLocale).join('|')})(?=/|$)`);
+
+const pathFor = (loc: Locale) => {
+  // Strip existing locale prefix, then prepend the new one. Homepages go
+  // through homeUrl — in demo builds the English home lives at /demo/ and
+  // the root `/` is a redirect gateway, so switching FROM /demo/ must map to
+  // the locale's real homepage (homeUrl('ja') = '/ja/'), never a localized
+  // '/ja/demo/' (no such route). In forks landingLinkEnabled is false, so
+  // isHome only matches the plain '/' and the result stays byte-equal to the
+  // old localizePath('/', loc).
+  const stripped = currentPath.replace(localePrefixRe, '') || '/';
+  const isHome = stripped === '/' || (landingLinkEnabled && stripped === '/demo/');
+  return isHome ? homeUrl(loc) : localizePath(stripped, loc);
 };
 ---
 
 <header class="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur">
   <div class="mx-auto flex h-14 max-w-7xl items-center gap-4 px-4">
-    {/* Logo */}
+    {/* Logo — homeUrl keeps demo builds pointing at /demo/ (the root is the
+        storefront gateway); forks get '/' exactly as before. */}
     <a
-      href={localizePath('/', locale)}
+      href={homeUrl(locale)}
       class="flex items-center gap-2 font-bold text-foreground"
       aria-label={site.name}
     >

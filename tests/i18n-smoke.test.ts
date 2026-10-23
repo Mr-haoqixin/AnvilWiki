@@ -46,7 +46,10 @@ describe('i18n: no hardcoded locale arrays', () => {
       const src = fs.readFileSync(file, 'utf8');
       // Matches ['ja'], ['en'], ['ja','zh'] etc. — but NOT `locales` identifiers.
       const hardcoded = src.match(/\[\s*['"][a-z]{2}['"]\s*(,\s*['"][a-z]{2}['"]\s*)*\]/g);
-      expect(hardcoded ?? [], `found hardcoded locale array in ${rel}: ${hardcoded?.join(', ')}`).toHaveLength(0);
+      expect(
+        hardcoded ?? [],
+        `found hardcoded locale array in ${rel}: ${hardcoded?.join(', ')}`,
+      ).toHaveLength(0);
     });
   }
 
@@ -77,9 +80,9 @@ describe('i18n: getUi results are deeply frozen (read-only by contract AND at ru
     expect(Object.isFrozen(unknown)).toBe(true);
   });
 
-  it('serves the default Chinese UI through the retained English URL prefix', () => {
-    expect(getUi('en').site.name).toBe(getUi('zh').site.name);
-    expect(getUi('en').home.hero.title).toBe(getUi('zh').home.hero.title);
+  it('keeps the English and Chinese UI tables distinct', () => {
+    expect(getUi('en').site.name).not.toBe(getUi('zh').site.name);
+    expect(getUi('en').home.hero.title).not.toBe(getUi('zh').home.hero.title);
   });
 
   it('mutating a cached locale result throws (no silent cross-locale poisoning)', () => {

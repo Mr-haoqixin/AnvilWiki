@@ -25,15 +25,15 @@ describe('slugifyTag', () => {
 });
 
 describe('tag/recent URL helpers', () => {
-  it('builds unprefixed Chinese paths', () => {
-    expect(tagsPath('zh')).toBe('/tags/');
-    expect(tagPath('fire-boss', 'zh')).toBe('/tags/fire-boss/');
-    expect(recentPath('zh')).toBe('/recent/');
+  it('builds unprefixed default-locale paths', () => {
+    expect(tagsPath('en')).toBe('/tags/');
+    expect(tagPath('fire-boss', 'en')).toBe('/tags/fire-boss/');
+    expect(recentPath('en')).toBe('/recent/');
   });
-  it('prefixes the English locale', () => {
-    expect(tagsPath('en')).toBe('/en/tags/');
-    expect(tagPath('fire-boss', 'en')).toBe('/en/tags/fire-boss/');
-    expect(recentPath('en')).toBe('/en/recent/');
+  it('prefixes non-default locales', () => {
+    expect(tagsPath('zh')).toBe('/zh/tags/');
+    expect(tagPath('fire-boss', 'zh')).toBe('/zh/tags/fire-boss/');
+    expect(recentPath('zh')).toBe('/zh/recent/');
   });
 });
 

@@ -1,12 +1,12 @@
 ---
 title: "把站跑起来:三步看到属于你的网站"
-description: "fork 把模板复制到你名下、clone 搬回电脑装齐零件、pnpm dev 在浏览器打开示例站——三步每步带「你会看到什么」,终点是 localhost:4321 上一个跑着的完整攻略站。"
+description: "fork 把模板复制到你名下、clone 搬回电脑装齐零件、pnpm dev 让示例站跑起来——三步每步带「你会看到什么」,终点是 localhost:4321/demo/ 上一个跑着的完整攻略站(根路径会自动跳到项目官网)。"
 manual: learn
 order: 10
 stage: "把站立起来"
 icon: lucide:rocket
-tldr: "三步:①fork——在 GitHub 上点 Fork,把模板整店复制到你名下(原店照常营业,你这份随便改);②clone+pnpm install——把仓库搬回电脑,一条命令装齐网站零件;③pnpm dev——浏览器打开 localhost:4321,看到虚构游戏 Anvil Quest 的示例站。这一课先不换皮,先让样品站完整跑起来,确认环境没问题。"
-updated: 2026-09-02
+tldr: "三步:①fork——在 GitHub 上点 Fork,把模板整店复制到你名下(原店照常营业,你这份随便改);②clone+pnpm install——把仓库搬回电脑,一条命令装齐网站零件;③pnpm dev——浏览器打开 localhost:4321 会自动跳到项目官网,示例 wiki 在 /demo/,看到虚构游戏 Anvil Quest 的示例站。这一课先不换皮,先让样品站完整跑起来,确认环境没问题。"
+updated: 2026-10-14
 ---
 
 ## 先看一个真实场景
@@ -16,7 +16,7 @@ AnvilWiki 模板是一家**已经装修好的蛋糕店**:货架、收银台、�
 ## 本课做完你会拿到
 
 - 你名下的一份完整网站代码(GitHub 上一份 + 电脑里一份)
-- 浏览器里一个跑着的网站:`http://localhost:4321` 能看到示例攻略站
+- 浏览器里一个跑着的网站:`http://localhost:4321/demo/` 能看到示例攻略站(根路径 `http://localhost:4321` 会自动跳到项目官网)
 
 ### 第 1 步:把模板复制到你名下(fork)
 
@@ -49,7 +49,7 @@ pnpm dev
 ```
 
 **你会看到**:几行绿色启动信息,里面有 `localhost:4321`。
-**确认做对了**:浏览器打开 [localhost:4321](http://localhost:4321),看到一个虚构游戏「Anvil Quest」的攻略站——这就是你下一课要换掉的样子。看完回到终端按 `Control + C` 停掉它(下一课再启动)。
+**确认做对了**:浏览器打开 [/demo/](http://localhost:4321/demo/),看到一个虚构游戏「Anvil Quest」的攻略站——这就是你下一课要换掉的样子(打开根路径 localhost:4321 会自动跳到 AnvilWiki 项目官网,那是 demo 站的门面;下一课换皮后,根路径就是你自己的站)。看完回到终端按 `Control + C` 停掉它(下一课再启动)。
 
 ## 三个经典错误(提前替你踩)
 
@@ -67,7 +67,7 @@ pnpm dev
 
 - ☐ `你的用户名/AnvilWiki` 存在,是你名下的仓库
 - ☐ `ls` 能看到 `package.json`
-- ☐ localhost:4321 打开过示例站,看完已用 `Control + C` 停掉
+- ☐ localhost:4321/demo/ 打开过示例站,看完已用 `Control + C` 停掉
 
 ## 下一课
 

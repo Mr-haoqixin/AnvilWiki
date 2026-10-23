@@ -190,6 +190,16 @@ export interface LandingContent {
     steps: { title: string; description: string; command: string; linkLabel: string; href: string }[];
     allDocs: { label: string; href: string };
   };
+  /** "About the author" block on the landing root — who builds AnvilWiki and
+   *  why. Part of the landing demo-identity layer: apply-template deletes
+   *  landing-en/zh.ts whole, so forks never inherit it. */
+  author: {
+    title: string;
+    name: string;
+    role: string;
+    bio: string;
+    links: { label: string; href: string }[];
+  };
   /** Docs-center search (Pagefind modal). Landing zh isn't a wiki locale,
    * so SearchButton can't fall back to src/locales — docs pages pass these. */
   search: {

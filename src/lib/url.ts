@@ -7,6 +7,7 @@
 
 import { defaultLocale, type Locale } from '~/i18n/routing';
 import { siteUrl } from '~/config/site';
+import { landingLinkEnabled } from '~/config/project';
 
 /** Build a path with the locale prefix applied (or none for default locale). */
 export function localizePath(path: string, locale: Locale): string {
@@ -35,8 +36,16 @@ export function absoluteUrl(path: string, locale: Locale): string {
   return siteAbsolute(localizePath(path, locale));
 }
 
-/** Home URL for a locale. */
+/**
+ * Home URL for a locale. Demo builds serve the English wiki homepage at
+ * /demo/ (the root `/` is the storefront gateway); after apply-template
+ * flips landingLinkEnabled to false, the first branch is dead code and the
+ * return value is byte-identical to the historical `localizePath('/', locale)`.
+ * Single source of truth for the logo, language switcher, breadcrumbs,
+ * BreadcrumbList JSON-LD, and homepage hreflang clusters.
+ */
 export function homeUrl(locale: Locale): string {
+  if (landingLinkEnabled && locale === defaultLocale) return '/demo/';
   return localizePath('/', locale);
 }
 

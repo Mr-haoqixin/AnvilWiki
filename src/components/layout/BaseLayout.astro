@@ -128,6 +128,8 @@ const xDefaultHref = defaultAlt
 // Optional analytics / verification (env-var gated — empty = not injected).
 const gaId = import.meta.env.PUBLIC_GA_ID as string | undefined;
 const cfBeaconToken = import.meta.env.PUBLIC_CF_BEACON_TOKEN as string | undefined;
+const vibecafeProductId = import.meta.env.PUBLIC_VIBECAFE_PRODUCT_ID as string | undefined;
+const vibecafeAuthKey = import.meta.env.PUBLIC_VIBECAFE_AUTH_KEY as string | undefined;
 const gscVerification = import.meta.env.PUBLIC_GSC_VERIFICATION as string | undefined;
 
 // Consent banner labels: wiki locales derive them from the locale JSON
@@ -277,6 +279,22 @@ const privacyLabel = consent?.privacyLabel ?? footerStrings.privacyPolicy ?? 'Pr
         defer
         src="https://static.cloudflareinsights.com/beacon.min.js"
         data-cf-beacon={JSON.stringify({ token: cfBeaconToken })}
+      ></script>
+    )}
+
+    {/*
+      VibeCafé product telemetry (optional) — env-gated like the CF beacon
+      above: both PUBLIC_VIBECAFE_* values set, or nothing injected. The demo
+      site's own ids live in wrangler.toml [vars]; forks stay clean unless
+      they opt in.
+    */}
+    {vibecafeProductId && vibecafeAuthKey && (
+      <script
+        is:inline
+        defer
+        src="https://vibecafe.ai/telemetry/v1.js"
+        data-vc-product-id={vibecafeProductId}
+        data-vc-auth-key={vibecafeAuthKey}
       ></script>
     )}
 

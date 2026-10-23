@@ -18,7 +18,7 @@ export const en: LandingContent = {
   description:
     'An open-source game wiki template with an AI-native content workflow: pick the right game, generate pages by talking to your AI tool, codes pages stay fresh on autopilot. Lighthouse 4×100, free on Cloudflare, 100% ad revenue yours.',
   announcement: {
-    text: `AnvilWiki template update log (v${PROJECT_VERSION}): the CLI now speaks Chinese — apply-template asks your interface language on interactive runs (or pass --lang zh), while scripted/non-interactive runs stay byte-identical. The fifth full-project code review landed in the same release: 10 confirmed findings fixed — consent event/storage literals now pinned by a contract test (a one-sided rename silently killed ad loading), a silent shell-$ expansion in cover frontmatter splicing eliminated, dead code and duplicate truth-sources (order field, t(), llms.txt enum) removed. 24 suites / 390 tests. Forks: merge upstream and pnpm install as usual. This bar tracks template releases — details & full changelog on GitHub Releases.`,
+    text: `AnvilWiki template update log (v${PROJECT_VERSION}): the demo site root becomes the project gateway — anvil.wiki now lands on the Chinese page (301) and the English wiki demo moves to /demo/ (fork builds stay byte-identical); handbook and landing pages gain a compact top native-banner slot (reusing the existing unit); VibeCafé analytics switches to env-gated opt-in, restoring the zero-third-party-scripts-on-first-run contract for forks; the landing page adds an "About the author" section (synced to the README) — maintainer Yuan Ruiqin (Ruiqin, PNGTRIBE) shares the path behind the template. Audit-fix and doc-drift batches since round 35 are all logged. 24 suites / 401 tests. Forks: merge upstream and pnpm install as usual. This bar tracks template releases — details & full changelog on GitHub Releases.`,
     href: RELEASES,
     dismissLabel: 'Dismiss announcement',
   },
@@ -29,7 +29,7 @@ export const en: LandingContent = {
       'An SEO-hardened game wiki template (Astro + Cloudflare Pages — Lighthouse 4×100, free unlimited bandwidth) with an AI content workflow that ships inside your repo: talk to your AI to generate pages, codes stay fresh on autopilot. Every ad dollar is yours.',
     primaryCta: { label: 'Fork on GitHub', href: FORK_URL },
     secondaryCta: { label: 'Star on GitHub', href: 'https://github.com/PNGTRID/AnvilWiki' },
-    tertiaryCta: { label: 'Live Demo', href: '/' },
+    tertiaryCta: { label: 'Live Demo', href: '/demo/' },
     installCommand: `git clone https://github.com/PNGTRID/AnvilWiki.git
 cd anvilwiki
 pnpm install && pnpm dev`,
@@ -295,7 +295,7 @@ pnpm install && pnpm dev`,
       subtitle:
         'A complete game wiki built with AnvilWiki — Lighthouse 4×100, deployable in 30 minutes.',
       primaryLabel: 'View the demo',
-      primaryHref: '/',
+      primaryHref: '/demo/',
       secondaryLabel: 'Get started',
       secondaryHref: '/landing/#docs',
     },
@@ -355,7 +355,7 @@ pnpm install && pnpm dev`,
       'Real i18n: English at root + Japanese prefixed, with fallback',
       'Working ad slots, search, comments — all env-gated, off by default',
     ],
-    cta: { label: 'View live demo →', href: '/' },
+    cta: { label: 'View live demo →', href: '/demo/' },
     browserUrl: 'anvil.wiki/bosses/emberfang',
     mobileCaption: 'Mobile-first: clean first screen, scrollable tables, tap-to-copy codes.',
     articleAlt: 'Boss guide article — Quick Answer card and structured Boss Overview data card',
@@ -449,6 +449,18 @@ pnpm install && pnpm dev`,
       label: 'Open the docs center — two hands-on manuals with copy-paste AI prompts',
       href: '/landing/docs/',
     },
+  },
+  author: {
+    title: 'About the author',
+    name: '袁锐钦 (Yuan Ruiqin)',
+    role: 'AnvilWiki maintainer · lead of the PNG 部落 community',
+    bio:
+      'Ruiqin spent years in design, teaching, and running a print factory — real business, real pressure. The turn to AI-assisted building follows one belief: code is the means, a shipped product is the skill, and users plus revenue close the loop. AnvilWiki distills that path — keyword sourcing, AI-assisted content, SEO, monetization — into a forkable template that goes live in about 30 minutes, with the bilingual handbook recording what actually worked.',
+    links: [
+      { label: 'ruiqin.dev — personal site', href: 'https://ruiqin.dev' },
+      { label: 'PNG 部落 — pngtrid.cn', href: 'https://pngtrid.cn' },
+      { label: 'GitHub — @PNGTRID', href: 'https://github.com/PNGTRID' },
+    ],
   },
   search: {
     label: 'Search',

@@ -15,11 +15,11 @@
 [![Cloudflare Pages](https://img.shields.io/badge/Cloudflare-Pages-F38020?logo=cloudflare&logoColor=white)](https://pages.cloudflare.com)
 [![Release](https://img.shields.io/github/v/release/PNGTRID/AnvilWiki?label=Release&color=brightgreen)](https://github.com/PNGTRID/AnvilWiki/releases)
 [![CI](https://github.com/PNGTRID/AnvilWiki/actions/workflows/ci.yml/badge.svg)](https://github.com/PNGTRID/AnvilWiki/actions/workflows/ci.yml)
-[![Live Demo](https://img.shields.io/badge/Demo-anvil.wiki-brightgreen)](https://anvil.wiki/)
+[![Live Demo](https://img.shields.io/badge/Demo-anvil.wiki-brightgreen)](https://anvil.wiki/demo/)
 [![Docs](https://img.shields.io/badge/Docs-/landing/docs-8b5cf6)](https://anvil.wiki/landing/docs)
 [![Works with](https://img.shields.io/badge/Works_with-Claude_Code_%7C_Codex_%7C_Cursor_%7C_ZCode-blueviolet)](.agent/skills/)
 
-[![Demo site homepage](public/images/showcase/demo-home.webp)](https://anvil.wiki/)
+[![Demo site homepage](public/images/showcase/demo-home.webp)](https://anvil.wiki/demo/)
 
 <p align="center">
   <a href="https://anvil.wiki/bosses/emberfang/"><img src="public/images/showcase/demo-article.webp" width="32%" alt="Boss stat card"></a>
@@ -29,12 +29,12 @@
 
 > Boss 数据卡 · 兑换码一键复制 · 武器强度榜——wiki 级呈现的其中三页,点图直达对应页面。Boss stat cards, tap-to-copy codes, tier lists — three of the wiki-grade page types; click through to the live pages.
 
-> Lighthouse 4×100 — 实测于 [anvil.wiki](https://anvil.wiki/)（2026-09-03）
+> Lighthouse 4×100 — 实测于 [anvil.wiki/demo](https://anvil.wiki/demo/)（2026-09-03）
 > 
-> [![Performance 100](https://img.shields.io/badge/Performance-100-058627?style=flat-square&logo=lighthouse&logoColor=white)](https://anvil.wiki/)
-> [![Accessibility 100](https://img.shields.io/badge/Accessibility-100-058627?style=flat-square&logo=lighthouse&logoColor=white)](https://anvil.wiki/)
-> [![Best Practices 100](https://img.shields.io/badge/Best_Practices-100-058627?style=flat-square&logo=lighthouse&logoColor=white)](https://anvil.wiki/)
-> [![SEO 100](https://img.shields.io/badge/SEO-100-058627?style=flat-square&logo=lighthouse&logoColor=white)](https://anvil.wiki/)
+> [![Performance 100](https://img.shields.io/badge/Performance-100-058627?style=flat-square&logo=lighthouse&logoColor=white)](https://anvil.wiki/demo/)
+> [![Accessibility 100](https://img.shields.io/badge/Accessibility-100-058627?style=flat-square&logo=lighthouse&logoColor=white)](https://anvil.wiki/demo/)
+> [![Best Practices 100](https://img.shields.io/badge/Best_Practices-100-058627?style=flat-square&logo=lighthouse&logoColor=white)](https://anvil.wiki/demo/)
+> [![SEO 100](https://img.shields.io/badge/SEO-100-058627?style=flat-square&logo=lighthouse&logoColor=white)](https://anvil.wiki/demo/)
 
 ---
 
@@ -45,7 +45,7 @@
 | **零基础从零做一个赚钱的游戏站** | 📚 [学习手册](https://anvil.wiki/zh/landing/docs/learn)——每步写明「做什么/怎么做/你会看到什么」,含可复制的 AI 提示词 |
 | 看「从零到赚钱」的全部工作量 | 🗺️ [文档中心首页](https://anvil.wiki/zh/landing/docs)——10 件事全景清单,逐项点入 |
 | 深度定制 / 给模板写代码 | 🔧 [开发手册](https://anvil.wiki/zh/landing/docs/dev) |
-| 看看做出来长什么样 | 🎮 [在线 Demo](https://anvil.wiki/)——虚构游戏「Anvil Quest」的完整 wiki |
+| 看看做出来长什么样 | 🎮 [在线 Demo](https://anvil.wiki/demo/)——虚构游戏「Anvil Quest」的完整 wiki |
 | 对比 Fandom / Wiki.js / 其他方案 | ⚖️ [完整对比页](https://anvil.wiki/zh/landing/comparison)——三种物种、Fandom 用户搬家指南、自托管引擎数据表、什么时候不该选 AnvilWiki |
 | 看「游戏 wiki 页面模板」长什么样 | 🧩 [模板展示页](https://anvil.wiki/zh/landing/templates)——Boss 攻略/兑换码/强度榜/物品页/文档中心,每型挂 demo 真实页面 |
 
@@ -64,10 +64,10 @@ cd AnvilWiki
 
 # 2. 安装依赖并本地预览
 pnpm install
-pnpm dev            # 打开 http://localhost:4321,能看到 demo 站 = 环境通了
+pnpm dev            # 打开 http://localhost:4321/demo/,能看到示例 wiki = 环境通了
 
 # 3. 一条问答式命令,把 demo 站换成你的游戏(游戏名/主题色/域名/语言…)
-pnpm apply-template
+pnpm apply-template    # 中文界面加 --lang zh
 
 # 4. 把改动推回你的 fork
 git add .
@@ -180,6 +180,8 @@ fork 后用 ZCode / Claude Code / Codex / Cursor 打开仓库,直接对话即可
 
 许可:**MIT**,见 [LICENSE](LICENSE)。
 
+作者:**袁锐钦(Ruiqin)**,PNG 部落主理人——[ruiqin.dev](https://ruiqin.dev)(个人站) · [PNG 部落](https://pngtrid.cn)(社区) · [GitHub @PNGTRID](https://github.com/PNGTRID)。
+
 致谢:选品判决框架([docs/sourcing.md](docs/sourcing.md) 第四节)参考了 [yan-labs/yan-skills](https://github.com/yan-labs/yan-skills)(MIT)的 game-opportunity 技能;AdSense 申请前审计技能(`/anvil-adsense-audit`)的审计框架受 [yantoumu/adsense-site-auditor-skill](https://github.com/yantoumu/adsense-site-auditor-skill) 启发(清单为模板特化重写,未复制其文本);视频转攻略工作流(`anvil-new-article` Step 0)的管线设计参考 [kennyzir/7deer_skills](https://github.com/kennyzir/7deer_skills/tree/main/youtube-content-gen)(MIT)的 youtube-content-gen 技能。感谢三个项目把方法论开源出来;也感谢群友 [誓言](https://github.com/lyglzhl)——其 2026-09-15 的外部代码审查报告是 v2.27.0 fallback 页 SEO 收敛修复与 roadmap 复杂度候选项的直接来源。
 
 ---
@@ -191,7 +193,7 @@ fork 后用 ZCode / Claude Code / Codex / Cursor 打开仓库,直接对话即可
 | **Build a money-making game site from zero** | 📚 [Learning Manual](https://anvil.wiki/landing/docs/learn) — every step a SOP with copy-paste AI prompts |
 | See the whole journey first | 🗺️ [Docs hub](https://anvil.wiki/landing/docs) — a 10-job whole-picture checklist |
 | Customize deeply / contribute code | 🔧 [Development Manual](https://anvil.wiki/landing/docs/dev) |
-| See what it looks like | 🎮 [Live demo](https://anvil.wiki/) — a complete wiki for the fictional game "Anvil Quest" |
+| See what it looks like | 🎮 [Live demo](https://anvil.wiki/demo/) — a complete wiki for the fictional game "Anvil Quest" |
 | Compare Fandom / Wiki.js / alternatives | ⚖️ [Full comparison](https://anvil.wiki/landing/comparison) |
 | See what the wiki page templates look like | 🧩 [Templates showcase](https://anvil.wiki/landing/templates) — boss guide, codes, tier list, item pages, docs center, each linked to a real demo page |
 
@@ -208,10 +210,10 @@ cd AnvilWiki
 
 # 2. Install & preview locally
 pnpm install
-pnpm dev            # open http://localhost:4321 — seeing the demo site means your env works
+pnpm dev            # open http://localhost:4321/demo/ — seeing the demo wiki means your env works
 
 # 3. One guided Q&A command swaps the demo for your game (name/theme/domain/locales…)
-pnpm apply-template
+pnpm apply-template    # add --lang zh for a Chinese UI
 
 # 4. Push the changes back to your fork
 git add .
@@ -311,6 +313,8 @@ Built a site? Open a PR appending an entry to `COMMUNITY_SITES` in `src/config/l
 ### Community & License
 
 MIT License — see [LICENSE](LICENSE).
+
+Author: **Yuan Ruiqin (Ruiqin)**, lead of the PNG 部落 (PNGTRIBE) community — [ruiqin.dev](https://ruiqin.dev) (personal site) · [pngtrid.cn](https://pngtrid.cn) (community) · [GitHub @PNGTRID](https://github.com/PNGTRID).
 
 Credits: the opportunity-scoring framework in [docs/sourcing.md](docs/sourcing.md) (section 4) draws on the game-opportunity skill from [yan-labs/yan-skills](https://github.com/yan-labs/yan-skills) (MIT); the AdSense pre-application audit skill (`/anvil-adsense-audit`) is inspired by the audit framework of [yantoumu/adsense-site-auditor-skill](https://github.com/yantoumu/adsense-site-auditor-skill) (our checklist is a template-specific rewrite, not a copy); the video-to-guide workflow (`anvil-new-article` Step 0) draws on the pipeline of [kennyzir/7deer_skills](https://github.com/kennyzir/7deer_skills/tree/main/youtube-content-gen) (MIT, youtube-content-gen). Thanks to all three projects for open-sourcing their methodology — and to [Shiyan](https://github.com/lyglzhl) (誓言, a community reviewer) whose external code review report (2026-09-15) directly drove the v2.27.0 fallback-SEO fix and the roadmap complexity candidates.
 

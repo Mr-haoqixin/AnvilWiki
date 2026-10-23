@@ -1,0 +1,69 @@
+---
+/**
+ * RootGateway — the demo root shadow page served at `/`.
+ *
+ * ⚠️ SURVIVE FILE — never list this component in LANDING_PATHS
+ * (scripts/apply-template.ts), the setup.yml rm line, or the e2e absence
+ * assertions. src/pages/index.astro statically imports it, and build-time
+ * module resolution runs unconditionally regardless of the landingLinkEnabled
+ * runtime value — deleting it makes FORK builds fail to resolve the import.
+ * Forks carry it as a dead branch (landingLinkEnabled=false) alongside the
+ * dead constants in src/config/project.ts — same contract as SiteHeader
+ * importing project.ts.
+ *
+ * Demo behavior: `/` is the project storefront. The live channel is the root
+ * rule in public/_redirects (301 → /zh/landing/); this page is the in-dist
+ * fallback for any asset-direct-serving scenario: meta-refresh completes the
+ * jump, canonical points at the target (Google merges signals), and the full
+ * OG/twitter card keeps share previews intact even for crawlers that ignore
+ * meta refresh. Zero <script>, zero globals.css, zero GA/ads.
+ */
+import { demoRootGateway } from '~/config/project';
+import { site, siteUrl } from '~/config/site';
+
+const target = `${siteUrl}${demoRootGateway.target}`;
+// Same default OG image as BaseLayout (and thus /zh/landing/ via
+// LandingLayout) — the root card stays visually identical to the landing's.
+const ogImage = `${siteUrl}/images/hero.webp`;
+---
+
+<!doctype html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{demoRootGateway.title}</title>
+    <meta name="description" content={demoRootGateway.description} />
+    {/* Canonical points at the jump target so Google consolidates the root's
+        signals there. No noindex here — noindex + canonical-to-another-page
+        is a contradictory pair; canonical merging IS the signal-transfer path. */}
+    <link rel="canonical" href={target} />
+    <meta http-equiv="refresh" content={`0;url=${demoRootGateway.target}`} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />
+
+    {/* Open Graph */}
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={demoRootGateway.title} />
+    <meta property="og:description" content={demoRootGateway.description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content={String(site.ogImageWidth)} />
+    <meta property="og:image:height" content={String(site.ogImageHeight)} />
+    {/* og:url joins canonical at the target so share signals consolidate on
+        /zh/landing/ instead of splitting between it and the bare root. */}
+    <meta property="og:url" content={target} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content="zh_CN" />
+
+    {/* Twitter */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={demoRootGateway.title} />
+    <meta name="twitter:description" content={demoRootGateway.description} />
+    <meta name="twitter:image" content={ogImage} />
+  </head>
+  <body>
+    <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;">
+      <a href={demoRootGateway.target} style="color:inherit;text-decoration:underline;">{demoRootGateway.linkLabel}</a>
+    </div>
+  </body>
+</html>

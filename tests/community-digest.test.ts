@@ -175,6 +175,51 @@ describe('community-digest.json contract (written daily by automation)', () => {
     expect(checked, 'count-consistency checker matched nothing — regex or shape drifted').toBeGreaterThan(0);
   });
 
+  test('all-time-high superlatives match the reports-array maximum (when present)', () => {
+    // The 2026-10-14 summary shipped "历史新高日（389 条）" while the same
+    // file's own reports array holds 432 (09-01) and 404 (09-08) — a
+    // superlative with an in-repo fact source contradicting it. Pinned per
+    // spec §7.3: "历史新高" in pipeline-authored prose (daily summaries plus
+    // curated item titles/details) may only appear on a day whose
+    // stats.messages equals the array-wide maximum. Verbatim quotes are
+    // speech and stay unguarded; windowed phrasing ("五周来新高") is
+    // intentionally out of scope — only the all-time claim has a mechanical
+    // source here.
+    const messagesOf = (fullDate: string): number | undefined => {
+      const r = reports.find((x) => String(x.date) === fullDate);
+      return r ? Number((r.stats as Raw).messages) : undefined;
+    };
+    const violates = (text: string, messages: number | undefined, max: number): boolean =>
+      text.includes('历史新高') && messages !== undefined && messages < max;
+    const max = Math.max(...reports.map((r) => Number((r.stats as Raw).messages)));
+    for (const day of data.daily) {
+      if (violates(day.summary, messagesOf(day.date), max)) {
+        expect.fail(
+          `${day.date} summary claims 历史新高 but stats.messages ${messagesOf(day.date)} < array max ${max}`,
+        );
+      }
+    }
+    for (const category of data.categories) {
+      for (const item of category.items) {
+        const text = `${String(item.title ?? '')}${String(item.detail ?? '')}`;
+        if (!text.includes('历史新高')) continue;
+        const fullDates = reports
+          .map((r) => String(r.date))
+          .filter((d) => d.endsWith(`-${String(item.date)}`));
+        if (fullDates.length !== 1) continue; // ambiguous year — audit territory, not a gate
+        if (violates(text, messagesOf(fullDates[0]), max)) {
+          expect.fail(
+            `${fullDates[0]} curated item claims 历史新高 but stats.messages ${messagesOf(fullDates[0])} < array max ${max}`,
+          );
+        }
+      }
+    }
+    // Liveness: the detector fires on a synthetic violator, so a silent
+    // wording/shape drift cannot turn this into a permanently-green no-op.
+    expect(violates('历史新高日（389 条）', 389, 432)).toBe(true);
+    expect(violates('五周来新高日（389 条）', 389, 432)).toBe(false);
+  });
+
   test('owner-only dimensions never leak into the public file (spec §3.5)', () => {
     const leaked = reports
       .flatMap((r) => Object.keys(r))
