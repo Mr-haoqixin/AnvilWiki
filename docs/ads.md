@@ -138,7 +138,23 @@ Google 的[广告投放位置政策](https://support.google.com/adsense/answer/1
 
 ### 广告位怎么挂(独立文件 + iframe 隔离,必读)
 
-**不要把 Adsterra 的脚本直接粘进组件源码。** 正确姿势:每个广告位一个独立 html 文件,放 `public/ads/` 目录(自行新建),例如 `public/ads/incontent.html`,文件内容就是 Adsterra 后台拿到的 `<script>` 片段(它自带 `window.atOptions` 配置)。然后在页面里用 iframe 挂载:
+**不要把 Adsterra 的脚本直接粘进组件源码。** 正确姿势:每个广告位一个独立 html 文件,放 `public/ads/` 目录(自行新建),例如 `public/ads/incontent.html`,文件内容就是 Adsterra 后台拿到的 `<script>` 片段(它自带 `window.atOptions` 配置)。**片段要包成完整 HTML 文档,不要只贴裸 `<script>`**——否则 `pnpm build` 时 Pagefind 会报 `has no <html> element` 警告,广告页也可能被搜索引擎或站内搜索收录:
+
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Advertisement</title>
+</head>
+<body data-pagefind-ignore>
+  <!-- 这里粘贴 Adsterra 后台的 <script> 片段 -->
+</body>
+</html>
+```
+
+`noindex` 让搜索引擎不收录这个 iframe 文档,`data-pagefind-ignore` 让站内搜索跳过它;两者都只影响爬虫/索引,不影响广告脚本执行。契约测试 `tests/ads-html.test.ts` 会钉住这个形态。然后在页面里用 iframe 挂载:
 
 ```html
 <iframe src="/ads/incontent.html" style="width:100%;max-width:728px;height:90px;border:0"

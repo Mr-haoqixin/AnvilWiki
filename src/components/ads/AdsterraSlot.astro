@@ -6,8 +6,11 @@
  * `window.atOptions` global, so two units inlined on one page clobber each
  * other (slot B renders with slot A's config). Every unit therefore lives in
  * its own static html file under `public/ads/` — `<name>.html`, holding
- * exactly the snippet from the Adsterra dashboard (Ad Units → GET CODE) —
- * and this component mounts it in an iframe. The sandbox omits
+ * the snippet from the Adsterra dashboard (Ad Units → GET CODE) wrapped in a
+ * minimal standalone document (`<!doctype html>`, `<html>`, `<body
+ * data-pagefind-ignore>`, plus a `noindex` robots meta) — and this component
+ * mounts it in an iframe. Bare script fragments trigger a Pagefind
+ * "has no <html> element" build warning. The sandbox omits
  * `allow-top-navigation` (some mobile creatives try to navigate the whole
  * page away) — but with `allow-scripts` + `allow-same-origin` both present
  * (creatives need them to render), the sandbox is layout containment and
