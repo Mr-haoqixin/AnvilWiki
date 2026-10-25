@@ -44,6 +44,7 @@
     "test:watch": "vitest",
     "test:e2e": "node scripts/e2e-apply-template.mjs",
     "check-sitemap": "tsx scripts/check-sitemap.ts",
+    "check-incremental": "node scripts/check-incremental.mjs",
     "check-config": "tsx scripts/check-config.ts",
     "new-post": "tsx scripts/new-post.ts",
     "bulk-new-posts": "tsx scripts/bulk-new-posts.ts",

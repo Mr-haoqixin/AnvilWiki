@@ -263,6 +263,21 @@ export default defineConfig({
   // production lesson; the terminal fix is 'always' everywhere, NOT a
   // _redirects reverse-301 which loops on CF).
   trailingSlash: 'always',
+  // Incremental static builds (Astro 7.2+, experimental) — DISABLED after a
+  // real-mode audit (2026-10-25): with the flag on, a cache-hit build
+  // restores pages but does NOT re-emit the base image variant each page's
+  // og:image points at (responsive srcset variants DO come back), so the
+  // cached dist shipped 841 referenced-but-missing files out of 3364 —
+  // every article's social share card would 404. Caught by
+  // scripts/check-incremental.mjs (cached vs `--force` build diff, kept as
+  // a weekly workflow). Re-enable only with that audit green; the cacheKey
+  // plumbing (~/lib/build-cache + the four content routes) stays in place,
+  // inert without the flag. Also: build.concurrency > 1 disables the cache,
+  // and node_modules/.astro must persist between builds (Cloudflare Pages
+  // Build Caching / actions/cache both cover it) for it to help at all.
+  experimental: {
+    incrementalBuild: false,
+  },
   image: {
     // Emit explicit width/height on responsive <Image> output to prevent CLS.
     responsiveStyles: true,

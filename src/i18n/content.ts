@@ -41,10 +41,6 @@ function isPublished(e: WikiEntry): boolean {
   return !e.data.draft || isDev;
 }
 
-function contentLocale(locale: Locale): Locale {
-  return locale === 'en' ? defaultLocale : locale;
-}
-
 // parseEntryId lives in lib/content-utils.ts (pure, vitest-testable).
 export { parseEntryId };
 
@@ -90,11 +86,10 @@ export async function getEntryWithFallback(
  */
 export async function getEntriesByCategory(category: string, locale: Locale): Promise<WikiEntry[]> {
   const all = await getCollection('wiki');
-  const sourceLocale = contentLocale(locale);
   return all
     .filter((e) => {
       const parsed = parseEntryId(e.id);
-      return isPublished(e) && parsed?.locale === sourceLocale && parsed.category === category;
+      return isPublished(e) && parsed?.locale === locale && parsed.category === category;
     })
     .sort(newestFirst); // newest first, id tie-break (see content-utils)
 }
@@ -151,9 +146,8 @@ export async function localesForCategory(category: string): Promise<Locale[]> {
  */
 export async function getRecentEntries(locale: Locale, limit = 6): Promise<WikiEntry[]> {
   const all = await getCollection('wiki');
-  const sourceLocale = contentLocale(locale);
   return all
-    .filter((e) => isPublished(e) && parseEntryId(e.id)?.locale === sourceLocale)
+    .filter((e) => isPublished(e) && parseEntryId(e.id)?.locale === locale)
     .sort(newestFirst)
     .slice(0, limit);
 }
@@ -190,11 +184,10 @@ export async function getRelatedEntries(
  */
 export async function getTagsWithCounts(locale: Locale): Promise<Array<{ tag: string; count: number }>> {
   const all = await getCollection('wiki');
-  const sourceLocale = contentLocale(locale);
   const counts = new Map<string, number>();
   for (const e of all) {
     const parsed = parseEntryId(e.id);
-    if (!isPublished(e) || parsed?.locale !== sourceLocale) continue;
+    if (!isPublished(e) || parsed?.locale !== locale) continue;
     for (const tag of e.data.tags) {
       counts.set(tag, (counts.get(tag) ?? 0) + 1);
     }
@@ -205,7 +198,7 @@ export async function getTagsWithCounts(locale: Locale): Promise<Array<{ tag: st
     // sorts by the build machine's DEFAULT locale (ICU env drift → the same
     // content orders differently across machines). Same determinism intent
     // as newestFirst's id tie-break.
-    .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag, sourceLocale));
+    .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag, locale));
 }
 
 /**
@@ -214,12 +207,11 @@ export async function getTagsWithCounts(locale: Locale): Promise<Array<{ tag: st
  */
 export async function getEntriesByTag(tagSlug: string, locale: Locale): Promise<WikiEntry[]> {
   const all = await getCollection('wiki');
-  const sourceLocale = contentLocale(locale);
   return all
     .filter((e) => {
       if (!isPublished(e)) return false;
       const parsed = parseEntryId(e.id);
-      if (parsed?.locale !== sourceLocale) return false;
+      if (parsed?.locale !== locale) return false;
       return e.data.tags.some((t: string) => slugifyTag(t) === tagSlug);
     })
     .sort(newestFirst);

@@ -12,6 +12,13 @@ import ListPage from '~/components/article/ListPage.astro';
 import ArticlePage from '~/components/article/ArticlePage.astro';
 import { CONTENT_TYPES } from '~/config/navigation';
 import { isLocale, defaultLocale, locales, type Locale } from '~/i18n/routing';
+import {
+  categoryCoverageMap,
+  combineKeys,
+  entryCoverageMap,
+  envFingerprint,
+  localeRollup,
+} from '~/lib/build-cache';
 import { getEntryWithFallback, localesForEntry, localesForCategory, parseEntryId, type ResolvedEntry } from '~/lib/content';
 import { detailPath, languageAlternates, listPath } from '~/lib/url';
 
@@ -22,8 +29,16 @@ export async function getStaticPaths() {
   // Drafts are dev-only — never generate production pages for them.
   const published = all.filter((e) => isDev || !e.data.draft);
 
+  // cacheKey inputs (experimental.incrementalBuild) — see ~/lib/build-cache.
+  const env = envFingerprint(import.meta.env as Record<string, unknown>);
+  const rollups = new Map<string, string>();
+  for (const l of locales) rollups.set(l, localeRollup(l, published));
+  const entryCoverage = entryCoverageMap(published);
+  const categoryCoverage = categoryCoverageMap(published);
+
   const paths: Array<{
     params: { locale: string; slug: string };
+    cacheKey: string;
   }> = [];
 
   // Only non-default locales here.
@@ -34,18 +49,28 @@ export async function getStaticPaths() {
   for (const locale of nonDefaultLocales) {
     // List page paths: one per category per locale.
     for (const ct of CONTENT_TYPES) {
-      paths.push({ params: { locale, slug: ct } });
+      paths.push({
+        params: { locale, slug: ct },
+        cacheKey: combineKeys('list', locale, ct, rollups.get(locale) ?? '', categoryCoverage.get(ct) ?? '', env),
+      });
     }
 
     // Article paths from this locale's own MDX.
     for (const entry of published) {
       const parsed = parseEntryId(entry.id);
       if (!parsed || parsed.locale !== locale) continue;
-      paths.push({ params: { locale, slug: `${parsed.category}/${parsed.slug}` } });
+      const id = `${parsed.category}/${parsed.slug}`;
+      paths.push({
+        params: { locale, slug: id },
+        cacheKey: combineKeys('article', locale, id, entry.digest ?? '', rollups.get(locale) ?? '', entryCoverage.get(id) ?? '', env),
+      });
     }
 
     // Also generate paths for English articles so fallback works at request
     // time (e.g. /ja/bosses/stormcaller where ja version doesn't exist).
+    // Fallback pages RENDER default-locale content (related pool, prev/next
+    // all come from the served locale), so their key tracks the DEFAULT
+    // locale's rollup — not this URL locale's.
     for (const entry of published) {
       const parsed = parseEntryId(entry.id);
       if (!parsed || parsed.locale !== defaultLocale) continue;
@@ -53,7 +78,18 @@ export async function getStaticPaths() {
       // Avoid duplicate params (if same slug exists in both locales).
       const exists = paths.some((p) => p.params.locale === locale && p.params.slug === slugStr);
       if (!exists) {
-        paths.push({ params: { locale, slug: slugStr } });
+        paths.push({
+          params: { locale, slug: slugStr },
+          cacheKey: combineKeys(
+            'article',
+            locale,
+            slugStr,
+            entry.digest ?? '',
+            rollups.get(defaultLocale) ?? '',
+            entryCoverage.get(slugStr) ?? '',
+            env,
+          ),
+        });
       }
     }
   }

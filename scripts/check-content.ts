@@ -21,6 +21,13 @@
  *      from frontmatter, so a mismatch renders fine but ships structured
  *      data pointing at URLs that 404 (check-links can't see it: the page
  *      itself resolves).
+ *   8. Frontmatter scalar hygiene: no UTF-8 BOM, no bare ' inside a
+ *      single-quoted value (must be '' — js-yaml rejects the whole file
+ *      otherwise), and `description` must parse to 40-165 chars (''
+ *      escapes shorten the parsed value by one char per escape). All three
+ *      shipped real build breaks from AI-written batches (2026-10-13/20
+ *      cohorts) whose failures surfaced only at build time with cryptic
+ *      messages — this rule catches them at the generation-stage self-check.
  *
  * Style: warnings don't fail the build; errors exit 1 (can gate CI).
  *
@@ -151,6 +158,44 @@ for (const file of files) {
           file,
           catIdx,
           `frontmatter category "${fmCategory}" ≠ directory "${dirCategory}" — the URL follows the directory but JSON-LD/prev-next follow frontmatter`,
+        );
+      }
+    }
+  }
+
+  // 8. Frontmatter scalar hygiene (see docblock). Runs even when secondFm is
+  //    -1 for the BOM check — a BOM-headed file's frontmatter looks like body
+  //    text to every ^--- anchored scan, which is exactly the failure.
+  if (src.charCodeAt(0) === 0xfeff) {
+    error(file, 0, 'file starts with a UTF-8 BOM — every ^--- anchored frontmatter scan (this lint, the build lastmod walk) misses the block');
+  }
+  if (secondFm !== -1) {
+    const fmLines = lines.slice(1, secondFm);
+    for (let i = 0; i < fmLines.length; i++) {
+      const single = fmLines[i].match(/^([A-Za-z][\w-]*):\s*'(.*)'\s*$/);
+      if (single && single[2].includes("'") && single[2].replace(/''/g, '').includes("'")) {
+        error(
+          file,
+          i + 1,
+          `"${single[1]}" has a bare ' inside a single-quoted YAML value — double it ('') or js-yaml rejects the whole file`,
+        );
+      }
+    }
+    const descIdx = fmLines.findIndex((l) => /^description:/.test(l));
+    if (descIdx !== -1) {
+      const rawDesc = fmLines[descIdx];
+      const singleQ = rawDesc.match(/^description:\s*'(.*)'\s*$/);
+      const doubleQ = rawDesc.match(/^description:\s*"(.*)"\s*$/);
+      const parsedDesc = singleQ
+        ? singleQ[1].replace(/''/g, "'")
+        : doubleQ
+          ? doubleQ[1].replace(/\\"/g, '"')
+          : rawDesc.replace(/^description:\s*/, '');
+      if (parsedDesc.length < 40 || parsedDesc.length > 165) {
+        error(
+          file,
+          descIdx + 1,
+          `description parses to ${parsedDesc.length} chars (schema requires 40-165${singleQ ? " — count AFTER '' → ' unescaping" : ''})`,
         );
       }
     }

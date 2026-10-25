@@ -127,6 +127,7 @@ const xDefaultHref = defaultAlt
 
 // Optional analytics / verification (env-var gated — empty = not injected).
 const gaId = import.meta.env.PUBLIC_GA_ID as string | undefined;
+const adsenseClient = import.meta.env.PUBLIC_ADSENSE_CLIENT as string | undefined;
 const cfBeaconToken = import.meta.env.PUBLIC_CF_BEACON_TOKEN as string | undefined;
 const vibecafeProductId = import.meta.env.PUBLIC_VIBECAFE_PRODUCT_ID as string | undefined;
 const vibecafeAuthKey = import.meta.env.PUBLIC_VIBECAFE_AUTH_KEY as string | undefined;
@@ -243,13 +244,13 @@ const privacyLabel = consent?.privacyLabel ?? footerStrings.privacyPolicy ?? 'Pr
     {gscVerification && <meta name="google-site-verification" content={gscVerification} />}
 
     {/*
-      Analytics are injected DYNAMICALLY (consent-gated).
+      Analytics / AdSense are injected DYNAMICALLY (consent-gated).
       BaseLayout only defines the loader; CookieConsent.astro calls it after
       the visitor accepts. See GDPR note in AGENTS.md. No tracking env vars
       → this block renders nothing → zero JS.
     */}
-    {gaId && (
-      <script is:inline define:vars={{ gaId }}>
+    {(gaId || adsenseClient) && (
+      <script is:inline define:vars={{ gaId, adsenseClient }}>
         window.__awLoadTrackers = () => {
           if (window.__awTrackersLoaded) return;
           window.__awTrackersLoaded = true;
@@ -264,6 +265,15 @@ const privacyLabel = consent?.privacyLabel ?? footerStrings.privacyPolicy ?? 'Pr
             }
             gtag('js', new Date());
             gtag('config', gaId);
+          }
+          if (adsenseClient) {
+            const s = document.createElement('script');
+            s.async = true;
+            s.crossOrigin = 'anonymous';
+            s.src =
+              'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' +
+              adsenseClient;
+            document.head.appendChild(s);
           }
         };
       </script>
@@ -352,8 +362,9 @@ const privacyLabel = consent?.privacyLabel ?? footerStrings.privacyPolicy ?? 'Pr
   <body class="min-h-screen bg-background text-foreground antialiased">
     {aiDisclaimer && <Fragment set:html={`<!-- AI Content Disclaimer (${locale}): ${aiDisclaimer} -->`} />}
     <slot />
-    {/* Consent banner — only rendered when tracking env vars are set. */}
-    {gaId && (
+    {/* Consent banner — only rendered when tracking env vars are set
+        (same condition as AdsterraSlot/MobileAnchorAd consent gating). */}
+    {(gaId || adsenseClient) && (
       <CookieConsent
         labels={{
           title: consentLabels.title,

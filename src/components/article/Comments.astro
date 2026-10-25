@@ -42,9 +42,21 @@ const enabled = Boolean(
   repo && repoId && category && categoryId && import.meta.env.PUBLIC_GISCUS_ENABLED === 'true',
 );
 
-// Giscus data-lang uses short codes matching our locale values.
-// Whitelist is defensive (Giscus codes ≠ BCP-47 in edge cases).
-const GISCUS_LANG: Record<string, string> = { en: 'en', zh: 'zh-CN' };
+// Giscus data-lang uses short codes matching our locale values (zh-hant →
+// zh-TW is the one non-identity mapping). Whitelist is defensive (Giscus
+// codes ≠ BCP-47 in edge cases).
+const GISCUS_LANG: Record<string, string> = {
+  en: 'en',
+  zh: 'zh-CN',
+  'zh-hant': 'zh-TW',
+  ja: 'ja',
+  es: 'es',
+  fr: 'fr',
+  de: 'de',
+  pt: 'pt',
+  nl: 'nl',
+  ru: 'ru',
+};
 const lang = GISCUS_LANG[locale] ?? 'en';
 
 const ui = getUi(locale);

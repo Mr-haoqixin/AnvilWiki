@@ -55,7 +55,8 @@ description: 从用户提供的素材(口述要点/YouTube 视频/别的攻略/�
 
 ### Step 2 — 写 frontmatter(硬规则)
 
-- `description`: **40-165 字符**,build 会失败短于 40
+- `description`: **40-165 字符,按"解析后"计**——单引号值里的 `''` 转义会让解析结果比原文短 1 字符/次;`pnpm check-content` 会先于 build 给出精确报错
+- **YAML 单引号转义(硬规则)**:值内的 `'` 必须写成 `''`(如 `Theo''s Hat`)——裸 `'` 让整个文件 js-yaml 解析失败;文件**不得带 UTF-8 BOM**。长度/转义/BOM 三类问题都由 `pnpm check-content` 确定性拦截,先跑它再 build
 - `title`: ≤80 字符,含游戏名+关键词(如 "Emberfang Boss Guide - Complete Strategy")
 - `date` / `lastModified`: ISO 日期(YYYY-MM-DD)
 - `summary`: 40-60 词直答句(会成为 Quick Answer 卡 + AI 搜索摘要候选)

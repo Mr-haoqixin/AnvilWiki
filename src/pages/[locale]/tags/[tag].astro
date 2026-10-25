@@ -6,29 +6,37 @@
 import TagListPage from '~/components/article/TagListPage.astro';
 import { defaultLocale, isLocale, locales, type Locale } from '~/i18n/routing';
 import { slugifyTag, localesForTag, parseEntryId } from '~/lib/content';
+import { combineKeys, envFingerprint, localeRollup, tagCoverageMap } from '~/lib/build-cache';
 import { languageAlternates, tagPath } from '~/lib/url';
 
 export async function getStaticPaths() {
   const { getCollection } = await import('astro:content');
   const all = await getCollection('wiki');
   const isDev = import.meta.env.DEV;
+  const published = all.filter((e) => isDev || !e.data.draft);
 
-  const paths: Array<{ params: { locale: string; tag: string } }> = [];
+  // cacheKey inputs (experimental.incrementalBuild) — see ~/lib/build-cache.
+  const env = envFingerprint(import.meta.env as Record<string, unknown>);
+  const tagCoverage = tagCoverageMap(published);
+
+  const paths: Array<{ params: { locale: string; tag: string }; cacheKey: string }> = [];
   for (const locale of locales) {
     if (locale === defaultLocale) continue;
-    const sourceLocale = locale === 'en' ? defaultLocale : locale;
     const slugs = new Set<string>();
-    for (const entry of all) {
-      if (entry.data.draft && !isDev) continue;
+    for (const entry of published) {
       const parsedId = parseEntryId(entry.id);
-      if (!parsedId || parsedId.locale !== sourceLocale) continue;
+      if (!parsedId || parsedId.locale !== locale) continue;
       for (const tag of entry.data.tags) {
         const slug = slugifyTag(tag);
         if (slug) slugs.add(slug); // skip empty-string slugs (blank tags)
       }
     }
+    const rollup = localeRollup(locale, published);
     for (const tagSlug of slugs) {
-      paths.push({ params: { locale, tag: tagSlug } });
+      paths.push({
+        params: { locale, tag: tagSlug },
+        cacheKey: combineKeys('tag', locale, tagSlug, rollup, tagCoverage.get(tagSlug) ?? '', env),
+      });
     }
   }
   return paths;

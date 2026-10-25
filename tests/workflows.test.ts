@@ -68,7 +68,8 @@ const AUDIT = '.github/workflows/content-pipeline.yml';
 const RELEASE_OPS = '.github/workflows/release-ops.yml';
 const SETUP = '.github/workflows/setup.yml';
 const INDEXNOW = '.github/workflows/indexnow.yml';
-const ALL_WORKFLOWS = [CI, AUTO, AUDIT, RELEASE_OPS, SETUP, INDEXNOW];
+const INCREMENTAL_AUDIT = '.github/workflows/incremental-audit.yml';
+const ALL_WORKFLOWS = [CI, AUTO, AUDIT, RELEASE_OPS, SETUP, INDEXNOW, INCREMENTAL_AUDIT];
 
 const EIGHT_GATES = [
   'pnpm lint',
@@ -736,5 +737,36 @@ describe('transpile-pagefind range-media lowering covers whole preludes', () => 
     expect(lowerRangeMedia('@media (max-width: 768px) { .x {} }')).toBe(
       '@media (max-width: 768px) { .x {} }',
     );
+  });
+});
+
+describe('incremental-build audit stays read-only and equivalence-only', () => {
+  const wf = readWorkflow(INCREMENTAL_AUDIT) as Workflow;
+  const steps = wf.jobs?.equivalence?.steps ?? [];
+
+  test('triggers on schedule + dispatch only (no push/PR surface)', () => {
+    // Like the freshness audit: a guard workflow never gates ordinary work.
+    expect(Object.keys(wf.on ?? {})).toEqual(['workflow_dispatch', 'schedule']);
+  });
+
+  test('read-only permissions, runs the equivalence script, uses no secrets', () => {
+    expect(wf.permissions).toEqual({ contents: 'read' });
+    const check = steps.find((s) => /check-incremental/.test(s.run ?? ''));
+    expect(check?.run).toContain('pnpm check-incremental');
+    // Two builds happen inside the script — the workflow itself must not
+    // grow a second build step that drifts from the audited command.
+    expect(steps.filter((s) => /astro build|pnpm build/.test(s.run ?? ''))).toHaveLength(0);
+    const raw = readFileSync(join(root, INCREMENTAL_AUDIT), 'utf8');
+    expect(raw.match(/secrets\.[A-Z_]+/g) ?? []).toEqual([]);
+  });
+
+  test('restores the same incremental cache the gates build writes', () => {
+    // A cold cache would compare two FULL builds — trivially equal,
+    // guarding nothing. The restore step must stay keyed identically to
+    // .github/actions/gates/action.yml.
+    const restore = steps.find((s) => (s.uses ?? '').startsWith('actions/cache'));
+    expect(restore?.with?.path).toBe('node_modules/.astro');
+    const gatesRaw = readFileSync(join(root, GATES), 'utf8');
+    expect(gatesRaw).toContain(String(restore?.with?.key));
   });
 });

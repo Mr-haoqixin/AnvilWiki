@@ -29,6 +29,19 @@ runs:
       run: pnpm check-config
       shell: bash
 
+    - name: Restore Astro incremental build cache
+      # cacheDir of experimental.incrementalBuild (astro.config.ts) — the
+      # same directory Cloudflare Pages Build Caching persists on the deploy
+      # side. github.sha in the key makes every run save a fresh entry;
+      # restore-keys fall back to the newest earlier commit's entry.
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: node_modules/.astro
+        key: astro-incremental-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
+        restore-keys: |
+          astro-incremental-${{ hashFiles('pnpm-lock.yaml') }}-
+          astro-incremental-
+
     - name: Build
       run: pnpm build
       shell: bash

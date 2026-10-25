@@ -986,16 +986,23 @@ describe('setup.yml demo-author removal still matches the real authors.ts', () =
     const demoAuthorRe = new RegExp(pyPattern, 'g');
     const src = readFileSync(join(repoRoot, 'src/config/authors.ts'), 'utf8');
     const after = src.replace(demoAuthorRe, '\n');
+    const lines = src.split('\n');
+    const start = lines.findIndex((l) => l.includes('// DEMO'));
+    if (start === -1) {
+      // Applied fork: the demo block was already stripped (apply-template /
+      // setup.yml first run). A re-run of Initialize AnvilWiki is a
+      // documented flow, so the regex must be a byte-exact no-op here —
+      // anything it still matched would corrupt hand-added author entries.
+      expect(after).toBe(src);
+      return;
+    }
     // The demo identity is gone — comment line AND entry line.
     expect(after).not.toContain('Forge Master Kael');
     expect(after).not.toContain('// DEMO');
     // Byte-preservation oracle: the demo block is the comment line directly
     // above the entry line; deleting exactly those two lines must equal the
     // regex output — anything else the regex touched fails here.
-    const lines = src.split('\n');
-    const start = lines.findIndex((l) => l.includes('// DEMO'));
     const end = lines.findIndex((l) => l.includes("'Forge Master Kael'"));
-    expect(start).toBeGreaterThan(-1);
     expect(end).toBe(start + 1);
     const expected = [...lines.slice(0, start), ...lines.slice(end + 1)].join('\n');
     expect(after).toBe(expected);
@@ -1441,6 +1448,16 @@ describe('rewriteLocaleJson overview/home are re-run-aware (M2)', () => {
 describe('stripDemoAuthors — the CLI authors.ts regex (real-file contract + setup.yml parity)', () => {
   test('removes exactly the demo block from the shipped authors.ts, byte-preserving the rest', () => {
     const src = readFileSync(join(repoRoot, 'src/config/authors.ts'), 'utf8');
+    if (!src.includes('// DEMO')) {
+      // Applied fork: the demo block was already stripped. The contract that
+      // still matters here is idempotence — stripDemoAuthors must report
+      // no-change and return the file byte-identical, so a re-run of the CLI
+      // or setup.yml never touches hand-added author entries.
+      const noop = stripDemoAuthors(src);
+      expect(noop.changed).toBe(false);
+      expect(noop.cleaned).toBe(src);
+      return;
+    }
     const once = stripDemoAuthors(src);
     expect(once.changed).toBe(true);
     expect(once.cleaned).not.toContain('Forge Master Kael');

@@ -16,6 +16,9 @@ import { Icon } from 'astro-icon/components';
 import { render } from 'astro:content';
 import LocaleLayout from '~/components/layout/LocaleLayout.astro';
 import AffiliateSuggestion from '~/components/ads/AffiliateSuggestion.astro';
+import InContentAd from '~/components/ads/InContentAd.astro';
+import MobileAnchorAd from '~/components/ads/MobileAnchorAd.astro';
+import AdsterraSlotPair from '~/components/ads/AdsterraSlotPair.astro';
 import Comments from '~/components/article/Comments.astro';
 import TableOfContents from '~/components/article/TableOfContents.astro';
 import ShareButton from '~/components/article/ShareButton.astro';
@@ -50,7 +53,6 @@ interface Props {
 }
 const { locale, resolved, alternates = [], availableLocales } = Astro.props;
 const { entry, servedLocale, isFallback } = resolved;
-const displayLocale = servedLocale === 'en' ? 'zh-CN' : servedLocale;
 const ui = getUi(locale);
 const nav = ui.nav as Record<string, string>;
 const shared = ui.shared;
@@ -67,8 +69,8 @@ const coverUrl = entry.data.image
   : `${siteUrl}/images/hero.webp`;
 
 // Related articles come from the SERVED locale's pool — on a fallback page
-// (locale=en serving Chinese) the requested-locale pool doesn't contain
-// this entry's siblings and "Related" would silently disappear.
+// (URL locale differs from servedLocale) the requested-locale pool doesn't
+// contain this entry's siblings and "Related" would silently disappear.
 const related = await getRelatedEntries(entry, servedLocale, 3);
 
 // Visible codes FAQ — same strings feed faqPageJsonLd (marking up invisible
@@ -201,7 +203,7 @@ const jsonLd = [
       <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground">
         <span class="inline-flex items-center gap-1">
           <Icon name="lucide:calendar" class="h-3.5 w-3.5" />
-          {entry.data.date.toLocaleDateString(displayLocale, { timeZone: 'UTC' })}
+          {entry.data.date.toLocaleDateString(servedLocale, { timeZone: 'UTC' })}
         </span>
         {entry.data.gameVersion && (
           <span
@@ -231,7 +233,7 @@ const jsonLd = [
           entry.data.lastModified && (
             <span class="inline-flex items-center gap-1">
               <Icon name="lucide:refresh-cw" class="h-3.5 w-3.5" />
-              {shared.lastUpdated}: {entry.data.lastModified.toLocaleDateString(displayLocale, { timeZone: 'UTC' })}
+              {shared.lastUpdated}: {entry.data.lastModified.toLocaleDateString(servedLocale, { timeZone: 'UTC' })}
             </span>
           )
         }
@@ -290,7 +292,7 @@ const jsonLd = [
       <aside class="mt-4 flex items-start gap-2 rounded-lg border border-amber-500/40 bg-amber-500/10 p-3 text-sm text-foreground" role="note">
         <Icon name="lucide:alert-triangle" class="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
         <p>
-          {shared.possiblyOutdated} {(entry.data.lastModified ?? entry.data.date).toLocaleDateString(displayLocale, { timeZone: 'UTC' })}
+          {shared.possiblyOutdated} {(entry.data.lastModified ?? entry.data.date).toLocaleDateString(servedLocale, { timeZone: 'UTC' })}
           {shared.outdatedNote}
         </p>
       </aside>
@@ -402,6 +404,11 @@ const jsonLd = [
       )
     }
 
+    {/* In-content ad before related articles */}
+    <InContentAd />
+    {/* Adsterra pair: 728×90 here, responsive native after the Related
+        section (end-of-content position) — same DOM order as upstream. */}
+    <AdsterraSlotPair>
     {/* Related */}
     {
       related.length > 0 && (
@@ -423,6 +430,7 @@ const jsonLd = [
         </section>
       )
     }
+    </AdsterraSlotPair>
     {/* Prev / Next within the same category */}
     {(olderEntry || newerEntry) && (
       <nav class="mt-10 grid gap-3 sm:grid-cols-2" aria-label={shared.paginationAria ?? 'Article pagination'}>
@@ -473,6 +481,10 @@ const jsonLd = [
 
     {/* Affiliate suggestions — config empty = component renders nothing (v2.0) */}
     <AffiliateSuggestion locale={locale} category={entry.data.category} />
+
+    {/* Adsterra 320×50 bottom anchor — mobile only, dismissible, consent-gated;
+        env empty = renders nothing (zero-ad fork contract). */}
+    <MobileAnchorAd />
 
   </article>
     {/* Desktop TOC — sticky, between article and sidebar */}

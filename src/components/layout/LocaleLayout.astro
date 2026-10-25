@@ -8,9 +8,9 @@
 import BaseLayout from './BaseLayout.astro';
 import SiteHeader from '~/components/header/SiteHeader.astro';
 import SiteFooter from '~/components/footer/SiteFooter.astro';
-import { defaultLocale, type Locale } from '~/i18n/routing';
+import StickyBanner from '~/components/ads/StickyBanner.astro';
+import { type Locale } from '~/i18n/routing';
 import { getUi } from '~/i18n/ui';
-import { siteUrl } from '~/config/site';
 
 interface Props {
   locale: Locale;
@@ -25,7 +25,7 @@ interface Props {
   availableLocales?: readonly Locale[];
   /** Locale of the MAIN content (servedLocale) — fixes <html lang> on fallback pages. */
   contentLocale?: Locale;
-  /** Canonical URL override for retained locale aliases. */
+  /** Optional canonical URL override (defaults to the current URL). */
   canonicalUrl?: string;
   /** Real og:image dimensions (px) — forwarded to BaseLayout. */
   ogImageWidth?: number;
@@ -44,20 +44,14 @@ const {
 } = Astro.props;
 const currentPath = Astro.url.pathname;
 const shared = getUi(locale).shared;
-const mainContentLocale =
-  contentLocale ?? (locale === 'en' && defaultLocale !== 'en' ? defaultLocale : locale);
-const isDefaultContentAlias = locale === 'en' && mainContentLocale === defaultLocale;
-const aliasCanonicalUrl =
-  isDefaultContentAlias && !canonicalUrl
-    ? new URL(currentPath.replace(/^\/en(?=\/|$)/, '') || '/', siteUrl).href
-    : canonicalUrl;
+const mainContentLocale = contentLocale ?? locale;
 ---
 
 <BaseLayout
   locale={locale}
   contentLocale={mainContentLocale}
-  canonicalUrl={aliasCanonicalUrl}
-  noindex={noindex || isDefaultContentAlias}
+  canonicalUrl={canonicalUrl}
+  noindex={noindex}
   {...rest}
 >
   {/* Skip-to-content — first focusable element (WCAG 2.4.1). */}
@@ -68,6 +62,8 @@ const aliasCanonicalUrl =
     {shared.skipToContent ?? 'Skip to content'}
   </a>
   <SiteHeader locale={locale} currentPath={currentPath} availableLocales={availableLocales} />
+  {/* Sticky leaderboard (AdSense, desktop only, dismissible) — env empty = nothing rendered. */}
+  <StickyBanner />
   <main id="main" class="mx-auto min-h-[calc(100vh-3.5rem)] max-w-7xl px-4 py-8">
     <slot />
   </main>

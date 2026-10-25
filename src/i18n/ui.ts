@@ -20,7 +20,7 @@ import nl from '~/locales/nl.json';
 import zhHant from '~/locales/zh-hant.json';
 import ru from '~/locales/ru.json';
 
-import { defaultLocale, isLocale, type Locale } from './routing';
+import { isLocale, type Locale } from './routing';
 
 const messages: Record<Locale, Record<string, unknown>> = {
   en: en as Record<string, unknown>,
@@ -98,15 +98,12 @@ const uiCache = new Map<Locale, typeof en>();
 
 export function getUi(locale: string): typeof en {
   if (isLocale(locale)) {
-    // Non-default prefixes are retained as aliases on this single-language site.
-    const sourceLocale =
-      locale === 'en' && defaultLocale !== 'en' ? defaultLocale : locale;
-    const cached = uiCache.get(sourceLocale);
+    const cached = uiCache.get(locale);
     if (cached) return cached;
     const merged = deepFreeze(
-      deepMerge(en as Record<string, unknown>, messages[sourceLocale]),
+      deepMerge(en as Record<string, unknown>, messages[locale]),
     ) as typeof en;
-    uiCache.set(sourceLocale, merged);
+    uiCache.set(locale, merged);
     return merged;
   }
   return en;

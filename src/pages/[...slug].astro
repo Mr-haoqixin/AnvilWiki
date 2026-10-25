@@ -12,6 +12,13 @@ import ListPage from '~/components/article/ListPage.astro';
 import ArticlePage from '~/components/article/ArticlePage.astro';
 import { CONTENT_TYPES } from '~/config/navigation';
 import { defaultLocale, type Locale } from '~/i18n/routing';
+import {
+  categoryCoverageMap,
+  combineKeys,
+  entryCoverageMap,
+  envFingerprint,
+  localeRollup,
+} from '~/lib/build-cache';
 import { getEntryWithFallback, localesForEntry, localesForCategory, parseEntryId, type ResolvedEntry } from '~/lib/content';
 import { detailPath, languageAlternates, listPath } from '~/lib/url';
 
@@ -19,20 +26,36 @@ export async function getStaticPaths() {
   const { getCollection } = await import('astro:content');
   const all = await getCollection('wiki');
   const isDev = import.meta.env.DEV;
+  const published = all.filter((e) => isDev || !e.data.draft);
 
-  const paths: Array<{ params: { slug: string } }> = [];
+  // cacheKey inputs (experimental.incrementalBuild) — Astro's module-graph
+  // hash covers code + locale JSON; these add content digests, same-locale
+  // coupling, hreflang coverage and env. See ~/lib/build-cache for the
+  // granularity trade-off.
+  const env = envFingerprint(import.meta.env as Record<string, unknown>);
+  const enRollup = localeRollup(defaultLocale, published);
+  const entryCoverage = entryCoverageMap(published);
+  const categoryCoverage = categoryCoverageMap(published);
+
+  const paths: Array<{ params: { slug: string }; cacheKey: string }> = [];
 
   // List page paths: one per category (English default locale).
   for (const ct of CONTENT_TYPES) {
-    paths.push({ params: { slug: ct } });
+    paths.push({
+      params: { slug: ct },
+      cacheKey: combineKeys('list', defaultLocale, ct, enRollup, categoryCoverage.get(ct) ?? '', env),
+    });
   }
 
   // Article paths: one per English MDX. Drafts are dev-only (never built).
-  for (const entry of all) {
-    if (entry.data.draft && !isDev) continue;
+  for (const entry of published) {
     const parsed = parseEntryId(entry.id);
     if (!parsed || parsed.locale !== defaultLocale) continue;
-    paths.push({ params: { slug: `${parsed.category}/${parsed.slug}` } });
+    const id = `${parsed.category}/${parsed.slug}`;
+    paths.push({
+      params: { slug: id },
+      cacheKey: combineKeys('article', defaultLocale, id, entry.digest ?? '', enRollup, entryCoverage.get(id) ?? '', env),
+    });
   }
 
   return paths;
