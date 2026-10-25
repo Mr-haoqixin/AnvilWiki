@@ -51,6 +51,13 @@ for (const file of htmlFiles) {
 }
 
 const HREF_RE = /href="(\/[^"]*)"/g;
+const decodeHref = (href: string): string => {
+  try {
+    return decodeURIComponent(href);
+  } catch {
+    return href;
+  }
+};
 const broken = new Map<string, string[]>(); // link -> [pages...]
 const soft404: string[] = []; // pages whose entire body is "Not Found"
 let checked = 0;
@@ -64,7 +71,7 @@ for (const file of htmlFiles) {
   if (src.trim() === 'Not Found') soft404.push(pagePath);
   let m: RegExpExecArray | null;
   while ((m = HREF_RE.exec(src)) !== null) {
-    const href = m[1];
+    const href = decodeHref(m[1]);
     // Skip asset-like and non-page links — the extension allowlist is shared
     // with check-content (lib/asset-extensions). This file's old local copy
     // had drifted from check-content's, so direct mp4/pdf/zip/webm links

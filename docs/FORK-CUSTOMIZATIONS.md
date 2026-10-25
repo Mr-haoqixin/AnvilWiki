@@ -52,13 +52,42 @@ git switch wiki/20261012
 git merge --ff-only sync/vX.Y.Z
 ```
 
-## 4. 已知遗留（非合并引入）
+## 4. 内容同步与已知遗留
 
-- `pnpm check-content`：26 个 zh 页面正文链接缺 `zh/` 前缀。
-- `pnpm check-links`：628 条跨语言正文链接未带当前语言前缀（主要在 de/es/fr/nl/pt/ru 机器翻译页）。
-- 修复方向：按源页面 locale 批量补前缀；目标页在该语言不存在时改链到英文并标注语言。
+内容层已按 weki.gg 的 en / zh-hans 页面补齐，并生成 8 个非 en/zh 语言的索引页。数据与生成脚本：
 
-## 5. 备份
+```powershell
+# 1) 抓取事实字段（只存短字段，正文由本站改写）
+node scripts/weki-scrape.mjs --only=quests
+node scripts/weki-scrape.mjs --only=items --items
 
-- 合并前 tag：`backup/pre-upstream-v2.38`
-- 合并分支：`sync/v2.38.0`（保留，便于回溯）
+# 2) 生成/补全 en、zh 详情页和总览页
+node scripts/weki-generate.mjs
+node scripts/weki-generate.mjs --only=directories
+
+# 3) 生成其余 8 个语言的本地化索引页
+node scripts/weki-localized.mjs
+
+pnpm check-content
+pnpm typecheck
+pnpm lint
+pnpm test
+pnpm build
+pnpm check-links
+```
+
+- `pnpm check-links`：已修复百分号编码 CJK 链接的误报；当前 0 条断链。
+- `pnpm check-content`：当前 1212 个 MDX 文件全部通过，0 条错误/警告。
+- 非 en/zh 语言目前提供本地化标题、导语和表头的索引页；详情页回退到英文或中文内容。
+- 部分任务步骤解析由于来源页面编号重复（如选择分支编号）导致步骤显示异常（出现重复或错乱的步骤号）。为直接解决此问题，对以下任务在正文中补充了来源页面的步骤说明图片：
+  - `sorrowspore-experience`
+  - `fairy-ring`
+  - `forests-and-fairies`
+  （图片取自对应来源页面的 og:image 或首图，内嵌于正文，帮助用户直观查看正确步骤。）
+- `pnpm check-content`：当前 1212 个 MDX 文件全部通过，0 条错误/警告。
+- 非 en/zh 语言目前提供本地化标题、导语和表头的索引页；详情页回退到英文或中文内容。
+- 部分任务步骤解析由于来源页面编号重复（如选择分支编号）导致步骤显示异常（出现重复或错乱的步骤号）。为直接解决此问题，对以下任务在正文中补充了来源页面的步骤说明图片：
+  - `sorrowspore-experience`
+  - `fairy-ring`
+  - `forests-and-fairies`
+  （图片取自对应来源页面的 og:image 或首图，内嵌于正文，帮助用户直观查看正确步骤。）
