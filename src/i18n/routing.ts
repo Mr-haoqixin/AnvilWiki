@@ -13,7 +13,10 @@
  * This is configured in astro.config.ts via `i18n.routing.prefixDefaultLocale: false`.
  */
 
-export const locales = ['en', 'zh', 'ja', 'es', 'fr', 'de', 'pt', 'nl', 'zh-hant', 'ru'] as const;
+// Steam ships 8 in-game languages (en/zh-hans/zh-hant/ja/fr/de/ru/pt-BR);
+// es and nl were retired 2026-10-26 (no in-game counterpart) — their URLs
+// 301 to the unprefixed default-locale pages via public/_redirects.
+export const locales = ['en', 'zh', 'ja', 'fr', 'de', 'pt', 'zh-hant', 'ru'] as const;
 
 export type Locale = (typeof locales)[number];
 
@@ -24,11 +27,9 @@ export const LOCALE_LABELS: Record<Locale, string> = {
   en: 'English',
   zh: '简体中文',
   ja: '日本語',
-  es: 'Español',
   fr: 'Français',
   de: 'Deutsch',
   pt: 'Português',
-  nl: 'Nederlands',
   'zh-hant': '繁體中文',
   ru: 'Русский',
 };
@@ -45,11 +46,9 @@ export const OG_LOCALE_MAP: Record<string, string> = {
   en: 'en_US',
   zh: 'zh_CN',
   ja: 'ja_JP',
-  es: 'es_ES',
   fr: 'fr_FR',
   de: 'de_DE',
-  pt: 'pt_PT',
-  nl: 'nl_NL',
+  pt: 'pt_BR',
   'zh-hant': 'zh_TW',
   ru: 'ru_RU',
 };

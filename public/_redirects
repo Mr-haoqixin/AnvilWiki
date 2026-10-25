@@ -1,3 +1,9 @@
 # Default-locale alias for Cloudflare Pages.
 /en/ /
 /en /
+# es/nl retired 2026-10-26 (Steam ships 8 in-game languages without them) —
+# keep their indexed URLs alive by 301ing to the unprefixed default pages.
+/es / 301
+/es/* /:splat 301
+/nl / 301
+/nl/* /:splat 301
