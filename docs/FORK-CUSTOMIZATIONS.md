@@ -9,13 +9,13 @@
 | --- | --- |
 | 上游 remote | `upstream` → `https://github.com/PNGTRID/AnvilWiki.git` |
 | 当前同步基线 | `v2.38.0`（2026-10-22，已合入 CM `0bb4373`） |
-| 默认语言 | `en`（根路径无前缀）；`zh` 及其余 8 个语言带前缀 |
-| 语言列表 | `src/i18n/routing.ts`：en, zh, ja, es, fr, de, pt, nl, zh-hant, ru |
+| 默认语言 | `en`（根路径无前缀）；`zh` 及其余 6 个语言带前缀 |
+| 语言列表 | `src/i18n/routing.ts`：en, zh, ja, fr, de, pt, zh-hant, ru（es/nl 已于 2026-10-26 移除——Steam 游戏内 8 语言不含；旧 URL 经 `_redirects` 301 到无前缀页） |
 | Landing 层 | 已删除（`landingLinkEnabled = false`）；保留 `RootGateway.astro` 仅为 import 存活 |
 | `wrangler.toml` | 已删除，平台 env 走 Cloudflare Dashboard |
 | 广告 | `public/ads/*.html` 为完整 HTML 文档（noindex + data-pagefind-ignore），env 门控 |
 | 域名 | `SITE_URL` env 优先，`src/config/site.ts` 为回退；统一走 `siteUrl`/`siteHost` |
-| 封面 | `gen-covers` 输出 WebP；`postbuild-imgckr.mjs` 处理 imgckr 图片 |
+| 封面 | `gen-covers` 输出 WebP；正文图片一律本地化（`public/images/external/`，由 `scripts/localize-images.mjs` 一次性迁移；check-content 规则 9 禁止外链图） |
 | 法务页 | `LegalContent.astro` 为本站中文文案 |
 
 ## 2. 冲突处理规则
@@ -26,14 +26,14 @@
 | `src/components/RootGateway.astro` | **永不删除**（`index.astro` 静态 import） |
 | `src/config/project.ts` | 取上游后确认 `landingLinkEnabled = false` |
 | `astro.config.ts` | 上游为底；保留 `siteUrl`、删除 handbook lastmod、保留 `/en` sitemap 过滤 |
-| `public/_redirects` | 保留本站两行（`/en/ /`、`/en /`）；**禁止**引入上游 `/ → /zh/landing/` |
+| `public/_redirects` | 保留本站 6 条（`/en/ /`、`/en /` + es/nl 四条 301）；**禁止**引入上游 `/ → /zh/landing/` |
 | landing 路由 / `demo.astro` | 保持删除（上游 modify/delete 冲突时用 `git rm`） |
 | `wrangler.toml` | 保持删除 |
 | `src/content/wiki/*/codes/all-codes.mdx` | 保持删除（本站无 codes 页） |
 | `src/locales/{en,ja}.json` | 保留本站 `home.explore` 内容；上游新增 UI key 才取上游 |
 | `LegalContent.astro` | 取上游逻辑/修复，贴回本站中文法务文案 |
 | `SiteHeader.astro` | 保留本站紧凑语言切换布局；路径计算取上游 `homeUrl` 版本 |
-| `tests/*` | 断言必须匹配本站「en 默认 + 10 语言 + 无 landing + 有广告」；不得为变绿删测试 |
+| `tests/*` | 断言必须匹配本站「en 默认 + 8 语言 + 无 landing + 有广告」；不得为变绿删测试 |
 
 ## 3. 每次同步步骤
 

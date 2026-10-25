@@ -43,7 +43,7 @@ description: 从用户给的关键词清单批量生成一批符合 AnvilWiki sc
   2. 每个 H2 后第一段 40-60 词直答（Quick Answer / AI 摘要候选）
   3. 数据进 Markdown 表格，步骤用有序列表
   4. 至少 1 条内链指向**真实存在**的相关文章（`grep` 或 `pnpm build` 后 `pnpm check-links` 验证），无合适页面就不加
-  5. frontmatter 硬规则同 anvil-new-article：description 40-165 字符（按解析后计）、单引号值内 `'` 必须写成 `''`、文件不得带 BOM、summary 40-60 词直答、tags 复用已有词汇表、不写 H1 —— `pnpm check-content` 会确定性拦截长度/转义/BOM 三类问题，先于 build 报错
+  5. frontmatter 硬规则同 anvil-new-article：description 40-165 字符（按解析后计）、单引号值内 `'` 必须写成 `''`、文件不得带 BOM、summary 40-60 词直答、tags 复用已有词汇表、不写 H1、正文图片一律本地路径（禁外链图床） —— `pnpm check-content` 会确定性拦截长度/转义/BOM/外链图四类问题，先于 build 报错
   6. 非默认语言（如 ja）正文里的站内链接必须带语言前缀（`/ja/bosses/x/`）——裸 `/bosses/x/` 会静默跳到英文页
 - codes 页额外：`codes:` 数组逐条登记（code/reward/status/expiryDate/source），正文只写怎么兑换
 - bosses 页额外：`boss:` 数据卡（hp/weakness/resistant/location）+ 按阶段 H2

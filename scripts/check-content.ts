@@ -28,6 +28,11 @@
  *      shipped real build breaks from AI-written batches (2026-10-13/20
  *      cohorts) whose failures surfaced only at build time with cryptic
  *      messages — this rule catches them at the generation-stage self-check.
+ *   9. No external image hotlinks in bodies (http(s) image sources must be
+ *      cached under public/images/ and referenced by local path). Every
+ *      hotlink is a chronic single point of failure held by a third party
+ *      (seven refs were already 404 at source when localize-images.mjs ran
+ *      on 2026-10-26) and check-links cannot see them.
  *
  * Style: warnings don't fail the build; errors exit 1 (can gate CI).
  *
@@ -94,11 +99,21 @@ for (const file of files) {
       prevLevel = level;
     }
 
-    // 3. Images without alt text (MD image syntax).
+    // 3. Images without alt text (MD image syntax) + 9. external image
+    //    hotlinks (MD syntax AND raw <img> tags — localize first, see
+    //    scripts/localize-images.mjs).
     const img = line.match(/!\[([^\]]*)\]\(([^)]+)\)/g) ?? [];
     for (const m of img) {
       const alt = m.match(/!\[([^\]]*)\]/)?.[1] ?? '';
       if (!alt.trim()) error(file, ln, `image without alt text: ${m.slice(0, 60)}`);
+      const src = m.match(/\]\(([^)]+)\)/)?.[1] ?? '';
+      if (/^https?:\/\//i.test(src)) {
+        error(file, ln, `external image hotlink is forbidden (cache it under public/images/ first): ${src.slice(0, 60)}`);
+      }
+    }
+    const imgTag = line.match(/<img\s[^>]*src="([^"]+)"/i);
+    if (imgTag && /^https?:\/\//i.test(imgTag[1])) {
+      error(file, ln, `external image hotlink is forbidden (cache it under public/images/ first): ${imgTag[1].slice(0, 60)}`);
     }
 
     // 4 + 5 + 6. Internal MD page links: trailing slash, locale prefix, and

@@ -80,7 +80,7 @@ description: 从用户提供的素材(口述要点/YouTube 视频/别的攻略/�
   2. 位置:想放在某个小节下面,就在该小节末尾 `import Video from '~/components/mdx/Video.astro'` + `<Video id="..." title="..."/>`(与 Callout 同款心智);只想文末展示则只写 frontmatter(内联过的 id 不会在文末重复渲染)
 - 图片**四条规则**(媒体密度是排名因素,纯文字页没有竞争力):
   1. **封面必配**:每篇 frontmatter `image`(codes 页尤其重要——分享卡片辨识度),放 `src/assets/covers/`,**1200×675**(v2.0 起的 og:image 标准,Google Discover 大图预览要求 ≥1200px 宽;用 `pnpm gen-covers` 可从标题自动生成品牌色封面)
-  2. **正文内联图**:`![alt 描述](/images/articles/xxx.png)`,图放 `public/images/articles/`,建议 16:9(globals.css 已预留 16:9 盒子,零 CLS)
+  2. **正文内联图**:`![alt 描述](/images/articles/xxx.png)`,图放 `public/images/articles/`,建议 16:9(globals.css 已预留 16:9 盒子,零 CLS)。**禁止外链图床**——先下载进 `public/images/` 再用本地路径(check-content 规则 9 拦截 http 图源)
   3. **gallery 机制图**:boss/路线/流程类文章加 frontmatter `gallery`(2-4 张,每张配 `caption` + `alt`)
   4. **密度参考**:boss 攻略 ≥1 视频 + 2-4 张 gallery;教程每个大节可配 1 张内联图;tier list 重点条目配 1 张卡片图。示范参考:`en/bosses/stormcaller.mdx`(gallery 机制图)、`en/guides/weapon-tier-list.mdx`(内联卡片图)、`en/guides/beginner-guide.mdx`(gallery 路线图)
 
