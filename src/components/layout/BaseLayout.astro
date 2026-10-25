@@ -128,6 +128,10 @@ const xDefaultHref = defaultAlt
 // Optional analytics / verification (env-var gated — empty = not injected).
 const gaId = import.meta.env.PUBLIC_GA_ID as string | undefined;
 const adsenseClient = import.meta.env.PUBLIC_ADSENSE_CLIENT as string | undefined;
+// Microsoft Clarity (session heatmaps — cookie/localStorage based, so it
+// rides the same consent gate as GA/AdSense). Previously hardcoded inline
+// and loaded unconditionally; see __awLoadTrackers below.
+const clarityId = import.meta.env.PUBLIC_CLARITY_ID as string | undefined;
 const cfBeaconToken = import.meta.env.PUBLIC_CF_BEACON_TOKEN as string | undefined;
 const vibecafeProductId = import.meta.env.PUBLIC_VIBECAFE_PRODUCT_ID as string | undefined;
 const vibecafeAuthKey = import.meta.env.PUBLIC_VIBECAFE_AUTH_KEY as string | undefined;
@@ -244,13 +248,13 @@ const privacyLabel = consent?.privacyLabel ?? footerStrings.privacyPolicy ?? 'Pr
     {gscVerification && <meta name="google-site-verification" content={gscVerification} />}
 
     {/*
-      Analytics / AdSense are injected DYNAMICALLY (consent-gated).
+      Analytics / AdSense / Clarity are injected DYNAMICALLY (consent-gated).
       BaseLayout only defines the loader; CookieConsent.astro calls it after
       the visitor accepts. See GDPR note in AGENTS.md. No tracking env vars
       → this block renders nothing → zero JS.
     */}
-    {(gaId || adsenseClient) && (
-      <script is:inline define:vars={{ gaId, adsenseClient }}>
+    {(gaId || adsenseClient || clarityId) && (
+      <script is:inline define:vars={{ gaId, adsenseClient, clarityId }}>
         window.__awLoadTrackers = () => {
           if (window.__awTrackersLoaded) return;
           window.__awTrackersLoaded = true;
@@ -273,6 +277,12 @@ const privacyLabel = consent?.privacyLabel ?? footerStrings.privacyPolicy ?? 'Pr
             s.src =
               'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' +
               adsenseClient;
+            document.head.appendChild(s);
+          }
+          if (clarityId) {
+            const s = document.createElement('script');
+            s.async = true;
+            s.src = 'https://www.clarity.ms/tag/' + clarityId;
             document.head.appendChild(s);
           }
         };
@@ -351,20 +361,14 @@ const privacyLabel = consent?.privacyLabel ?? footerStrings.privacyPolicy ?? 'Pr
         });
       })();
     </script>
-    <script type="text/javascript">
-        (function(c,l,a,r,i,t,y){
-            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-        })(window, document, "clarity", "script", "yusju3ox3y");
-    </script>
   </head>
   <body class="min-h-screen bg-background text-foreground antialiased">
     {aiDisclaimer && <Fragment set:html={`<!-- AI Content Disclaimer (${locale}): ${aiDisclaimer} -->`} />}
     <slot />
     {/* Consent banner — only rendered when tracking env vars are set
-        (same condition as AdsterraSlot/MobileAnchorAd consent gating). */}
-    {(gaId || adsenseClient) && (
+        (same condition family as the loader above; Clarity is cookie-based
+        too, so a Clarity-only site still owes the visitor the choice). */}
+    {(gaId || adsenseClient || clarityId) && (
       <CookieConsent
         labels={{
           title: consentLabels.title,
