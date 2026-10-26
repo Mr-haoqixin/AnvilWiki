@@ -14,6 +14,14 @@
  *
  * Gated on PUBLIC_ADSENSE_CLIENT + PUBLIC_ADSENSE_SLOT_STICKY:
  * either empty = nothing rendered.
+ *
+ * Ad-free routes: Google's AdSense placement policy discourages ads on
+ * low-value/legal pages (privacy policy, terms, copyright, contact form).
+ * LocaleLayout mounts this banner site-wide and legal pages flow through
+ * LegalPage → LocaleLayout, so the exclusion lives here. The regex allows
+ * an optional locale segment (/zh/privacy-policy/…) — a plain startsWith
+ * check missed every non-default-locale legal page (caught by the dist
+ * audit: zh privacy still shipped the banner).
  */
 import { Icon } from 'astro-icon/components';
 import AdSenseSlot from './AdSenseSlot.astro';
@@ -21,7 +29,11 @@ import { currentSharedStrings } from '~/lib/shared-ui';
 
 const client = import.meta.env.PUBLIC_ADSENSE_CLIENT as string | undefined;
 const slot = import.meta.env.PUBLIC_ADSENSE_SLOT_STICKY as string | undefined;
-const show = !!(client && slot);
+const AD_FREE_PAGES = ['privacy-policy', 'terms-of-service', 'copyright', 'contact'];
+const adFreePage = AD_FREE_PAGES.some((p) =>
+  new RegExp(`^/(?:[a-z-]+/)?${p}/`).test(Astro.url.pathname),
+);
+const show = !!(client && slot) && !adFreePage;
 const sharedStrings = currentSharedStrings(Astro.currentLocale);
 const closeAd = sharedStrings.closeAd ?? 'Close ad';
 ---
