@@ -63,6 +63,41 @@
       "code": "版本"
     },
     "codesFaq": [],
+    "calendarPlanner": {
+      "title": "按遊戲日期規劃",
+      "hint": "每季 14 天，從星期日開始。選擇日期後可查看本頁記錄的天氣、固定活動和每週安排。",
+      "seasonLabel": "季節",
+      "dayLabel": "日期",
+      "dayHeading": "{season}第 {day} 天 · {weekday}",
+      "weekdayLabel": "星期",
+      "weatherLabel": "天氣",
+      "eventLabel": "固定活動",
+      "timeLabel": "時間",
+      "weeklyTitle": "每週安排",
+      "noEntry": "本頁日曆表未列出這一天的天氣或固定活動。",
+      "noJsMessage": "如果 JavaScript 無法使用，請查看下方的完整日曆表。",
+      "dynamicNote": "劇情觸發活動取決於信件和遊戲進度，完整列表見下文。",
+      "seasons": ["春季", "夏季", "秋季", "冬季"],
+      "weekdays": ["週日", "週一", "週二", "週三", "週四", "週五", "週六"],
+      "weeklySchedule": [
+        "加入種子共享社後有種子箱；實踐工坊開放。",
+        "解鎖後有宿舍泥餅箱；磨坊主營業。",
+        "實踐工坊和磨坊主營業。",
+        "沒有固定的每週商店安排。",
+        "實踐工坊和磨坊主營業。",
+        "實踐工坊和磨坊主營業。",
+        "磨坊主營業。"
+      ]
+    },
+    "itemTableControls": {
+      "searchLabel": "搜尋物品",
+      "searchPlaceholder": "名稱、價格或說明",
+      "sortLabel": "依價格排序",
+      "sortOriginal": "維持原順序",
+      "sortLowest": "價格由低至高",
+      "sortHighest": "價格由高至低",
+      "count": "顯示 {visible} / {total} 件物品"
+    },
     "possiblyOutdated": "本頁資料最後核對於",
     "outdatedNote": "；後續更新可能改變遊戲內容。",
     "prevArticle": "上一篇",

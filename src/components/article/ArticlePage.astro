@@ -25,6 +25,7 @@ import ShareButton from '~/components/article/ShareButton.astro';
 import BossStatCard from '~/components/article/BossStatCard.astro';
 import CodesTable from '~/components/article/CodesTable.astro';
 import ArticleGallery from '~/components/article/ArticleGallery.astro';
+import ItemTableControls from '~/components/article/ItemTableControls.astro';
 import BackToTop from '~/components/article/BackToTop.astro';
 import WikiSidebar from '~/components/sidebar/WikiSidebar.astro';
 import { NAVIGATION_CONFIG } from '~/config/navigation';
@@ -62,6 +63,7 @@ const navItem = NAVIGATION_CONFIG.find((n) => n.key === entry.data.category);
 const parsed = parseEntryId(entry.id);
 const slug = parsed?.slug ?? '';
 const category = entry.data.category;
+const hasItemCatalogControls = category === 'items' && slug.startsWith('items-') && slug !== 'items-directory';
 const categoryLabel = overview?.overviewTitle ?? nav[category] ?? category;
 
 const coverUrl = entry.data.image
@@ -368,6 +370,7 @@ const jsonLd = [
       data-pagefind-body
     >
       <Content />
+      {hasItemCatalogControls && <ItemTableControls locale={locale} />}
     </div>
 
     {/* Fallback videos — only IDs NOT inlined in the body via <Video/>.

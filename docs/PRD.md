@@ -325,8 +325,8 @@ anvilwiki/
 │   │   ├── header/               # SiteHeader / SearchButton(Pagefind) / LanguageSwitcher / ThemeToggle
 │   │   ├── footer/ sidebar/      # SiteFooter / WikiSidebar
 │   │   ├── home/                 # 首页 6 区块 + explore 模块（displayType 分发）
-│   │   ├── article/              # ArticlePage / ListPage / CodesTable / TagListPage / Comments 等
-│   │   ├── mdx/                  # ⭐ MDX 组件词汇表：CodeBlock/StatBar/Callout/Accordion/Video/AffiliateLink
+│   │   ├── article/              # ArticlePage / ListPage / ItemTableControls / CodesTable / TagListPage 等
+│   │   ├── mdx/                  # ⭐ MDX 组件词汇表：CodeBlock/StatBar/Callout/Accordion/Video/AffiliateLink/CalendarPlanner
 │   │   ├── seo/ ads/ video/      # JsonLd / AdSenseSlot×3 位 / LazyYouTube 门面
 │   │   └── landing/              # 项目官网组件（fork 清理）
 │   ├── config/                   # ⭐ 配置层（fork 改这里）
@@ -663,6 +663,7 @@ export const defaultLocale: Locale = 'en';
 **渲染**：
 - H1 = `entry.data.title`（MDX 正文不写 H1）。
 - MDX body 通过 `entry.render()` 渲染。
+- 物品分类图鉴文章（`items-*`）在已有表格上增强客户端搜索与价格排序；表格仍是唯一数据源，禁用 JavaScript 时保留完整静态内容。
 - 面包屑：首页 → 分类 → 本篇。
 - 元信息：发布日期、最后修改、阅读时间。
 - 相关文章：按 `tags` 匹配，最多 3 篇。

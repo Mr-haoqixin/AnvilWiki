@@ -63,6 +63,41 @@
       "code": "コード"
     },
     "codesFaq": [],
+    "calendarPlanner": {
+      "title": "学園の日程を計画",
+      "hint": "各季節は14日間で日曜日から始まります。日付を選ぶと、掲載済みの天気、固定イベント、週間予定を確認できます。",
+      "seasonLabel": "季節",
+      "dayLabel": "日",
+      "dayHeading": "{season} {day}日目 · {weekday}",
+      "weekdayLabel": "曜日",
+      "weatherLabel": "天気",
+      "eventLabel": "固定イベント",
+      "timeLabel": "時間",
+      "weeklyTitle": "週間予定",
+      "noEntry": "この日付の天気や固定イベントはカレンダー表に記載されていません。",
+      "noJsMessage": "JavaScript が利用できない場合は、下の完全なカレンダー表をご覧ください。",
+      "dynamicNote": "ストーリーイベントは手紙や進行状況によって異なります。詳しくは下の一覧をご覧ください。",
+      "seasons": ["春", "夏", "秋", "冬"],
+      "weekdays": ["日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日"],
+      "weeklySchedule": [
+        "種苗協同組合の加入後は種の箱が届き、実践工房も営業します。",
+        "解放後は寮のマッドパイ箱が届き、粉ひき屋も営業します。",
+        "実践工房と粉ひき屋が営業します。",
+        "定期営業の店はありません。",
+        "実践工房と粉ひき屋が営業します。",
+        "実践工房と粉ひき屋が営業します。",
+        "粉ひき屋が営業します。"
+      ]
+    },
+    "itemTableControls": {
+      "searchLabel": "アイテムを検索",
+      "searchPlaceholder": "名前、価格、メモ",
+      "sortLabel": "価格で並べ替え",
+      "sortOriginal": "元の順序",
+      "sortLowest": "価格の安い順",
+      "sortHighest": "価格の高い順",
+      "count": "{total}件中{visible}件を表示"
+    },
     "possiblyOutdated": "このガイドが最後に確認されたのは",
     "outdatedNote": "— それ以降にゲームが変更された可能性があります。一部の詳細が古くなっている可能性があります。",
     "prevArticle": "前へ",

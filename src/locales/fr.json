@@ -63,6 +63,41 @@
       "code": "Code"
     },
     "codesFaq": [],
+    "calendarPlanner": {
+      "title": "Planifier une journée d'école",
+      "hint": "Chaque saison compte 14 jours et commence un dimanche. Choisissez une date pour consulter la météo, les activités fixes et le programme hebdomadaire indiqués.",
+      "seasonLabel": "Saison",
+      "dayLabel": "Jour",
+      "dayHeading": "{season} · Jour {day} · {weekday}",
+      "weekdayLabel": "Jour de la semaine",
+      "weatherLabel": "Météo",
+      "eventLabel": "Activité fixe",
+      "timeLabel": "Horaire",
+      "weeklyTitle": "Rendez-vous hebdomadaires",
+      "noEntry": "Le tableau du calendrier n'indique ni météo ni activité fixe pour cette date.",
+      "noJsMessage": "Si JavaScript est indisponible, consultez les tableaux complets ci-dessous.",
+      "dynamicNote": "Les événements liés à l'histoire dépendent des lettres et de la progression ; voir la liste complète ci-dessous.",
+      "seasons": ["Printemps", "Été", "Automne", "Hiver"],
+      "weekdays": ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"],
+      "weeklySchedule": [
+        "Boîte de la coopérative de graines (après adhésion) ; atelier ouvert.",
+        "Boîte de pâtés du dortoir (après déblocage) ; meunier présent.",
+        "Atelier et meunier ouverts.",
+        "Aucune boutique hebdomadaire fixe.",
+        "Atelier et meunier ouverts.",
+        "Atelier et meunier ouverts.",
+        "Meunier présent."
+      ]
+    },
+    "itemTableControls": {
+      "searchLabel": "Rechercher des objets",
+      "searchPlaceholder": "Nom, prix ou notes",
+      "sortLabel": "Trier par prix",
+      "sortOriginal": "Ordre d'origine",
+      "sortLowest": "Prix croissant",
+      "sortHighest": "Prix décroissant",
+      "count": "{visible} sur {total} objets"
+    },
     "possiblyOutdated": "Ce guide a été vérifié pour la dernière fois le",
     "outdatedNote": "— le jeu a pu changer depuis. Certains détails pourraient être obsolètes.",
     "prevArticle": "Précédent",

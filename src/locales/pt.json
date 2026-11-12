@@ -63,6 +63,41 @@
       "code": "Código"
     },
     "codesFaq": [],
+    "calendarPlanner": {
+      "title": "Planeje um dia na escola",
+      "hint": "Cada estação tem 14 dias e começa no domingo. Escolha uma data para consultar o clima, as atividades fixas e a rotina semanal listados.",
+      "seasonLabel": "Estação",
+      "dayLabel": "Dia",
+      "dayHeading": "{season} · Dia {day} · {weekday}",
+      "weekdayLabel": "Dia da semana",
+      "weatherLabel": "Clima",
+      "eventLabel": "Atividade fixa",
+      "timeLabel": "Horário",
+      "weeklyTitle": "Rotina semanal",
+      "noEntry": "A tabela do calendário não lista clima nem atividade fixa para esta data.",
+      "noJsMessage": "Se o JavaScript estiver indisponível, consulte as tabelas completas abaixo.",
+      "dynamicNote": "Eventos da história dependem das cartas e do progresso; veja a lista completa abaixo.",
+      "seasons": ["Primavera", "Verão", "Outono", "Inverno"],
+      "weekdays": ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"],
+      "weeklySchedule": [
+        "Caixa da cooperativa de sementes (após entrar); oficina aberta.",
+        "Caixa de torta de lama do dormitório (após desbloquear); moleiro aberto.",
+        "Oficina e moleiro abertos.",
+        "Sem loja com rotina semanal fixa.",
+        "Oficina e moleiro abertos.",
+        "Oficina e moleiro abertos.",
+        "Moleiro aberto."
+      ]
+    },
+    "itemTableControls": {
+      "searchLabel": "Pesquisar itens",
+      "searchPlaceholder": "Nome, preço ou observações",
+      "sortLabel": "Ordenar por preço",
+      "sortOriginal": "Ordem original",
+      "sortLowest": "Menor primeiro",
+      "sortHighest": "Maior primeiro",
+      "count": "{visible} de {total} itens"
+    },
     "possiblyOutdated": "Este guia foi verificado pela última vez em",
     "outdatedNote": "— o jogo pode ter mudado desde então. Alguns detalhes podem estar desatualizados.",
     "prevArticle": "Anterior",

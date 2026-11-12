@@ -4,11 +4,12 @@ description: 'Songs of Glimmerwick datamined calendar: 39 fixed classes/festival
 category: info
 image: '../../../../assets/covers/en-info-calendar-overview.webp'
 date: 2026-10-13
-lastModified: 2026-10-13
+lastModified: 2026-11-12
 summary: 'Songs of Glimmerwick calendar has 4 seasons of 14 days each (56 total), 39 fixed-date classes and festivals, 10 dynamic events triggered by story, teahouse shows, and weekly recurrences. Weather is fixed: 12 rain, 10 snow, 24 fog days.'
 tags: ['calendar', 'festivals', 'classes', 'weather', 'datamined']
 ---
 
+import CalendarPlanner from '~/components/mdx/CalendarPlanner.astro';
 
 ## Calendar Overview
 
@@ -16,7 +17,11 @@ Four seasons, 14 days each, 56 days total. Classes and festivals occur on fixed 
 
 Weather is the same every playthrough: **12 rain days, 10 snow days (6 heavy), 24 fog days**. Rain or snow auto-waters crops.
 
+<CalendarPlanner />
+
 ## Spring
+
+<div data-calendar-season-table="spring">
 
 | Day | Weekday | Weather | Event | Time |
 | --- | --- | --- | --- | --- |
@@ -31,7 +36,11 @@ Weather is the same every playthrough: **12 rain days, 10 snow days (6 heavy), 2
 | 13 | Fri | Fog | Market with Clover | 12:00–12:45 |
 | 14 | Sat | | **Seaflower Festival** | 08:00–16:00 |
 
+</div>
+
 ## Summer
+
+<div data-calendar-season-table="summer">
 
 | Day | Weekday | Weather | Event | Time |
 | --- | --- | --- | --- | --- |
@@ -48,7 +57,11 @@ Weather is the same every playthrough: **12 rain days, 10 snow days (6 heavy), 2
 | 13 | Fri | | **Summer Music Festival** | 08:00–23:45 |
 | 14 | Sat | Fog | Forests and Fairies | 16:00–17:15 |
 
+</div>
+
 ## Fall
+
+<div data-calendar-season-table="fall">
 
 | Day | Weekday | Weather | Event | Time |
 | --- | --- | --- | --- | --- |
@@ -64,7 +77,11 @@ Weather is the same every playthrough: **12 rain days, 10 snow days (6 heavy), 2
 | 13 | Fri | | **Pumpkin Moon Festival** | 16:00–19:55 |
 | 14 | Sat | Fog | | |
 
+</div>
+
 ## Winter
+
+<div data-calendar-season-table="winter">
 
 | Day | Weekday | Weather | Event | Time |
 | --- | --- | --- | --- | --- |
@@ -81,6 +98,8 @@ Weather is the same every playthrough: **12 rain days, 10 snow days (6 heavy), 2
 | 12 | Thu | Heavy Snow+Fog | | |
 | 13 | Fri | Fog | | |
 | 14 | Sat | | **Starry Night Celebration** | 21:00–23:00 |
+
+</div>
 
 ## Dynamic Events (10)
 
@@ -128,4 +147,3 @@ After Winter Day 14, the year enters **endless spring**: seasons stop changing, 
 - [All 44 Quests Overview](/tasks/quests-overview/)
 - [Achievements Overview](/achievements/achievements-overview/)
 - [Game Overview](/info/game-overview/)
-

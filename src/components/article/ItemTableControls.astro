@@ -1,0 +1,102 @@
+---
+import { getUi } from '~/i18n/ui';
+import type { Locale } from '~/i18n/routing';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const labels = getUi(locale).shared.itemTableControls;
+---
+
+<section
+  class="not-prose my-4 grid gap-3 rounded-lg border border-border bg-card p-4 text-card-foreground sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end"
+  data-item-table-controls
+  data-pagefind-ignore
+  hidden
+>
+  <label class="grid gap-1 text-sm font-medium">
+    {labels.searchLabel}
+    <input
+      class="min-w-0 rounded-md border border-border bg-background px-3 py-2 text-foreground"
+      type="search"
+      placeholder={labels.searchPlaceholder}
+      data-item-search
+    />
+  </label>
+  <label class="grid gap-1 text-sm font-medium">
+    {labels.sortLabel}
+    <select
+      class="rounded-md border border-border bg-background px-3 py-2 text-foreground"
+      data-item-sort
+    >
+      <option value="original">{labels.sortOriginal}</option>
+      <option value="ascending">{labels.sortLowest}</option>
+      <option value="descending">{labels.sortHighest}</option>
+    </select>
+  </label>
+  <p class="text-sm text-muted-foreground sm:col-span-2" role="status" aria-live="polite" data-item-count></p>
+</section>
+
+<script is:inline define:vars={{ countTemplate: labels.count }}>
+  const controls = document.querySelector('[data-item-table-controls]');
+  const article = controls?.closest('article');
+  const table = article?.querySelector('table');
+  const body = table?.tBodies[0];
+  const search = controls?.querySelector('[data-item-search]');
+  const sort = controls?.querySelector('[data-item-sort]');
+  const count = controls?.querySelector('[data-item-count]');
+
+  if (
+    !(controls instanceof HTMLElement) ||
+    !(table instanceof HTMLTableElement) ||
+    !(body instanceof HTMLTableSectionElement) ||
+    !(search instanceof HTMLInputElement) ||
+    !(sort instanceof HTMLSelectElement) ||
+    !(count instanceof HTMLElement)
+  ) {
+    throw new Error('ItemTableControls: expected item catalog table or controls are missing.');
+  }
+
+  const records = Array.from(body.rows).map((row, index) => {
+    const rawPrice = row.cells[1]?.textContent?.trim().replace(/,/g, '') ?? '';
+    const price = rawPrice === '' ? Number.NaN : Number(rawPrice);
+    return {
+      row,
+      index,
+      price: Number.isFinite(price) ? price : null,
+    };
+  });
+
+  table.parentElement?.insertBefore(controls, table);
+  controls.hidden = false;
+
+  const updateRows = () => {
+    const query = search.value.trim().toLocaleLowerCase();
+    const direction = sort.value;
+    const ordered = [...records].sort((a, b) => {
+      if (direction === 'original') return a.index - b.index;
+      if (a.price === null) return b.price === null ? a.index - b.index : 1;
+      if (b.price === null) return -1;
+      const difference = direction === 'ascending' ? a.price - b.price : b.price - a.price;
+      return difference || a.index - b.index;
+    });
+
+    let visible = 0;
+    for (const record of ordered) {
+      const matches = record.row.textContent.toLocaleLowerCase().includes(query);
+      record.row.hidden = !matches;
+      if (matches) visible += 1;
+      body.append(record.row);
+    }
+
+    count.textContent = countTemplate
+      .replace('{visible}', String(visible))
+      .replace('{total}', String(records.length));
+  };
+
+  search.addEventListener('input', updateRows);
+  sort.addEventListener('change', updateRows);
+  updateRows();
+</script>

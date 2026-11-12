@@ -219,3 +219,50 @@ describe('cross-script alignment contracts', () => {
     expect(content).not.toContain('(?<!!)');
   });
 });
+
+describe('bilingual item catalog links and coverage', () => {
+  const catalogSlugs = fs
+    .readdirSync(join(repoRoot, 'src', 'content', 'wiki', 'en', 'items'))
+    .filter((name) => name.startsWith('items-') && name !== 'items-directory.mdx')
+    .sort();
+
+  const rowCount = (content: string) => {
+    const lines = content.split(/\r?\n/);
+    const separatorIndex = lines.findIndex((line) => /^\|\s*-{3,}/.test(line));
+    if (separatorIndex < 0) throw new Error('Item catalog table separator was not found.');
+    let rows = 0;
+    for (let index = separatorIndex + 1; index < lines.length && lines[index].startsWith('|'); index += 1) {
+      rows += 1;
+    }
+    return rows;
+  };
+
+  test('the 14 English and Chinese category tables stay aligned at 552 entries', () => {
+    expect(catalogSlugs).toHaveLength(14);
+    const totals = new Map<string, number>();
+
+    for (const locale of ['en', 'zh']) {
+      let total = 0;
+      for (const slug of catalogSlugs) {
+        const content = readRepo(`src/content/wiki/${locale}/items/${slug}`);
+        const rows = rowCount(content);
+        expect(rows).toBeGreaterThan(0);
+        if (locale === 'zh') {
+          expect(rows).toBe(rowCount(readRepo(`src/content/wiki/en/items/${slug}`)));
+        }
+        total += rows;
+      }
+      totals.set(locale, total);
+    }
+
+    expect(totals.get('en')).toBe(552);
+    expect(totals.get('zh')).toBe(552);
+  });
+
+  test('Flour catalog entries link to the localized detail page', () => {
+    expect(readRepo('src/content/wiki/en/items/items-ingredients.mdx'))
+      .toContain('[Flour](/items/flour/)');
+    expect(readRepo('src/content/wiki/zh/items/items-ingredients.mdx'))
+      .toContain('[面粉](/zh/items/flour/)');
+  });
+});

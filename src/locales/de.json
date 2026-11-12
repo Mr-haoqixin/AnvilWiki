@@ -63,6 +63,41 @@
       "code": "Code"
     },
     "codesFaq": [],
+    "calendarPlanner": {
+      "title": "Einen Schultag planen",
+      "hint": "Jede Jahreszeit hat 14 Tage und beginnt am Sonntag. Wählen Sie ein Datum, um eingetragenes Wetter, feste Aktivitäten und den Wochenplan zu sehen.",
+      "seasonLabel": "Jahreszeit",
+      "dayLabel": "Tag",
+      "dayHeading": "{season} · Tag {day} · {weekday}",
+      "weekdayLabel": "Wochentag",
+      "weatherLabel": "Wetter",
+      "eventLabel": "Fester Termin",
+      "timeLabel": "Uhrzeit",
+      "weeklyTitle": "Wochenplan",
+      "noEntry": "Für dieses Datum sind in der Kalendertabelle weder Wetter noch feste Aktivitäten aufgeführt.",
+      "noJsMessage": "Wenn JavaScript nicht verfügbar ist, nutzen Sie die vollständigen Kalendertabellen unten.",
+      "dynamicNote": "Story-Ereignisse hängen von Briefen und Fortschritt ab; die vollständige Liste steht weiter unten.",
+      "seasons": ["Frühling", "Sommer", "Herbst", "Winter"],
+      "weekdays": ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"],
+      "weeklySchedule": [
+        "Saatgut-Koop-Kiste (nach Beitritt); Werkstatt geöffnet.",
+        "Schlafsaal-Matschkuchen-Kiste (nach Freischaltung); Müller geöffnet.",
+        "Werkstatt und Müller geöffnet.",
+        "Kein fester wöchentlicher Ladenplan.",
+        "Werkstatt und Müller geöffnet.",
+        "Werkstatt und Müller geöffnet.",
+        "Müller geöffnet."
+      ]
+    },
+    "itemTableControls": {
+      "searchLabel": "Gegenstände suchen",
+      "searchPlaceholder": "Name, Preis oder Hinweise",
+      "sortLabel": "Nach Preis sortieren",
+      "sortOriginal": "Ursprüngliche Reihenfolge",
+      "sortLowest": "Niedrigster zuerst",
+      "sortHighest": "Höchster zuerst",
+      "count": "{visible} von {total} Gegenständen"
+    },
     "possiblyOutdated": "Dieser Leitfaden wurde zuletzt geprüft am",
     "outdatedNote": "— das Spiel hat sich seitdem möglicherweise verändert. Einige Details könnten veraltet sein.",
     "prevArticle": "Vorheriger",

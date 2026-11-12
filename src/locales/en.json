@@ -63,6 +63,41 @@
       "code": "Code"
     },
     "codesFaq": [],
+    "calendarPlanner": {
+      "title": "Plan a school day",
+      "hint": "Each season has 14 days and begins on Sunday. Choose a date to see its recorded weather, fixed activity, and weekly routine.",
+      "seasonLabel": "Season",
+      "dayLabel": "Day",
+      "dayHeading": "{season} · Day {day} · {weekday}",
+      "weekdayLabel": "Weekday",
+      "weatherLabel": "Weather",
+      "eventLabel": "Fixed activity",
+      "timeLabel": "Time",
+      "weeklyTitle": "Weekly routine",
+      "noEntry": "The calendar table does not list weather or a fixed activity for this date.",
+      "noJsMessage": "Use the full calendar tables below if JavaScript is unavailable.",
+      "dynamicNote": "Story-triggered events depend on letters and progress; see the full list below.",
+      "seasons": ["Spring", "Summer", "Fall", "Winter"],
+      "weekdays": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      "weeklySchedule": [
+        "Seed Co-op box (after joining); Practice Workshop open.",
+        "Dorm Mud Pie Box (after unlocking); Miller open.",
+        "Practice Workshop and Miller open.",
+        "No fixed weekly shop schedule.",
+        "Practice Workshop and Miller open.",
+        "Practice Workshop and Miller open.",
+        "Miller open."
+      ]
+    },
+    "itemTableControls": {
+      "searchLabel": "Search items",
+      "searchPlaceholder": "Name, price, or notes",
+      "sortLabel": "Sort by price",
+      "sortOriginal": "As listed",
+      "sortLowest": "Lowest first",
+      "sortHighest": "Highest first",
+      "count": "{visible} of {total} items"
+    },
     "possiblyOutdated": "This guide was last checked on",
     "outdatedNote": "— the game may have changed since. Some details could be out of date.",
     "prevArticle": "Previous",

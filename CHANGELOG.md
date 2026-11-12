@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Songs of Glimmerwick 资料更新**：依据 Steam 官方公告补齐 v1.09、v1.10、v1.11/1.12、v1.13 中英版本记录，并在海底神殿与静默神庙地点页补入相关修复说明和互链；不把未由公告确认的旧机制数据笼统标成已验证。
+- **日历规划器与图鉴检索**：中英日历页新增按季节/日期选择的规划器，直接读取已有季节表和每周安排，未列出的天气或固定活动明确标为未记录；中英各有 14 类、552 条物品目录数据，新增面粉中英详情页及目录入口，并为图鉴表提供搜索、价格升降序排序和结果计数（8 种 UI 语言齐备，原始静态表作为无 JavaScript 回退）。验证：395 tests passed / 7 skipped、typecheck 0 errors、check-content 与 strict UI i18n 通过；构建 3,628 页，593,209 个站内链接全部有效。
+
 ## [2.38.0] - 2026-10-22
 
 ### Added

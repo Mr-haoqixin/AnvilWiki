@@ -63,6 +63,41 @@
       "code": "版本"
     },
     "codesFaq": [],
+    "calendarPlanner": {
+      "title": "按游戏日期规划",
+      "hint": "每季 14 天，从周日开始。选择日期后可查看本页记录的天气、固定活动和每周安排。",
+      "seasonLabel": "季节",
+      "dayLabel": "日期",
+      "dayHeading": "{season}第 {day} 天 · {weekday}",
+      "weekdayLabel": "星期",
+      "weatherLabel": "天气",
+      "eventLabel": "固定活动",
+      "timeLabel": "时间",
+      "weeklyTitle": "每周安排",
+      "noEntry": "本页日历表未列出这一天的天气或固定活动。",
+      "noJsMessage": "如果 JavaScript 不可用，请查看下方的完整日历表。",
+      "dynamicNote": "剧情触发活动取决于信件和游戏进度，完整列表见下文。",
+      "seasons": ["春季", "夏季", "秋季", "冬季"],
+      "weekdays": ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+      "weeklySchedule": [
+        "加入种子共享社后有种子箱；实践工坊开放。",
+        "解锁后有宿舍泥饼箱；磨坊主营业。",
+        "实践工坊和磨坊主营业。",
+        "没有固定的每周商店安排。",
+        "实践工坊和磨坊主营业。",
+        "实践工坊和磨坊主营业。",
+        "磨坊主营业。"
+      ]
+    },
+    "itemTableControls": {
+      "searchLabel": "搜索物品",
+      "searchPlaceholder": "名称、价格或说明",
+      "sortLabel": "按价格排序",
+      "sortOriginal": "保持原顺序",
+      "sortLowest": "价格从低到高",
+      "sortHighest": "价格从高到低",
+      "count": "显示 {visible} / {total} 件物品"
+    },
     "possiblyOutdated": "本页资料最后核对于",
     "outdatedNote": "；后续更新可能改变游戏内容。",
     "prevArticle": "上一篇",
